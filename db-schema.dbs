@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="car-database-v2" id="Project-1625" database="LogicalDesign" >
+	<comment><![CDATA[Schema of PanVidla's Definitive Car Database v2]]></comment>
+	<schema name="INSTANCE" catalogname="car-database-v2" >
+		<table name="Assist" prior="Entity" >
+			<comment><![CDATA[Represents a type of assist a car can have]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the assist]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the assist in full]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="5" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the assist shortened to an acronym]]></comment>
+			</column>
+			<index name="pk_Assist" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Car" prior="Entity" >
+			<comment><![CDATA[Represents a real-world car that can be depicted in a video game]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the car]]></comment>
+			</column>
+			<column name="date_time_added" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the car was added]]></comment>
+			</column>
+			<column name="date_time_edited" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the car was last edited]]></comment>
+			</column>
+			<column name="is_deleted" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the car was deleted]]></comment>
+			</column>
+			<column name="year" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Year in which the car was introduced]]></comment>
+			</column>
+			<column name="company_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID(s) of the company or companies that participated on the car]]></comment>
+			</column>
+			<column name="model" type="VARCHAR" length="256" jt="12" mandatory="y" >
+				<comment><![CDATA[Model of the car]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="512" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the car for situation where it needs to be displayed as one string]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the car shortened]]></comment>
+			</column>
+			<column name="no_of_instances" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of instances of said car in video games]]></comment>
+			</column>
+			<column name="engine_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the engine]]></comment>
+			</column>
+			<column name="max_power_output_kw_actual" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Actual maximum power output of the car in kW]]></comment>
+			</column>
+			<column name="max_power_output_rpm_actual" type="INT" jt="4" >
+				<comment><![CDATA[RPM at which the car actually produces maximum power]]></comment>
+			</column>
+			<column name="max_torque_nm_actual" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Actual maximum torque the car produces in N * m]]></comment>
+			</column>
+			<column name="max_torque_rpm_actual" type="INT" jt="4" >
+				<comment><![CDATA[RPM at which the car actually produces maximum torque]]></comment>
+			</column>
+			<column name="forced_induction_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of forced induction]]></comment>
+			</column>
+			<column name="has_forced_induction" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the car has some form of forced induction]]></comment>
+			</column>
+			<column name="transmission_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the transmission]]></comment>
+			</column>
+			<column name="no_of_gears_actual" prior="no_of_gears" type="INT" jt="4" >
+				<defo><![CDATA[1]]></defo>
+				<comment><![CDATA[No. of gears the car actually has]]></comment>
+			</column>
+			<column name="engine_layout_id" prior="engine_layout" type="INT" jt="4" >
+				<enumeration><![CDATA['front', 'middle', 'rear']]></enumeration>
+			</column>
+			<column name="drivetrain_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the drivetrain]]></comment>
+			</column>
+			<column name="curb_weight_kg" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Weight of the car without passengers in kg]]></comment>
+			</column>
+			<column name="weight_distribution" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Amount of the weight in the front of the car in %]]></comment>
+			</column>
+			<column name="tires_front" type="VARCHAR" length="16" jt="12" >
+				<comment><![CDATA[Front tires with which the car normally comes]]></comment>
+			</column>
+			<column name="tires_rear" type="VARCHAR" length="16" jt="12" >
+				<comment><![CDATA[Rear tires which the car normally comes with]]></comment>
+			</column>
+			<column name="0_to_100" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Amount of time it takes the car to accelerate from 0 to 100 km/h in seconds]]></comment>
+			</column>
+			<column name="max_speed_kph" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Maximum speed the car is able to reach in km/h]]></comment>
+			</column>
+			<column name="power_to_weight_ratio" type="DECIMAL" jt="3" >
+				<comment><![CDATA[Ratio of power to weight]]></comment>
+			</column>
+			<column name="assist_id" type="INT" jt="4" >
+				<comment><![CDATA[A list of assists the car has]]></comment>
+			</column>
+			<column name="is_fictional" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the car exists in real life]]></comment>
+			</column>
+			<column name="is_prototype" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not this car is a prototype]]></comment>
+			</column>
+			<column name="competition_id" type="INT" jt="4" >
+				<comment><![CDATA[Competitions in which this car participates or participated]]></comment>
+			</column>
+			<column name="car_class_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the car class]]></comment>
+			</column>
+			<index name="pk_Car" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Car_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="ManyToMany" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="company_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_Engine" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Engine" type="NonIdentifying" mandatory="n" cardinality="ZeroOne" range_from="0" range_to="0" >
+				<fk_column name="engine_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_ForcedInduction" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="ForcedInduction" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="forced_induction_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_Transmission" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Transmission" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="transmission_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_EngineLayout" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="EngineLayout" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="engine_layout_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_Drivetrain" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Drivetrain" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="drivetrain_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_Assist" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Assist" type="ManyToMany" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="assist_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_CompetitionReal" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="CompetitionReal" type="ManyToMany" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="competition_id" pk="id" />
+			</fk>
+			<fk name="fk_Car_CarClass" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="CarClass" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="car_class_id" pk="id" />
+			</fk>
+		</table>
+		<table name="CarClass" prior="Entity" >
+			<comment><![CDATA[Represents a car class as defined by the market]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the car class]]></comment>
+			</column>
+			<column name="name_euro" type="VARCHAR" length="32" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the car class as described on the European market]]></comment>
+			</column>
+			<column name="name_us" type="VARCHAR" length="32" jt="12" >
+				<comment><![CDATA[Name of the car class as described on the American market]]></comment>
+			</column>
+			<column name="name_alternative" type="VARCHAR" length="32" jt="12" >
+				<comment><![CDATA[Name of the car as known colloquially]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="8" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the car class shortened to an acronym]]></comment>
+			</column>
+			<index name="pk_CarClass" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Company" prior="Entity" >
+			<comment><![CDATA[Represents a generic company (e.g. that makes cars, car parts, video games...)]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the company]]></comment>
+			</column>
+			<column name="date_time_added" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the company was added]]></comment>
+			</column>
+			<column name="date_time_edited" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the company was last edited]]></comment>
+			</column>
+			<column name="is_deleted" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the company was deleted]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the company as shown in official sources (e.g. Wikipedia)]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the company as it will be displayed in the Database]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="8" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the company shortened to an acronym]]></comment>
+			</column>
+			<column name="description" type="VARCHAR" length="1024" jt="12" >
+				<comment><![CDATA[One line description of what the company does]]></comment>
+			</column>
+			<column name="owner_id" prior="owned_by_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the company that owns this company]]></comment>
+			</column>
+			<column name="country_id" type="INT" length="2" jt="4" >
+				<comment><![CDATA[ID of the country the company is primarily or originally based in]]></comment>
+			</column>
+			<column name="no_of_games_developed" type="INT" jt="4" >
+				<comment><![CDATA[No. of games developed by this company]]></comment>
+			</column>
+			<column name="no_of_games_published" type="INT" jt="4" >
+				<comment><![CDATA[No. of games published byt this company]]></comment>
+			</column>
+			<column name="no_of_cars" type="INT" jt="4" >
+				<comment><![CDATA[No. of cars that this company participated on]]></comment>
+			</column>
+			<column name="no_of_car_parts" type="INT" jt="4" >
+				<comment><![CDATA[No. of car parts the company developed]]></comment>
+			</column>
+			<column name="date_established" type="DATE" jt="91" >
+				<comment><![CDATA[Date when the company was established]]></comment>
+			</column>
+			<column name="date_ceased_existing" type="DATE" jt="91" >
+				<comment><![CDATA[Date when the company ceased existing]]></comment>
+			</column>
+			<index name="pk_Company" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Company_Country" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Country" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="country_id" pk="id" />
+			</fk>
+		</table>
+		<table name="CompetitionReal" prior="Entity" >
+			<comment><![CDATA[Represents a real world car competition]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the competition]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the competition as shown in official sources]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the competition as it will be displayed in the Database]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="8" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the competition shortened to an acronym]]></comment>
+			</column>
+			<column name="date_started" type="DATE" jt="91" >
+				<comment><![CDATA[Date of when the competition started]]></comment>
+			</column>
+			<column name="date_ended" type="DATE" jt="91" >
+				<comment><![CDATA[Date of when the competition stopped taking place]]></comment>
+			</column>
+			<index name="pk_CompetitionReal" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Country" prior="Entity" >
+			<comment><![CDATA[Represents a country]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the country]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="256" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the country as mentioned in official sources]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the country as it will be displayed in the Database]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="3" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the country shortened to a three letter acronym]]></comment>
+			</column>
+			<column name="no_of_companies_game" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of companies from said country that develop or publish games]]></comment>
+			</column>
+			<column name="no_of_companies_car" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of companies from said country that make cars or car parts]]></comment>
+			</column>
+			<column name="no_of_games" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of games made in said country]]></comment>
+			</column>
+			<column name="no_of_cars" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of cars made in said country]]></comment>
+			</column>
+			<index name="pk_Country" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Drivetrain" prior="Entity" >
+			<comment><![CDATA[Represents a type of drivetrain]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the drivetrain]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="16" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the drivetrain written in full]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="3" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the drivetrain type shortened to a three letter acronym]]></comment>
+			</column>
+			<index name="pk_Drivetrain" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Engine" prior="Entity" >
+			<comment><![CDATA[Represents an engine, real or virtual]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the engine]]></comment>
+			</column>
+			<column name="fuel_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the fuel the engine uses]]></comment>
+			</column>
+			<column name="type" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Type of the engine (e.g. naturally-aspirated V8, supercharged I6...)]]></comment>
+			</column>
+			<column name="displacement" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Displacement of the engine (if applicable) in liters]]></comment>
+			</column>
+			<column name="name_official" type="VARCHAR" length="256" jt="12" >
+				<comment><![CDATA[Name of the engine as named by its manufacturer]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="256" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the engine as it will be displayed in the Database (typically by concatenating the name of the maker, the displacement, the official name and the type of the engine]]></comment>
+			</column>
+			<column name="company_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the company that developed the engine]]></comment>
+			</column>
+			<column name="max_power_output_kw" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Maximum power output in kW]]></comment>
+			</column>
+			<column name="max_power_output_rpm" type="INT" jt="4" >
+				<comment><![CDATA[RPM at which the engine outputs maximum power]]></comment>
+			</column>
+			<column name="max_torque_nm" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Maximum amount of torque in N * m]]></comment>
+			</column>
+			<column name="max_torque_rpm" type="INT" jt="4" >
+				<comment><![CDATA[RPM at which the engine produces maximum amount of torque]]></comment>
+			</column>
+			<index name="pk_Engine" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="fuel_id" />
+			</index>
+			<index name="unq_id" unique="UNIQUE_INDEX" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Engine_Fuel" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Fuel" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="fuel_id" pk="id" />
+			</fk>
+			<fk name="fk_Engine_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="company_id" pk="id" />
+			</fk>
+		</table>
+		<table name="EngineLayout" prior="Entity" >
+			<comment><![CDATA[Represents the layout of an engine]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the layout]]></comment>
+			</column>
+			<column name="name_full" prior="name" type="VARCHAR" length="8" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the layout]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="3" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the layout shortened to a three letter acronym]]></comment>
+			</column>
+			<index name="pk_EngineLayout" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="ForcedInduction" prior="Entity" >
+			<comment><![CDATA[Represents a form of forced induction]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the forced induction]]></comment>
+			</column>
+			<column name="type" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Type of forced induction]]></comment>
+			</column>
+			<column name="company_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the company that developed the forced induction]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the forced induction as it will be displayed in the Database]]></comment>
+			</column>
+			<index name="pk_ForcedInduction" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_ForcedInduction_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="company_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Fuel" prior="Entity" >
+			<comment><![CDATA[Represents a type of fuel an engine can use to operate]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the fuel]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="32" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the fuel]]></comment>
+			</column>
+			<index name="pk_Fuel" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Game" prior="Entity" >
+			<comment><![CDATA[Represents a video game with information about it, its state of completion, the studio that made etc.]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the game]]></comment>
+			</column>
+			<column name="date_time_added" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the game was added]]></comment>
+			</column>
+			<column name="date_time_edited" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+				<comment><![CDATA[Date and time when the game was last edited]]></comment>
+			</column>
+			<column name="date_time_played" type="DATETIME" jt="93" >
+				<comment><![CDATA[Date and time when the game was last played]]></comment>
+			</column>
+			<column name="is_deleted" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the game was deleted]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the game as officially listed (e.g. on Wikipedia)]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the game as it will be displayed in the Database]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="5" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the game shortened to an acronym (e.g. Need for Speed: High Stakes -> NFS4)]]></comment>
+			</column>
+			<column name="developer_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the company that developed the game]]></comment>
+			</column>
+			<column name="publisher_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the company that published the game]]></comment>
+			</column>
+			<column name="game_state_id" prior="game_progression_id" type="INT" length="1" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[Represents the state of play of the game (e.g. not started, in-progress, complete...); does NOT represent a type of activity the player should proceed with next]]></comment>
+			</column>
+			<column name="genre_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the genre the game belongs to (e.g. arcade, simcade, simulation...)]]></comment>
+			</column>
+			<column name="no_of_instances" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of car instances in the game]]></comment>
+			</column>
+			<column name="no_of_times_played" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of sessions with the game]]></comment>
+			</column>
+			<index name="pk_Game" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_developer_id" unique="UNIQUE_INDEX" >
+				<column name="developer_id" />
+			</index>
+			<fk name="fk_Game_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="developer_id" pk="id" />
+			</fk>
+			<fk name="fk_Game_Company_0" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="NonIdentifying" mandatory="n" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="publisher_id" pk="id" />
+			</fk>
+			<fk name="fk_Game_Platform" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Platform" type="ManyToMany" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="id" pk="id" />
+			</fk>
+			<fk name="fk_Game_GameProgression" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="GameState" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="game_state_id" pk="id" />
+			</fk>
+			<fk name="fk_Game_GameGenre" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="GameGenre" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="genre_id" pk="id" />
+			</fk>
+		</table>
+		<table name="GameActivity" prior="Entity" >
+			<comment><![CDATA[Represents the activity that should be done next by the player]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the activity]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the activity]]></comment>
+			</column>
+			<column name="description" type="VARCHAR" length="1024" jt="12" >
+				<comment><![CDATA[A more verbose description of the activity]]></comment>
+			</column>
+			<column name="order" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Order in which the activity should be done]]></comment>
+			</column>
+			<column name="is_active" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+				<comment><![CDATA[Whether or not the activity should be done right now]]></comment>
+			</column>
+			<column name="game_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the game the activity belongs to]]></comment>
+			</column>
+			<index name="pk_GameActivity" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="game_id" />
+			</index>
+			<fk name="fk_GameActivity_Game" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Game" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="game_id" pk="id" />
+			</fk>
+		</table>
+		<table name="GameGenre" prior="Entity" >
+			<comment><![CDATA[Represents the genre of a video game]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the genre]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the genre]]></comment>
+			</column>
+			<column name="realism" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Level of realism (on the scale 0 to 4 / 1 to 5)]]></comment>
+			</column>
+			<index name="pk_GameGenre" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="GameState" prior="GameProgression" >
+			<comment><![CDATA[Represents the level of progression achieved by the player]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the game progression]]></comment>
+			</column>
+			<column name="order" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Order in which the game progression should be displayed]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the game progression]]></comment>
+			</column>
+			<index name="pk_GameProgression" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="General" prior="Entity" >
+			<comment><![CDATA[Represents miscellaneous value that the database needs to function (e.g. current instance)]]></comment>
+			<column name="key" type="VARCHAR" length="64" jt="12" mandatory="y" />
+			<column name="value" type="VARCHAR" length="64" jt="12" mandatory="y" />
+			<index name="pk_General" unique="PRIMARY_KEY" >
+				<column name="key" />
+			</index>
+		</table>
+		<table name="Image" prior="Entity" >
+			<comment><![CDATA[Represents an image that can accompany text descriptions]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the image]]></comment>
+			</column>
+			<column name="description" type="VARCHAR" length="1024" jt="12" >
+				<comment><![CDATA[Description of what is depicted in the image]]></comment>
+			</column>
+			<column name="order" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[Order in which the image should be displayed, if there should be multiple images for a single object]]></comment>
+			</column>
+			<column name="path" type="TEXT" jt="-1" mandatory="y" >
+				<comment><![CDATA[Path to the image]]></comment>
+			</column>
+			<column name="belongs_to_id" prior="belong_to_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the object that the image belongs to]]></comment>
+			</column>
+			<index name="pk_Image" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="belongs_to_id" />
+			</index>
+			<fk name="fk_Image_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Image_Game" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Game" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Image_Car" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Car" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Image_Platform" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Platform" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Instance" prior="Entity" >
+			<comment><![CDATA[Represents an instance of car that can be found in a video game]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the instance]]></comment>
+			</column>
+			<column name="car_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the car]]></comment>
+			</column>
+			<column name="game_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the game]]></comment>
+			</column>
+			<column name="date_time_played" type="DATETIME" jt="93" >
+				<comment><![CDATA[Date and time of when the instance was last played with]]></comment>
+			</column>
+			<column name="is_complete" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not this instance is complete]]></comment>
+			</column>
+			<column name="is_for_collection" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not this instance exists for collection purposes only]]></comment>
+			</column>
+			<column name="name_full" prior="name" type="VARCHAR" length="256" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the instance in full]]></comment>
+			</column>
+			<column name="name_nickname" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Nickname of the car that can work as a short name for the instance]]></comment>
+			</column>
+			<column name="type_id" type="INT" length="64" jt="4" >
+				<comment><![CDATA[ID of the type of driving that the car is intended for (e.g. road racing, rally, drifting...)]]></comment>
+			</column>
+			<column name="specialization_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the specialization]]></comment>
+			</column>
+			<column name="color_name" type="VARCHAR" length="32" jt="12" >
+				<comment><![CDATA[Color of the car expressed as a word]]></comment>
+			</column>
+			<column name="color_hex" type="VARCHAR" length="7" jt="12" >
+				<comment><![CDATA[Color of the car represented as a hex value]]></comment>
+			</column>
+			<column name="theme" type="VARCHAR" length="32" jt="12" >
+				<comment><![CDATA[Visual and customization theme of the car instance]]></comment>
+			</column>
+			<column name="no_of_sessions" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of times this instance was played with]]></comment>
+			</column>
+			<index name="pk_Instance" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="car_id" />
+				<column name="game_id" />
+			</index>
+			<index name="unq_id" unique="UNIQUE_INDEX" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Instance_Car" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Car" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="car_id" pk="id" />
+			</fk>
+			<fk name="fk_Instance_Game" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Game" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="game_id" pk="id" />
+			</fk>
+			<fk name="fk_Instance_InstanceType" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="InstanceType" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="type_id" pk="id" />
+			</fk>
+			<fk name="fk_Instance_InstanceSpecialization" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="InstanceSpecialization" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="specialization_id" pk="id" />
+			</fk>
+		</table>
+		<table name="InstanceSpecialization" prior="Entity" >
+			<comment><![CDATA[Represents a specialization of the car instance]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the specialization]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the specialization in full]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="16" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the specialization shortened to an acronym]]></comment>
+			</column>
+			<index name="pk_InstanceSpecialization" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="InstanceType" prior="Entity" >
+			<comment><![CDATA[Represents a type of driving a car instance can be intended for (e.g. road racing, rally, drifting...)]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the instance_type]]></comment>
+			</column>
+			<column name="name_full" prior="type_name" type="VARCHAR" length="32" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the type of driving]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="3" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the instance type shortened to a three letter acronym]]></comment>
+			</column>
+			<index name="pk_InstanceType" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="NFS3Instance" prior="NFS3" >
+			<comment><![CDATA[Represents an instance in Need for Speed III: Hot Pursuit base game]]></comment>
+			<column name="instance_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the car instance]]></comment>
+			</column>
+			<column name="car_class" type="ENUM" jt="12" >
+				<enumeration><![CDATA['C', 'B', 'A']]></enumeration>
+				<comment><![CDATA[Class of the NFS3 car]]></comment>
+			</column>
+			<column name="stats_acceleration" prior="acceleration" type="INT" jt="4" />
+			<column name="stats_top_speed" prior="top_speed" type="INT" jt="4" />
+			<column name="stats_handling" prior="handling" type="INT" jt="4" />
+			<column name="stats_braking" prior="braking" type="INT" jt="4" />
+			<column name="stats_average" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Average of the previous four stats]]></comment>
+			</column>
+			<index name="pk_NFS3Instance" unique="PRIMARY_KEY" >
+				<column name="instance_id" />
+			</index>
+			<fk name="fk_NFS3Instance_Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Instance" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="instance_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Platform" prior="Entity" >
+			<comment><![CDATA[Represents a platform on which video games can be played (e.g. PC, consoles...)]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the platform]]></comment>
+			</column>
+			<column name="name_full" type="VARCHAR" length="32" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the platform as shown in official sources (e.g. Playstation 3)]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="32" jt="12" mandatory="y" >
+				<defo><![CDATA['n/a']]></defo>
+				<comment><![CDATA[Name of the game as it will be displayed in the database]]></comment>
+			</column>
+			<column name="name_short" type="VARCHAR" length="5" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the platform shortened to an acronym]]></comment>
+			</column>
+			<index name="pk_Platform" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Text" prior="Entity" >
+			<comment><![CDATA[Represents a line of text that can serve as a heading, a paragraph...
+
+In the actual database model, this class will be a parent to subclasses representing text for companies, cars, instances etc.]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the text]]></comment>
+			</column>
+			<column name="content" type="TEXT" length="409" jt="-1" mandatory="y" >
+				<comment><![CDATA[Content of the text]]></comment>
+			</column>
+			<column name="order" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Order in which the line of text should be displayed]]></comment>
+			</column>
+			<column name="belongs_to_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the object that this text belongs to]]></comment>
+			</column>
+			<index name="pk_Text" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="belongs_to_id" />
+			</index>
+			<fk name="fk_Text_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Text_Game" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Game" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Text_Platform" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Platform" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Text_Car" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Car" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+		</table>
+		<table name="Transmission" prior="Entity" >
+			<comment><![CDATA[Represents transmission]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the transmission]]></comment>
+			</column>
+			<column name="type" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Type of the transmission (e.g. manual h-pattern, automatic...)]]></comment>
+			</column>
+			<column name="no_of_gears" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[1]]></defo>
+			</column>
+			<column name="company_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the company that developed the transmission]]></comment>
+			</column>
+			<column name="name_display" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the transmission as it will displayed in the Database]]></comment>
+			</column>
+			<index name="pk_Transmission" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Transmission_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="company_id" pk="id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-396" show_relation="columns" >
+		<entity schema="car-database-v2.INSTANCE" name="Assist" color="C1C6EE" x="640" y="1520" />
+		<entity schema="car-database-v2.INSTANCE" name="Car" color="C1C6EE" x="368" y="608" />
+		<entity schema="car-database-v2.INSTANCE" name="CarClass" color="C1C6EE" x="848" y="1520" />
+		<entity schema="car-database-v2.INSTANCE" name="Company" color="EEE7C1" x="48" y="272" />
+		<entity schema="car-database-v2.INSTANCE" name="CompetitionReal" color="EEE7C1" x="48" y="1184" />
+		<entity schema="car-database-v2.INSTANCE" name="Country" color="EEE7C1" x="48" y="960" />
+		<entity schema="car-database-v2.INSTANCE" name="Drivetrain" color="C1C6EE" x="848" y="1392" />
+		<entity schema="car-database-v2.INSTANCE" name="Engine" color="C1C6EE" x="368" y="1232" />
+		<entity schema="car-database-v2.INSTANCE" name="EngineLayout" color="C1C6EE" x="640" y="1376" />
+		<entity schema="car-database-v2.INSTANCE" name="ForcedInduction" color="C1C6EE" x="640" y="1232" />
+		<entity schema="car-database-v2.INSTANCE" name="Fuel" color="EEE7C1" x="368" y="1536" />
+		<entity schema="car-database-v2.INSTANCE" name="Game" color="EEC1C1" x="368" y="272" />
+		<entity schema="car-database-v2.INSTANCE" name="GameActivity" color="EEC1C1" x="736" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="GameGenre" color="EEC1C1" x="928" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="GameState" color="EEC1C1" x="576" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="General" color="C1EDEE" x="48" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="Image" color="CFEEC1" x="48" y="800" />
+		<entity schema="car-database-v2.INSTANCE" name="Instance" color="DBC1EE" x="736" y="608" />
+		<entity schema="car-database-v2.INSTANCE" name="InstanceSpecialization" color="DBC1EE" x="944" y="400" />
+		<entity schema="car-database-v2.INSTANCE" name="InstanceType" color="DBC1EE" x="736" y="400" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3Instance" color="C1C5EE" x="1184" y="48" />
+		<entity schema="car-database-v2.INSTANCE" name="Platform" color="EEC1C1" x="368" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="Text" color="CFEEC1" x="48" y="656" />
+		<entity schema="car-database-v2.INSTANCE" name="Transmission" color="C1C6EE" x="848" y="1232" />
+	</layout>
+</project>
