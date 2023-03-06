@@ -573,7 +573,6 @@
 			</column>
 			<index name="pk_Image" unique="PRIMARY_KEY" >
 				<column name="id" />
-				<column name="belongs_to_id" />
 			</index>
 			<fk name="fk_Image_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="belongs_to_id" pk="id" />
@@ -585,6 +584,9 @@
 				<fk_column name="belongs_to_id" pk="id" />
 			</fk>
 			<fk name="fk_Image_Platform" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Platform" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Image_Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Instance" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="belongs_to_id" pk="id" />
 			</fk>
 		</table>
@@ -686,6 +688,105 @@
 				<column name="id" />
 			</index>
 		</table>
+		<table name="NFS3Event" prior="Entity" >
+			<comment><![CDATA[Represents an individual event in NFS3]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the event]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="64" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the event (e.g. single race, special race, knockout, time trial...)]]></comment>
+			</column>
+			<column name="no_of_participants" type="INT" jt="4" >
+				<comment><![CDATA[No. of participants taking part in the event]]></comment>
+			</column>
+			<column name="no_of_laps" type="INT" jt="4" >
+				<comment><![CDATA[No. of laps in the event]]></comment>
+			</column>
+			<index name="pk_NFS3Event" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="NFS3EventRecord" prior="NFS3Event" >
+			<comment><![CDATA[Represents a record of a completed race or other activity in NFS3]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the event record]]></comment>
+			</column>
+			<column name="instance_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the instance]]></comment>
+			</column>
+			<column name="event_id" prior="event_type_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the event type]]></comment>
+			</column>
+			<column name="series_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the event series]]></comment>
+			</column>
+			<column name="location_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the location]]></comment>
+			</column>
+			<column name="date_time_added" type="DATETIME" jt="93" mandatory="y" >
+				<defo><![CDATA[systimestamp]]></defo>
+			</column>
+			<column name="event_record_no" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Number of the event record]]></comment>
+			</column>
+			<column name="position" type="INT" jt="4" >
+				<comment><![CDATA[Position on which the car finished]]></comment>
+			</column>
+			<column name="time_best_lap_milliseconds" prior="time_best_lap" type="BIGINT" jt="-5" >
+				<comment><![CDATA[Best lap time of the event in milliseconds]]></comment>
+			</column>
+			<column name="time_track_milliseconds" prior="time_track" type="BIGINT" jt="-5" >
+				<comment><![CDATA[Track time of the event in milliseconds]]></comment>
+			</column>
+			<column name="time_best_lap_hr" type="VARCHAR" length="10" jt="12" >
+				<comment><![CDATA[Time of the best lap in human readable format]]></comment>
+			</column>
+			<column name="time_track_hr" type="VARCHAR" length="10" jt="12" >
+				<comment><![CDATA[Track time in human readable format]]></comment>
+			</column>
+			<column name="result" type="VARCHAR" length="16" jt="12" >
+				<comment><![CDATA[Result of the event expressed with words]]></comment>
+			</column>
+			<column name="maximum_speed" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Maximum speed achieved during the event]]></comment>
+			</column>
+			<column name="is_lap_record" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the lap time was a lap record at the time]]></comment>
+			</column>
+			<column name="is_track_record" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the track time was a track record at the time]]></comment>
+			</column>
+			<column name="note" type="VARCHAR" length="1024" jt="12" >
+				<comment><![CDATA[Additional note]]></comment>
+			</column>
+			<column name="is_deleted" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[false]]></defo>
+				<comment><![CDATA[Whether or not the event record was deleted]]></comment>
+			</column>
+			<index name="pk_NFS3EventRecord" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="instance_id" />
+				<column name="event_id" />
+				<column name="location_id" />
+			</index>
+			<index name="unq_id" unique="UNIQUE_INDEX" >
+				<column name="id" />
+			</index>
+			<fk name="fk_NFS3EventRecord_NFS3Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3Instance" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="instance_id" pk="instance_id" />
+			</fk>
+			<fk name="fk_NFS3EventRecord_NFS3Event" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3Event" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="event_id" pk="id" />
+			</fk>
+			<fk name="fk_NFS3EventRecord_NFS3Series" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3Series" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="series_id" pk="id" />
+			</fk>
+			<fk name="fk_NFS3EventRecord_NFS3Location" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3Location" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="location_id" pk="id" />
+			</fk>
+		</table>
 		<table name="NFS3Instance" prior="NFS3" >
 			<comment><![CDATA[Represents an instance in Need for Speed III: Hot Pursuit base game]]></comment>
 			<column name="instance_id" type="INT" jt="4" mandatory="y" >
@@ -702,10 +803,122 @@
 			<column name="stats_average" type="DOUBLE" jt="8" >
 				<comment><![CDATA[Average of the previous four stats]]></comment>
 			</column>
+			<column name="tune_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the tune]]></comment>
+			</column>
+			<column name="no_events_total" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events this instance took part in]]></comment>
+			</column>
+			<column name="no_of_events_won" prior="no_events_won" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events that the instance won]]></comment>
+			</column>
+			<column name="no_of_events_won_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events won in %]]></comment>
+			</column>
+			<column name="no_of_events_podium" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events where this car placed on a podium]]></comment>
+			</column>
+			<column name="no_of_events_podium_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events where this car places on a podium in %]]></comment>
+			</column>
+			<column name="no_of_events_lost" prior="no_of_event_lost" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events which the instance lost]]></comment>
+			</column>
+			<column name="no_of_events_lost_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of event which the instance lost in %]]></comment>
+			</column>
+			<column name="no_of_events_dnf" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events the instance did not finish]]></comment>
+			</column>
+			<column name="no_of_events_dnf_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events the instance did not finish in %]]></comment>
+			</column>
+			<column name="average_position" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Average position across all positioned races]]></comment>
+			</column>
+			<column name="no_of_records_lap" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of lap records that this car set]]></comment>
+			</column>
+			<column name="no_of_records_track" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of track records this car set]]></comment>
+			</column>
 			<index name="pk_NFS3Instance" unique="PRIMARY_KEY" >
 				<column name="instance_id" />
 			</index>
 			<fk name="fk_NFS3Instance_Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Instance" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="instance_id" pk="id" />
+			</fk>
+		</table>
+		<table name="NFS3Location" prior="Entity" >
+			<comment><![CDATA[Represents a track in NFS3]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the location]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the location]]></comment>
+			</column>
+			<column name="country_id" type="INT" length="2" jt="4" >
+				<comment><![CDATA[ID of the country]]></comment>
+			</column>
+			<column name="is_fictional" type="BOOLEAN" jt="-7" mandatory="y" >
+				<defo><![CDATA[true]]></defo>
+				<comment><![CDATA[Whether or not the location is fictional]]></comment>
+			</column>
+			<column name="event_record_best_lap_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the event record with the best lap time]]></comment>
+			</column>
+			<column name="event_record_best_track_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the event record with the best track time]]></comment>
+			</column>
+			<index name="pk_NFS3Location" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_NFS3Location_NFS3EventRecord" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3EventRecord" type="NonIdentifying" mandatory="n" cardinality="ZeroOne" range_from="0" range_to="0" >
+				<fk_column name="event_record_best_lap_id" pk="id" />
+			</fk>
+			<fk name="fk_NFS3Location_NFS3EventRecord_0" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3EventRecord" type="NonIdentifying" mandatory="n" cardinality="ZeroOne" range_from="0" range_to="0" >
+				<fk_column name="event_record_best_track_id" pk="id" />
+			</fk>
+			<fk name="fk_NFS3Location_Country" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Country" type="NonIdentifying" mandatory="n" cardinality="ZeroOne" range_from="0" range_to="0" >
+				<fk_column name="country_id" pk="id" />
+			</fk>
+		</table>
+		<table name="NFS3Series" prior="Entity" >
+			<comment><![CDATA[Represents a series of races that should be grouped together]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the series]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the series of events]]></comment>
+			</column>
+			<index name="pk_NFS3Series" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="NFS3Tune" prior="Entity" >
+			<comment><![CDATA[Represents a tuning setting in NFS3]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the tune]]></comment>
+			</column>
+			<column name="instance_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the instance]]></comment>
+			</column>
+			<index name="pk_NFS3Tune" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="instance_id" />
+			</index>
+			<fk name="fk_NFS3Tune_NFS3EventRecord" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3EventRecord" type="Identifying" mandatory="y" cardinality="One" range_from="0" range_to="0" >
 				<fk_column name="instance_id" pk="id" />
 			</fk>
 		</table>
@@ -747,7 +960,6 @@ In the actual database model, this class will be a parent to subclasses represen
 			</column>
 			<index name="pk_Text" unique="PRIMARY_KEY" >
 				<column name="id" />
-				<column name="belongs_to_id" />
 			</index>
 			<fk name="fk_Text_Company" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Company" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="belongs_to_id" pk="id" />
@@ -759,6 +971,9 @@ In the actual database model, this class will be a parent to subclasses represen
 				<fk_column name="belongs_to_id" pk="id" />
 			</fk>
 			<fk name="fk_Text_Car" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Car" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="belongs_to_id" pk="id" />
+			</fk>
+			<fk name="fk_Text_Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Instance" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="belongs_to_id" pk="id" />
 			</fk>
 		</table>
@@ -788,17 +1003,17 @@ In the actual database model, this class will be a parent to subclasses represen
 		</table>
 	</schema>
 	<layout name="Default Layout" id="Layout-396" show_relation="columns" >
-		<entity schema="car-database-v2.INSTANCE" name="Assist" color="C1C6EE" x="640" y="1520" />
+		<entity schema="car-database-v2.INSTANCE" name="Assist" color="C1C6EE" x="640" y="1728" />
 		<entity schema="car-database-v2.INSTANCE" name="Car" color="C1C6EE" x="368" y="608" />
-		<entity schema="car-database-v2.INSTANCE" name="CarClass" color="C1C6EE" x="848" y="1520" />
+		<entity schema="car-database-v2.INSTANCE" name="CarClass" color="C1C6EE" x="848" y="1728" />
 		<entity schema="car-database-v2.INSTANCE" name="Company" color="EEE7C1" x="48" y="272" />
 		<entity schema="car-database-v2.INSTANCE" name="CompetitionReal" color="EEE7C1" x="48" y="1184" />
 		<entity schema="car-database-v2.INSTANCE" name="Country" color="EEE7C1" x="48" y="960" />
-		<entity schema="car-database-v2.INSTANCE" name="Drivetrain" color="C1C6EE" x="848" y="1392" />
-		<entity schema="car-database-v2.INSTANCE" name="Engine" color="C1C6EE" x="368" y="1232" />
-		<entity schema="car-database-v2.INSTANCE" name="EngineLayout" color="C1C6EE" x="640" y="1376" />
-		<entity schema="car-database-v2.INSTANCE" name="ForcedInduction" color="C1C6EE" x="640" y="1232" />
-		<entity schema="car-database-v2.INSTANCE" name="Fuel" color="EEE7C1" x="368" y="1536" />
+		<entity schema="car-database-v2.INSTANCE" name="Drivetrain" color="C1C6EE" x="848" y="1600" />
+		<entity schema="car-database-v2.INSTANCE" name="Engine" color="C1C6EE" x="368" y="1296" />
+		<entity schema="car-database-v2.INSTANCE" name="EngineLayout" color="C1C6EE" x="640" y="1584" />
+		<entity schema="car-database-v2.INSTANCE" name="ForcedInduction" color="C1C6EE" x="640" y="1296" />
+		<entity schema="car-database-v2.INSTANCE" name="Fuel" color="EEE7C1" x="368" y="1600" />
 		<entity schema="car-database-v2.INSTANCE" name="Game" color="EEC1C1" x="368" y="272" />
 		<entity schema="car-database-v2.INSTANCE" name="GameActivity" color="EEC1C1" x="736" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="GameGenre" color="EEC1C1" x="928" y="80" />
@@ -808,9 +1023,14 @@ In the actual database model, this class will be a parent to subclasses represen
 		<entity schema="car-database-v2.INSTANCE" name="Instance" color="DBC1EE" x="736" y="608" />
 		<entity schema="car-database-v2.INSTANCE" name="InstanceSpecialization" color="DBC1EE" x="944" y="400" />
 		<entity schema="car-database-v2.INSTANCE" name="InstanceType" color="DBC1EE" x="736" y="400" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3Event" color="C1C6EE" x="1888" y="48" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3EventRecord" color="C1C6EE" x="1552" y="48" />
 		<entity schema="car-database-v2.INSTANCE" name="NFS3Instance" color="C1C5EE" x="1184" y="48" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3Location" color="C1C6EE" x="1888" y="304" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3Series" color="C1C6EE" x="1888" y="192" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS3Tune" color="C1C6EE" x="1552" y="432" />
 		<entity schema="car-database-v2.INSTANCE" name="Platform" color="EEC1C1" x="368" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="Text" color="CFEEC1" x="48" y="656" />
-		<entity schema="car-database-v2.INSTANCE" name="Transmission" color="C1C6EE" x="848" y="1232" />
+		<entity schema="car-database-v2.INSTANCE" name="Transmission" color="C1C6EE" x="848" y="1296" />
 	</layout>
 </project>
