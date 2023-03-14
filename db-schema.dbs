@@ -464,6 +464,13 @@
 				<defo><![CDATA[0]]></defo>
 				<comment><![CDATA[No. of sessions with the game]]></comment>
 			</column>
+			<column name="game_series_id" type="INT" jt="4" >
+				<comment><![CDATA[ID of the game series]]></comment>
+			</column>
+			<column name="order_in_series" type="INT" jt="4" />
+			<column name="date_released" type="DATE" jt="91" >
+				<comment><![CDATA[Date of when the game was released]]></comment>
+			</column>
 			<index name="pk_Game" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -484,6 +491,9 @@
 			</fk>
 			<fk name="fk_Game_GameGenre" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="GameGenre" type="NonIdentifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="genre_id" pk="id" />
+			</fk>
+			<fk name="fk_Game_GameSeries" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="GameSeries" type="NonIdentifying" mandatory="n" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="game_series_id" pk="id" />
 			</fk>
 		</table>
 		<table name="GameActivity" prior="Entity" >
@@ -527,6 +537,18 @@
 				<comment><![CDATA[Level of realism (on the scale 0 to 4 / 1 to 5)]]></comment>
 			</column>
 			<index name="pk_GameGenre" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="GameSeries" prior="Entity" >
+			<comment><![CDATA[Represents a series of games]]></comment>
+			<column name="id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the series]]></comment>
+			</column>
+			<column name="name" type="VARCHAR" length="128" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the series]]></comment>
+			</column>
+			<index name="pk_GameSeries" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
@@ -918,7 +940,82 @@
 				<column name="id" />
 				<column name="instance_id" />
 			</index>
-			<fk name="fk_NFS3Tune_NFS3EventRecord" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3EventRecord" type="Identifying" mandatory="y" cardinality="One" range_from="0" range_to="0" >
+			<fk name="fk_NFS3Tune_NFS3Instance" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="NFS3Instance" type="Identifying" mandatory="y" cardinality="One" range_from="0" range_to="0" >
+				<fk_column name="instance_id" pk="instance_id" />
+			</fk>
+		</table>
+		<table name="NFS4Instance" prior="NFS3Instance_0" >
+			<comment><![CDATA[Represents an instance in Need for Speed: Road Challenge base game]]></comment>
+			<column name="instance_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the car instance]]></comment>
+			</column>
+			<column name="car_class" type="ENUM" jt="12" >
+				<enumeration><![CDATA['B', 'A', 'AA', 'AAA']]></enumeration>
+				<comment><![CDATA[Class of the NFS4 car]]></comment>
+			</column>
+			<column name="stats_acceleration" type="INT" jt="4" />
+			<column name="stats_top_speed" type="INT" jt="4" />
+			<column name="stats_handling" type="INT" jt="4" />
+			<column name="stats_braking" type="INT" jt="4" />
+			<column name="stats_overall" prior="stats_average" type="INT" jt="4" />
+			<column name="tune_id" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[ID of the tune]]></comment>
+			</column>
+			<column name="no_events_total" type="INT" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events this instance took part in]]></comment>
+			</column>
+			<column name="no_of_events_won" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events that the instance won]]></comment>
+			</column>
+			<column name="no_of_events_won_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events won in %]]></comment>
+			</column>
+			<column name="no_of_events_podium" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events where this car placed on a podium]]></comment>
+			</column>
+			<column name="no_of_events_podium_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events where this car places on a podium in %]]></comment>
+			</column>
+			<column name="no_of_events_lost" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events which the instance lost]]></comment>
+			</column>
+			<column name="no_of_events_lost_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of event which the instance lost in %]]></comment>
+			</column>
+			<column name="no_of_events_dnf" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events the instance did not finish]]></comment>
+			</column>
+			<column name="no_of_events_dnf_percent" type="DOUBLE" jt="8" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of events the instance did not finish in %]]></comment>
+			</column>
+			<column name="average_position" type="DOUBLE" jt="8" >
+				<comment><![CDATA[Average position across all positioned races]]></comment>
+			</column>
+			<column name="no_of_records_lap" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of lap records that this car set]]></comment>
+			</column>
+			<column name="no_of_records_track" type="INT" jt="4" >
+				<defo><![CDATA[0]]></defo>
+				<comment><![CDATA[No. of track records this car set]]></comment>
+			</column>
+			<column name="upgrade_level" type="INT" jt="4" />
+			<column name="price" type="INT" jt="4" >
+				<comment><![CDATA[Buying price of the car in $]]></comment>
+			</column>
+			<index name="pk_NFS3Instance_0" unique="PRIMARY_KEY" >
+				<column name="instance_id" />
+			</index>
+			<fk name="fk_NFS3Instance_Instance_0" virtual="y" to_schema="car-database-v2.INSTANCE" to_table="Instance" type="Identifying" mandatory="n" cardinality="ZeroMore" range_from="0" range_to="0" >
 				<fk_column name="instance_id" pk="id" />
 			</fk>
 		</table>
@@ -1017,6 +1114,7 @@ In the actual database model, this class will be a parent to subclasses represen
 		<entity schema="car-database-v2.INSTANCE" name="Game" color="EEC1C1" x="368" y="272" />
 		<entity schema="car-database-v2.INSTANCE" name="GameActivity" color="EEC1C1" x="736" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="GameGenre" color="EEC1C1" x="928" y="80" />
+		<entity schema="car-database-v2.INSTANCE" name="GameSeries" color="EEC1C1" x="208" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="GameState" color="EEC1C1" x="576" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="General" color="C1EDEE" x="48" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="Image" color="CFEEC1" x="48" y="800" />
@@ -1029,6 +1127,7 @@ In the actual database model, this class will be a parent to subclasses represen
 		<entity schema="car-database-v2.INSTANCE" name="NFS3Location" color="C1C6EE" x="1888" y="304" />
 		<entity schema="car-database-v2.INSTANCE" name="NFS3Series" color="C1C6EE" x="1888" y="192" />
 		<entity schema="car-database-v2.INSTANCE" name="NFS3Tune" color="C1C6EE" x="1552" y="432" />
+		<entity schema="car-database-v2.INSTANCE" name="NFS4Instance" color="C1EDEE" x="1184" y="560" />
 		<entity schema="car-database-v2.INSTANCE" name="Platform" color="EEC1C1" x="368" y="80" />
 		<entity schema="car-database-v2.INSTANCE" name="Text" color="CFEEC1" x="48" y="656" />
 		<entity schema="car-database-v2.INSTANCE" name="Transmission" color="C1C6EE" x="848" y="1296" />
