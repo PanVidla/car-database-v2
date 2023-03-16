@@ -117,9 +117,6 @@ class Platform(database.Model):
 
     # Metadata
     id = database.Column(database.Integer, primary_key=True)
-    datetime_added = database.Column(database.DateTime, default=datetime.utcnow, index=True, nullable=False)
-    datetime_edited = database.Column(database.DateTime, default=datetime.utcnow, index=True, nullable=False)
-    is_deleted = database.Column(database.Boolean, default=False, index=True, nullable=False)
 
     # General
     # Full name, e.g. PlayStation 3
@@ -142,5 +139,5 @@ class GamePlatform(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     game_id = database.Column(database.Integer, database.ForeignKey("games.id"))
     platform_id = database.Column(database.Integer, database.ForeignKey("platforms.id"))
-    game = database.relationship(Game, backref=backref("game_platform", cascade="all, delete-orphan"))
-    platform = database.relationship(Platform, backref=backref("game_platform", cascade="all, delete-orphan"))
+    game = database.relationship('Game', backref=backref("game_platform", cascade="all, delete-orphan"))
+    platform = database.relationship('Platform', backref=backref("game_platform", cascade="all, delete-orphan"))
