@@ -66,6 +66,9 @@ class Car(database.Model):
     # Statistics
     no_of_instances = database.Column(database.Integer, default=0, index=True, nullable=False)
 
+    # Relationships
+    instances = database.relationship('Instance', backref='car', lazy='dynamic')
+
 
 class Assist(database.Model):
 
@@ -125,7 +128,9 @@ class Drivetrain(database.Model):
     name_full = database.Column(database.Unicode, index=True, nullable=False)
     name_short = database.Column(database.Unicode, index=True, nullable=False)
 
+    # Relationships
     cars = database.relationship('Car', backref='drivetrain', lazy='dynamic')
+    instances = database.relationship('Instance', backref='drivetrain', lazy='dynamic')
 
 
 class EngineLayout(database.Model):
@@ -138,7 +143,9 @@ class EngineLayout(database.Model):
     # General
     name = database.Column(database.Unicode, index=True, nullable=False)
 
-    cars = database.relationship('Car', backref='transmission_type', lazy='dynamic')
+    # Relationships
+    cars = database.relationship('Car', backref='engine_layout', lazy='dynamic')
+    instances = database.relationship('Instance', backref='engine_layout', lazy='dynamic')
 
 
 class TransmissionType(database.Model):
@@ -155,7 +162,6 @@ class TransmissionType(database.Model):
     cars = database.relationship('Car', backref='drivetrain', lazy='dynamic')
 
 
-# Many-to-many relationships
 # Many-to-many relationships
 class CarAssist(database.Model):
 

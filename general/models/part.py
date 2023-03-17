@@ -42,7 +42,9 @@ class Engine(database.Model):
     max_torque_nm = database.Column(database.Double, index=True, nullable=True)
     max_torque_rpm = database.Column(database.Integer, nullable=True)
 
+    # Relationships
     cars = database.relationship('Car', backref='engine', lazy='dynamic')
+    instances = database.relationship('Instance', backref='engine', lazy='dynamic')
 
 
 class ForcedInduction(database.Model):
@@ -56,6 +58,23 @@ class ForcedInduction(database.Model):
     manufacturer_id = database.Column(database.Integer, database.ForeignKey("companies.id"), index=True, nullable=True)
     name_official = database.Column(database.Unicode, index=True, nullable=True)
     name_display = database.Column(database.Unicode, index=True, nullable=False)
+
+    # Relationships
+    cars = database.relationship('Car', backref='forced_induction', lazy='dynamic')
+    instances = database.relationship('Instance', backref='forced_induction', lazy='dynamic')
+
+
+class FuelType(database.Model):
+
+    __tablename__ = "fuel_types"
+
+    # Metadata
+    id = database.Column(database.Integer, primary_key=True)
+
+    # General
+    name = database.Column(database.Unicode, index=True, nullable=False)
+
+    cars = database.relationship('Car', backref='fuel_type', lazy='dynamic')
 
 
 class Transmission(database.Model):
@@ -72,18 +91,9 @@ class Transmission(database.Model):
     no_of_gears = database.Column(database.Unicode, index=True, nullable=False)
     type_id = database.Column(database.Integer, database.ForeignKey("transmission_types.id"), index=True, nullable=False)
 
-
-class FuelType(database.Model):
-
-    __tablename__ = "fuel_types"
-
-    # Metadata
-    id = database.Column(database.Integer, primary_key=True)
-
-    # General
-    name = database.Column(database.Unicode, index=True, nullable=False)
-
-    cars = database.relationship('Car', backref='fuel_type', lazy='dynamic')
+    # Relationships
+    cars = database.relationship('Car', backref='transmission', lazy='dynamic')
+    instances = database.relationship('Instance', backref='transmission', lazy='dynamic')
 
 
 class TransmissionType(database.Model):
@@ -99,3 +109,4 @@ class TransmissionType(database.Model):
     # Relationships
     transmissions = database.relationship('Transmission', backref='type', lazy='dynamic')
     cars = database.relationship('Car', backref='transmission_type', lazy='dynamic')
+    instances = database.relationship('Instance', backref='transmission_type', lazy='dynamic')
