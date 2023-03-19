@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import backref
 
 from general import database
+from general.models.info import Text, Image
 
 
 # Car
@@ -21,7 +22,7 @@ class Car(database.Model):
     year = database.Column(database.Integer, index=True, nullable=True)
     manufacturers = database.relationship('Company', secondary="car_manufacturer")
     model = database.Column(database.Unicode, index=True, nullable=False)
-    name_display = database.Column(database.Unicode, index=True, nullable=False)
+    name_display = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     name_short = database.Column(database.Unicode, nullable=True)
     is_prototype = database.Column(database.Boolean, default=False, index=True, nullable=False)
     is_fictional = database.Column(database.Boolean, default=False, index=True, nullable=False)
@@ -31,13 +32,18 @@ class Car(database.Model):
 
     # Technical
     # Engine
-    engine_id = database.Column(database.Integer, database.ForeignKey("engines.id"), index=True, nullable=True)
+    engines = database.relationship('Engine', secondary="car_engine", lazy='dynamic')
+    fuel_type_actual_id = database.Column(database.Integer, database.ForeignKey("fuel_types.id"), index=True,
+                                          nullable=True)
     max_power_output_kw_actual = database.Column(database.Double, index=True, nullable=True)
     max_power_output_rpm_actual = database.Column(database.Integer, nullable=True)
     max_torque_nm_actual = database.Column(database.Double, index=True, nullable=True)
     max_torque_rpm_actual = database.Column(database.Integer, nullable=True)
+    displacement_actual = database.Column(database.Double, index=True, nullable=True)
     # This refers to the specific car part
-    forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"), nullable=True)
+    additional_forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"),
+                                                     nullable=True)
+    aspiration_actual_id = database.Column(database.Integer, database.ForeignKey("aspirations.id"), nullable=True)
 
     # Drivetrain
     # This refers to the actual transmission car part and may backfill the following two values
@@ -50,6 +56,8 @@ class Car(database.Model):
     drivetrain_id = database.Column(database.Integer, database.ForeignKey("drivetrains.id"), index=True, nullable=False)
 
     # Platform
+    suspension_front_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
+    suspension_rear_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
     curb_weight_kg = database.Column(database.Double, index=True, nullable=True)
     weight_distribution = database.Column(database.Double, index=True, nullable=True)
     tires_front = database.Column(database.Unicode, nullable=True)
@@ -68,6 +76,8 @@ class Car(database.Model):
 
     # Relationships
     instances = database.relationship('Instance', backref='car', lazy='dynamic')
+    texts = database.relationship('CarText', backref='car', lazy='dynamic')
+    images = database.relationship('CarImage', backref='car', lazy='dynamic')
 
 
 class Assist(database.Model):
@@ -78,8 +88,8 @@ class Assist(database.Model):
     id = database.Column(database.Integer, primary_key=True)
 
     # General
-    name_full = database.Column(database.Unicode, index=True, nullable=False)
-    name_short = database.Column(database.Unicode, index=True, nullable=False)
+    name_full = database.Column(database.Unicode, index=True, nullable=False, unique=True)
+    name_short = database.Column(database.Unicode, index=True, nullable=False, unique=True)
 
     assists = database.relationship('Car', secondary="car_assist")
 
@@ -92,7 +102,7 @@ class BodyStyle(database.Model):
     id = database.Column(database.Integer, primary_key=True)
 
     # General
-    name = database.Column(database.Unicode, index=True, nullable=False)
+    name = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     no_of_doors = database.Column(database.Integer, nullable=False)
 
     cars = database.relationship('Car', backref='body_style', lazy='dynamic')
@@ -110,7 +120,7 @@ class CarClass(database.Model):
     name_euro = database.Column(database.Unicode, index=True, nullable=True)
     name_us = database.Column(database.Unicode, index=True, nullable=True)
     name_alternative = database.Column(database.Unicode, index=True, nullable=True)
-    name_custom = database.Column(database.Unicode, index=True, nullable=True)
+    name_custom = database.Column(database.Unicode, index=True, nullable=True, unique=True)
     name_short = database.Column(database.Unicode, nullable=True)
 
     # Relationships
@@ -141,25 +151,35 @@ class EngineLayout(database.Model):
     id = database.Column(database.Integer, primary_key=True)
 
     # General
-    name = database.Column(database.Unicode, index=True, nullable=False)
+    name = database.Column(database.Unicode, index=True, nullable=False, unique=True)
 
     # Relationships
     cars = database.relationship('Car', backref='engine_layout', lazy='dynamic')
     instances = database.relationship('Instance', backref='engine_layout', lazy='dynamic')
 
 
-class TransmissionType(database.Model):
+# Info
+class CarText(Text):
 
-    __tablename__ = "transmission_types"
+    __tablename__ = "texts_cars"
 
     # Metadata
-    id = database.Column(database.Integer, primary_key=True)
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
 
     # General
-    name_full = database.Column(database.Unicode, index=True, nullable=False)
-    name_short = database.Column(database.Unicode, index=True, nullable=False)
+    car_id = database.Column(database.Integer, database.ForeignKey('cars.id'), primary_key=True)
 
-    cars = database.relationship('Car', backref='drivetrain', lazy='dynamic')
+
+class CarImage(Image):
+
+    __tablename__ = "images_cars"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    is_thumbnail = database.Column(database.Boolean, default=False, index=True, nullable=False)
+    car_id = database.Column(database.Integer, database.ForeignKey('cars.id'), primary_key=True)
 
 
 # Many-to-many relationships
@@ -185,6 +205,18 @@ class CarCompetition(database.Model):
     competition_id = database.Column(database.Integer, database.ForeignKey("competitions.id"))
     car = database.relationship('Car', backref=backref("car_competition", cascade="all, delete-orphan"))
     competition = database.relationship('Competition', backref=backref("car_competition", cascade="all, delete-orphan"))
+
+
+class CarEngine(database.Model):
+
+    __tablename__ = "car_engine"
+
+    # Metadata
+    id = database.Column(database.Integer, primary_key=True)
+    car_id = database.Column(database.Integer, database.ForeignKey("cars.id"))
+    engine_id = database.Column(database.Integer, database.ForeignKey("engines.id"))
+    car = database.relationship('Car', backref=backref("car_engine", cascade="all, delete-orphan"))
+    engine = database.relationship('Engine', backref=backref("car_engine", cascade="all, delete-orphan"))
 
 
 class CarManufacturer(database.Model):

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from general import database
+from general.models.info import Text, Image
 
 
 # Represents any company (e.g. BMW, Electronic Arts, Playground Studios...)
@@ -17,7 +18,7 @@ class Company(database.Model):
     # Display name, e.g. Volkswagen
     name_display = database.Column(database.Unicode, index=True, nullable=False)
     # Short name, e.g. VW
-    name_short = database.Column(database.Unicode, nullable=False)
+    name_short = database.Column(database.Unicode, nullable=True)
     description = database.Column(database.Unicode, nullable=True)
 
     is_game_developer = database.Column(database.Boolean, default=False, index=True, nullable=False)
@@ -28,7 +29,7 @@ class Company(database.Model):
     owner_id = database.Column(database.Integer, database.ForeignKey("companies.id"), index=True, nullable=True)
     country_id = database.Column(database.Integer, database.ForeignKey("countries.id"), index=True, nullable=True)
     date_established = database.Column(database.Date, index=True, nullable=True)
-    date_ceased_to_exist = database.Column(database.Date, index=True, nullable=True)
+    date_ceased_to_exist = database.Column(database.Date, nullable=True)
 
     # Statistics
     no_of_games_developed = database.Column(database.Integer, default=0, nullable=True)
@@ -43,6 +44,8 @@ class Company(database.Model):
     games = database.relationship('Game', backref='company', lazy='dynamic')
     owner = database.relationship('Company', remote_side=[id], backref='owned_companies', lazy='dynamic')
     transmissions = database.relationship('Transmission',  backref='manufacturer', lazy='dynamic')
+    texts = database.relationship('CompanyText', backref='company', lazy='dynamic')
+    images = database.relationship('CompanyImage', backref='company', lazy='dynamic')
 
 
 # Represents a car competition (e.g. F1, GT3, NASCAR, WRC...)
@@ -63,6 +66,8 @@ class Competition(database.Model):
 
     # Relationships
     cars = database.relationship('Car', secondary="car_competition")
+    texts = database.relationship('CompetitionText', backref='competition', lazy='dynamic')
+    images = database.relationship('CompetitionImage', backref='competition', lazy='dynamic')
 
 
 # Represents a country (e.g. Italy, Germany, United States of America...)
@@ -89,3 +94,72 @@ class Country(database.Model):
 
     # Relationships
     companies = database.relationship('Company', backref='country', lazy='dynamic')
+    texts = database.relationship('CountryText', backref='country', lazy='dynamic')
+    images = database.relationship('CountryImage', backref='country', lazy='dynamic')
+
+
+# Info
+class CompanyText(Text):
+
+    __tablename__ = "texts_companies"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
+
+    # General
+    company_id = database.Column(database.Integer, database.ForeignKey('companies.id'), primary_key=True)
+
+
+class CompanyImage(Image):
+
+    __tablename__ = "images_companies"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    company_id = database.Column(database.Integer, database.ForeignKey('companies.id'), primary_key=True)
+
+
+class CompetitionText(Text):
+
+    __tablename__ = "texts_competitions"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
+
+    # General
+    competition_id = database.Column(database.Integer, database.ForeignKey('competitions.id'), primary_key=True)
+
+
+class CompetitionImage(Image):
+
+    __tablename__ = "images_competitions"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    competition_id = database.Column(database.Integer, database.ForeignKey('competitions.id'), primary_key=True)
+
+
+class CountryText(Text):
+
+    __tablename__ = "texts_countries"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
+
+    # General
+    country_id = database.Column(database.Integer, database.ForeignKey('countries.id'), primary_key=True)
+
+
+class CountryImage(Image):
+
+    __tablename__ = "images_countries"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    country_id = database.Column(database.Integer, database.ForeignKey('countries.id'), primary_key=True)

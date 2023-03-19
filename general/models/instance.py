@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import backref
 
 from general import database
+from general.models.info import Text, Image
 
 
 # Represents a video game instance of a car
@@ -30,18 +31,23 @@ class Instance(database.Model):
 
     # Visuals
     color_name = database.Column(database.Unicode, index=True, nullable=True)
-    color_hex = database.Column(database.Unicode, index=True, nullable=True)
+    color_hex = database.Column(database.Unicode, index=False, nullable=True)
     theme = database.Column(database.Unicode, index=True, nullable=True)
 
     # Technical
     # Engine
-    engine_id = database.Column(database.Integer, database.ForeignKey("engines.id"), index=True, nullable=True)
+    engines = database.relationship('Engine', secondary="instance_engine", lazy='dynamic')
+    fuel_type_actual_id = database.Column(database.Integer, database.ForeignKey("fuel_types.id"), index=True,
+                                          nullable=True)
     max_power_output_kw_actual = database.Column(database.Double, index=True, nullable=True)
     max_power_output_rpm_actual = database.Column(database.Integer, nullable=True)
     max_torque_nm_actual = database.Column(database.Double, index=True, nullable=True)
     max_torque_rpm_actual = database.Column(database.Integer, nullable=True)
+    displacement_actual = database.Column(database.Double, index=True, nullable=True)
     # This refers to the specific car part
-    forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"), nullable=True)
+    additional_forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"),
+                                                     nullable=True)
+    aspiration_actual_id = database.Column(database.Integer, database.ForeignKey("aspirations.id"), nullable=True)
 
     # Drivetrain
     # This refers to the actual transmission car part and may backfill the following two values
@@ -54,6 +60,10 @@ class Instance(database.Model):
     drivetrain_id = database.Column(database.Integer, database.ForeignKey("drivetrains.id"), index=True, nullable=False)
 
     # Platform
+    suspension_front_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True,
+                                          nullable=True)
+    suspension_rear_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True,
+                                         nullable=True)
     curb_weight_kg = database.Column(database.Double, index=True, nullable=True)
     weight_distribution = database.Column(database.Double, index=True, nullable=True)
     tires_front = database.Column(database.Unicode, nullable=True)
@@ -69,6 +79,34 @@ class Instance(database.Model):
 
     # Statistics
     no_of_sessions = database.Column(database.Integer, default=0, index=True, nullable=False)
+
+    # Relationships
+    texts = database.relationship('InstanceText', backref='instance', lazy='dynamic')
+    images = database.relationship('InstanceImage', backref='instance', lazy='dynamic')
+
+
+# Info
+class InstanceText(Text):
+
+    __tablename__ = "texts_instances"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
+
+    # General
+    instance_id = database.Column(database.Integer, database.ForeignKey('instances.id'), primary_key=True)
+
+
+class InstanceImage(Image):
+
+    __tablename__ = "images_instances"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    is_thumbnail = database.Column(database.Boolean, default=False, index=True, nullable=False)
+    instance_id = database.Column(database.Integer, database.ForeignKey('instances.id'), primary_key=True)
 
 
 # Represents a type of driving a car can be dedicated to (e.g. road racing, drifting, rally...)
@@ -117,3 +155,15 @@ class InstanceAssist(database.Model):
     assist_id = database.Column(database.Integer, database.ForeignKey("assists.id"))
     instance = database.relationship('Instance', backref=backref("instance_assist", cascade="all, delete-orphan"))
     assist = database.relationship('Assist', backref=backref("instance_assist", cascade="all, delete-orphan"))
+
+
+class InstanceEngine(database.Model):
+
+    __tablename__ = "instance_engine"
+
+    # Metadata
+    id = database.Column(database.Integer, primary_key=True)
+    instance_id = database.Column(database.Integer, database.ForeignKey("instances.id"))
+    engine_id = database.Column(database.Integer, database.ForeignKey("engines.id"))
+    instance = database.relationship('Instance', backref=backref("instance_engine", cascade="all, delete-orphan"))
+    engine = database.relationship('Engine', backref=backref("instance_engine", cascade="all, delete-orphan"))
