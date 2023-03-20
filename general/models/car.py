@@ -48,7 +48,7 @@ class Car(database.Model):
     # Drivetrain
     # This refers to the actual transmission car part and may backfill the following two values
     transmission_id = database.Column(database.Integer, database.ForeignKey("transmissions.id"), nullable=True)
-    transmission_type_actual_id = database.Column(database.Integer, database.ForeignKey("transmissions_types.id"),
+    transmission_type_actual_id = database.Column(database.Integer, database.ForeignKey("transmission_types.id"),
                                                   nullable=True)
     no_of_gears_actual = database.Column(database.Integer, index=True, nullable=True)
     engine_layout_id = database.Column(database.Integer, database.ForeignKey("engine_layouts.id"), index=True,

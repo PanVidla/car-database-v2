@@ -290,4 +290,4 @@ class TransmissionImage(Image):
     id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
 
     # General
-    transmission_id = database.Column(database.Integer, database.ForeignKey('transmission.id'), primary_key=True)
+    transmission_id = database.Column(database.Integer, database.ForeignKey('transmissions.id'), primary_key=True)

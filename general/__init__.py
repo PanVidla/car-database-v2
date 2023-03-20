@@ -12,4 +12,7 @@ bootstrap = Bootstrap(cardb)
 database = SQLAlchemy(cardb)
 migrate = Migrate(cardb, database)
 
+from general.models import blueprint as models_general_blueprint
+cardb.register_blueprint(models_general_blueprint)
+
 from general import routes
