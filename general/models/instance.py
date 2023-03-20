@@ -28,6 +28,7 @@ class Instance(database.Model):
     is_complete = database.Column(database.Boolean, default=False, index=True, nullable=False)
     is_for_collection = database.Column(database.Boolean, default=False, index=True, nullable=False)
     car_id = database.Column(database.Integer, database.ForeignKey("cars.id"), index=True, nullable=False)
+    game_id = database.Column(database.Integer, database.ForeignKey("games.id"), index=True, nullable=False)
 
     # Visuals
     color_name = database.Column(database.Unicode, index=True, nullable=True)
@@ -79,10 +80,30 @@ class Instance(database.Model):
 
     # Statistics
     no_of_sessions = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_events_total = database.Column(database.Integer, default=0, index=True, nullable=False)
 
     # Relationships
     texts = database.relationship('InstanceText', backref='instance', lazy='dynamic')
     images = database.relationship('InstanceImage', backref='instance', lazy='dynamic')
+
+
+class RacingInstance(Instance):
+
+    __tablename__ = "instances_racing"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('instances.id'), primary_key=True)
+
+    # Statistics
+    no_of_events_won = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_events_won_percent = database.Column(database.Double, index=True, nullable=True)
+    no_of_events_podium = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_events_podium_percent = database.Column(database.Double, index=True, nullable=True)
+    no_of_events_lost = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_events_lost_percent = database.Column(database.Double, index=True, nullable=True)
+    no_of_events_dnf = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_events_dnf_percent = database.Column(database.Double, index=True, nullable=True)
+    average_position = database.Column(database.Double, index=True, nullable=True)
 
 
 # Info

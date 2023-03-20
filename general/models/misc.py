@@ -96,6 +96,24 @@ class Country(database.Model):
     companies = database.relationship('Company', backref='country', lazy='dynamic')
     texts = database.relationship('CountryText', backref='country', lazy='dynamic')
     images = database.relationship('CountryImage', backref='country', lazy='dynamic')
+    locations = database.relationship('Location', backref='country', lazy='dynamic')
+
+
+class Location(database.Model):
+
+    __tablename__ = "locations"
+
+    # Metadata
+    id = database.Column(database.Integer, primary_key=True)
+
+    # General
+    name = database.Column(database.Unicode, index=True, nullable=False)
+    country_id = database.Column(database.Integer, database.ForeignKey('countries.id'))
+    is_fictional = database.Column(database.Boolean, default=True, index=True, nullable=False)
+
+    # Relationships
+    texts = database.relationship('LocationText', backref='location', lazy='dynamic')
+    images = database.relationship('LocationImage', backref='location', lazy='dynamic')
 
 
 # Info
@@ -163,3 +181,26 @@ class CountryImage(Image):
 
     # General
     country_id = database.Column(database.Integer, database.ForeignKey('countries.id'), primary_key=True)
+
+
+class LocationText(Text):
+
+    __tablename__ = "texts_locations"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('texts.id'), primary_key=True)
+
+    # General
+    location_id = database.Column(database.Integer, database.ForeignKey('locations.id'), primary_key=True)
+
+
+class LocationImage(Image):
+
+    __tablename__ = "images_locations"
+
+    # Metadata
+    id = database.Column(database.Integer, database.ForeignKey('images.id'), primary_key=True)
+
+    # General
+    is_plan = database.Column(database.Boolean, default=False, index=True, nullable=False)
+    location_id = database.Column(database.Integer, database.ForeignKey('locations.id'), primary_key=True)
