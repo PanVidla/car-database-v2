@@ -1,0 +1,43 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+    {% if title %}{{ title }} - Car Database{% else %}Pan Vidla's Car Database{% endif %}
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    <link href="{{ url_for('static', filename='css/car-database.css') }}" rel="stylesheet">
+{% endblock %}
+
+<!-- Menu -->
+{% block navbar %}
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a class="hover-underline-animation" href="{{ url_for('overview_games') }}">Games</a></li>
+                    <li><a class="hover-underline-animation" href="{{ url_for('overview_cars') }}">Cars</a></li>
+                    <li><a class="hover-underline-animation" href="{{ url_for('overview_instances') }}">Instances</a></li>
+                    <li><a class="hover-underline-animation" href="{{ url_for('overview_companies') }}">Companies</a></li>
+                    <li><a class="hover-underline-animation" href="#">Miscellaneous</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+<!-- Content -->
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block cardb_content %}
+        {% endblock %}
+    </div>
+{% endblock %}

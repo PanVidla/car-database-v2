@@ -1,0 +1,8 @@
+title_cars = "Cars"
+title_companies = "Companies"
+title_games = "Games"
+title_instances = "Instances"
+overview_heading_cars = "All cars"
+overview_heading_companies = "All companies"
+overview_heading_games = "All games"
+overview_heading_instances = "All instances"

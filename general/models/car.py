@@ -21,6 +21,7 @@ class Car(database.Model):
     # General
     year = database.Column(database.Integer, index=True, nullable=True)
     manufacturers = database.relationship('Company', secondary="car_manufacturer")
+    manufacturers_display = database.Column(database.Unicode, index=True, nullable=False)
     model = database.Column(database.Unicode, index=True, nullable=False)
     name_display = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     name_short = database.Column(database.Unicode, nullable=True)
@@ -56,8 +57,7 @@ class Car(database.Model):
     drivetrain_id = database.Column(database.Integer, database.ForeignKey("drivetrains.id"), index=True, nullable=False)
 
     # Platform
-    suspension_front_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
-    suspension_rear_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
+    suspension_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
     curb_weight_kg = database.Column(database.Double, index=True, nullable=True)
     weight_distribution = database.Column(database.Double, index=True, nullable=True)
     tires_front = database.Column(database.Unicode, nullable=True)

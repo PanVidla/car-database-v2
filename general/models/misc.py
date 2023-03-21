@@ -33,7 +33,6 @@ class Company(database.Model):
 
     # Statistics
     no_of_games_developed = database.Column(database.Integer, default=0, nullable=True)
-    no_of_games_published = database.Column(database.Integer, default=0, nullable=True)
     no_of_games_cars = database.Column(database.Integer, default=0, nullable=True)
     no_of_games_car_parts = database.Column(database.Integer, default=0, nullable=True)
 
@@ -41,8 +40,8 @@ class Company(database.Model):
     cars = database.relationship('Car', secondary="car_manufacturer")
     engines = database.relationship('Engine', backref='manufacturer', lazy='dynamic')
     forced_induction = database.relationship('ForcedInduction', backref='manufacturer', lazy='dynamic')
-    games = database.relationship('Game', backref='company', lazy='dynamic')
-    owner = database.relationship('Company', remote_side=[id], backref='owned_companies', lazy='dynamic')
+    games = database.relationship('Game', backref='developer', lazy='dynamic')
+    owner = database.relationship('Company', remote_side=[id], backref='owned_companies')
     transmissions = database.relationship('Transmission',  backref='manufacturer', lazy='dynamic')
     texts = database.relationship('CompanyText', backref='company', lazy='dynamic')
     images = database.relationship('CompanyImage', backref='company', lazy='dynamic')

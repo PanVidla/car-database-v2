@@ -15,7 +15,7 @@ class Aspiration(database.Model):
 
     # Relationships
     cars = database.relationship('Car', backref='aspiration', lazy='dynamic')
-    engines = database.relationship('Engine', backref='aspiration', lazy='dynamic')
+    engines = database.relationship('EngineCombustion', backref='aspiration', lazy='dynamic')
     forced_inductions = database.relationship('ForcedInduction', backref='type', lazy='dynamic')
     instances = database.relationship('Instance', backref='aspiration', lazy='dynamic')
 
