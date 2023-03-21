@@ -21,17 +21,6 @@ def overview_cars():
                            cars=cars)
 
 
-@cardb.route("/companies", methods=['GET'])
-def overview_companies():
-
-    companies = Company.query.order_by(Company.name_display.asc()).all()
-
-    return render_template("overview_companies.html",
-                           title=title_companies,
-                           overview_heading=overview_heading_companies,
-                           companies=companies)
-
-
 @cardb.route("/games", methods=['GET'])
 def overview_games():
 
