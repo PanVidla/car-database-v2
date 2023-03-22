@@ -33,8 +33,8 @@ class Company(database.Model):
 
     # Statistics
     no_of_games_developed = database.Column(database.Integer, default=0, nullable=True)
-    no_of_games_cars = database.Column(database.Integer, default=0, nullable=True)
-    no_of_games_car_parts = database.Column(database.Integer, default=0, nullable=True)
+    no_of_cars_produced = database.Column(database.Integer, default=0, nullable=True)
+    no_of_parts_produced = database.Column(database.Integer, default=0, nullable=True)
 
     # Relationships
     cars = database.relationship('Car', secondary="car_manufacturer")
