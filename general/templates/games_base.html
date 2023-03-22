@@ -20,6 +20,10 @@
                         {% if viewing == "platforms" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_platform') }}"><strong>Add platform</strong></a></li>
                         {% endif %}
+                        {% if viewing == "game_series" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_game_series') }}"><strong>Add game series</strong></a></li>
+                        {% endif %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_game_series') }}">Game series</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_platforms') }}">Platforms</a></li>
                         {% if platform %}
                         <li class="active"><a href="#">{{ platform.name_display }}</a></li>

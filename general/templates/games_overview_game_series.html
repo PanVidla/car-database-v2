@@ -1,0 +1,28 @@
+{% extends "games_base.html" %}
+
+{% block games_content %}
+
+    <div>
+        <table class="table table-hover table-striped table-bordered table-condensed">
+
+            {% if game_series == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no game series in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-11"><strong>Name</strong></td>
+            </tr>
+                {% for series in game_series %}
+            <tr>
+                <td class="col-sm-1">{{ series.id }}</td>
+                <td class="col-sm-11"><a href="{{ url_for('detail_game_series', id=series.id) }}">{{ series.name }}</a></td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "games_base.html" %}
+
+{% block games_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name(class_="form-control", placeholder="Name of the series (e.g. Need for Speed)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}
