@@ -31,7 +31,6 @@ class Game(database.Model):
     developer_id = database.Column(database.Integer, database.ForeignKey("companies.id"), index=True, nullable=False)
     date_released = database.Column(database.Date, index=True, nullable=True)
     genre_id = database.Column(database.Integer, database.ForeignKey("game_genres.id"), index=True, nullable=False)
-    date_published = database.Column(database.Date, index=True, nullable=True)
 
     # Technical
     game_state_id = database.Column(database.Integer, database.ForeignKey("game_states.id"), nullable=True)

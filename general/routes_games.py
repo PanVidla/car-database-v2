@@ -2,8 +2,9 @@
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
-from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm
-from general.models.game import Game, Platform, GameSeries
+from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
+    GameGenreAddForm, GameGenreEditForm
+from general.models.game import Game, Platform, GameSeries, GameGenre
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -13,7 +14,7 @@ def overview_games():
     games = Game.query.order_by(Game.name_display.asc()).all()
 
     return render_template("games_overview.html",
-                           title="All games",
+                           title="Games",
                            heading="All games",
                            games=games,
                            viewing="games")
@@ -25,10 +26,22 @@ def overview_game_series():
     game_series = GameSeries.query.order_by(GameSeries.name.asc()).all()
 
     return render_template("games_overview_game_series.html",
-                           title="All game series",
+                           title="Game series",
                            heading="All game series",
                            game_series=game_series,
                            viewing="game_series")
+
+
+@cardb.route("/games/genres", methods=['GET'])
+def overview_genres():
+
+    genres = GameGenre.query.order_by(GameGenre.realism.asc()).all()
+
+    return render_template("games_overview_genres.html",
+                           title="Genres",
+                           heading="Genres",
+                           genres=genres,
+                           viewing="genres")
 
 
 @cardb.route("/games/platforms", methods=['GET'])
@@ -38,7 +51,7 @@ def overview_platforms():
 
     return render_template("games_overview_platforms.html",
                            title="Platforms",
-                           heading="Platforms",
+                           heading="All platforms",
                            platforms=platforms,
                            viewing="platforms")
 
@@ -69,6 +82,34 @@ def add_game_series():
                            heading="Add game series",
                            form=form,
                            viewing="game_series")
+
+
+# Add genre
+@cardb.route("/games/genres/add-genre", methods=['GET', 'POST'])
+def add_genre():
+
+    form = GameGenreAddForm()
+
+    if form.validate_on_submit():
+
+        new_genre = GameGenre()
+        form.populate_obj(new_genre)
+
+        try:
+            database.session.add(new_genre)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new genre to the database.", "danger")
+            return redirect(url_for("add_genre"))
+
+        flash("{} has been successfully added to the database.".format(new_genre.name), "success")
+        return redirect(url_for("overview_genres"))
+
+    return render_template("games_form_genres.html",
+                           title="Add genre",
+                           heading="Add genre",
+                           form=form,
+                           viewing="genres")
 
 
 # Add platform
@@ -129,6 +170,33 @@ def edit_game_series(id):
                            viewing="game_series")
 
 
+# Edit genre
+@cardb.route("/games/genres/edit-genre/<id>", methods=['GET', 'POST'])
+def edit_genre(id):
+
+    genre = GameGenre.query.get(id)
+    form = GameGenreEditForm(obj=genre)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(genre)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing {}.".format(genre.name), "danger")
+            return redirect(url_for("edit_genre", id=genre.id))
+
+        flash("{} has been successfully edited.".format(genre.name, "success"))
+        return redirect(url_for("detail_genre", id=genre.id))
+
+    return render_template("games_form_genres.html",
+                           title="Edit genre",
+                           heading="Edit genre",
+                           form=form,
+                           viewing="genres")
+
+
 # Edit platform
 @cardb.route("/games/platforms/edit-platform/<id>", methods=['GET', 'POST'])
 def edit_platform(id):
@@ -176,6 +244,24 @@ def delete_game_series(id):
     return redirect(url_for("overview_game_series"))
 
 
+# Delete genre
+@cardb.route("/games/genres/delete-genre/<id>", methods=['GET', 'POST'])
+def delete_genre(id):
+
+    genre = GameGenre.query.get(id)
+
+    try:
+        database.session.delete(genre)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting {}.".format(genre.name), "danger")
+        return redirect(url_for("detail_genre", id=genre.id))
+
+    flash("{} has been successfully deleted.".format(genre.name), "success")
+    return redirect(url_for("overview_genres"))
+
+
 # Delete platform
 @cardb.route("/games/platforms/delete-platform/<id>", methods=['GET', 'POST'])
 def delete_platform(id):
@@ -207,6 +293,19 @@ def detail_game_series(id):
                            heading="{}".format(game_series.name),
                            game_series=game_series,
                            viewing="game_series")
+
+
+# Genre detail
+@cardb.route("/games/genres/detail/<id>", methods=['GET', 'POST'])
+def detail_genre(id):
+
+    genre = GameGenre.query.get(id)
+
+    return render_template("games_detail_genre.html",
+                           title="{}".format(genre.name),
+                           heading="{}".format(genre.name),
+                           genre=genre,
+                           viewing="genres")
 
 
 # Platform detail
