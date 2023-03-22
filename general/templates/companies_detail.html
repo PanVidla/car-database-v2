@@ -59,9 +59,9 @@
                   <td class="text-center"><strong>Parts manufacturer</strong></td>
               </tr>
               <tr>
-                  <td class="text-center">{{ company.is_game_company() }}</td>
-                  <td class="text-center">{{ company.is_car_company() }}</td>
-                  <td class="text-center">{{ company.is_part_company() }}</td>
+                  <td class="text-center {% if company.is_game_developer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_game_company() }}</td>
+                  <td class="text-center {% if company.is_car_manufacturer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_car_company() }}</td>
+                  <td class="text-center {% if company.is_car_part_manufacturer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_part_company() }}</td>
               </tr>
           </table>
       </div>

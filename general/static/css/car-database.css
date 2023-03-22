@@ -21,3 +21,13 @@
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+.true-neutral {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
+.false-neutral {
+    color: #ffffff;
+    background: #b1b2b3;
+}
