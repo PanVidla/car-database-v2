@@ -81,7 +81,7 @@ def add_company():
                            form=form)
 
 
-# Add company
+# Edit company
 @cardb.route("/companies/edit-company/<id>", methods=['GET', 'POST'])
 def edit_company(id):
 
@@ -109,6 +109,7 @@ def edit_company(id):
                            form=form)
 
 
+# Delete company
 @cardb.route("/misc/companies/delete-company/<id>", methods=['GET', 'POST'])
 def delete_company(id):
 

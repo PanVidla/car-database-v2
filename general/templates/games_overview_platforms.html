@@ -1,0 +1,31 @@
+{% extends "games_base.html" %}
+
+{% block games_content %}
+
+    <div>
+        <table class="table table-hover table-striped table-bordered table-condensed">
+
+            {% if platforms == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no platforms in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Short name</strong></td>
+            </tr>
+
+                {% for platform in platforms %}
+            <tr>
+                <td class="col-sm-1">{{ platform.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_platform', id=platform.id) }}">{{ platform.name_display }}</a></td>
+                <td class="col-sm-1">{{ platform.name_short }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

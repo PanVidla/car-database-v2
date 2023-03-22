@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block cardb_content %}
+
+    <!--  Heading  -->
+    <div class="page-header">
+        <h1>{{ heading }}</h1>
+    </div>
+
+    <!-- Submenu -->
+    {% block submenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_games') }}">All games</a></li>
+                        {% if viewing == "games" %}
+                        <li><a class="hover-underline-animation" href="#"><strong>Add game</strong></a></li>
+                        {% endif %}
+                        {% if viewing == "platforms" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_platform') }}"><strong>Add platform</strong></a></li>
+                        {% endif %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_platforms') }}">Platforms</a></li>
+                        {% if platform %}
+                        <li class="active"><a href="#">{{ platform.name_display }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block games_content %}
+    {% endblock %}
+
+{% endblock %}
