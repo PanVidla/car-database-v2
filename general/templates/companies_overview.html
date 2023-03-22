@@ -11,18 +11,26 @@
             </tr>
             {% else %}
             <tr>
-                <td class="col-sm-1"><b>Year</b></td>
-                <td class="col-sm-3"><b>Brand</b></td>
-                <td class="col-sm-7"><b>Model</b></td>
-                <td class="col-sm-1 text-center"><b>Instances</b></td>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-2"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Short name</strong></td>
+                <td class="col-sm-2"><strong>Country</strong></td>
+                <td class="col-sm-2"><strong>Description</strong></td>
+                <td class="col-sm-1"><strong>Dev</strong></td>
+                <td class="col-sm-1"><strong>Cars</strong></td>
+                <td class="col-sm-1"><strong>Parts</strong></td>
             </tr>
 
-                {% for car in list %}
+                {% for company in companies %}
             <tr>
-                <td class="col-sm-1">{{ car.year }}</td>
-                <td class="col-sm-3">{{ car.brand }}</td>
-                <td class="col-sm-7"><a href="{{ url_for('detail_car', car_id=car.id) }}">{{ car.model }}</a></td>
-                <td class="col-sm-1 text-center">{{ car.no_of_instances() }}</td>
+                <td class="col-sm-1">{{ company.id }}</td>
+                <td class="col-sm-2"><a href="{{ url_for('detail_company', id=company.id) }}">{{ company.name_display }}</a></td>
+                <td class="col-sm-1">{{ company.get_name_short() }}</td>
+                <td class="col-sm-2">{{ company.country.name_display }}</td>
+                <td class="col-sm-2">{{ company.description }}</td>
+                <td class="col-sm-1">{{ company.is_game_company() }}</td>
+                <td class="col-sm-1">{{ company.is_car_company() }}</td>
+                <td class="col-sm-1">{{ company.is_part_company() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

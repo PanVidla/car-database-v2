@@ -5,6 +5,7 @@
     <!--  Heading  -->
     <div class="page-header">
         <h1>{{ heading }}</h1>
+        {% if company %}<span class="help-block">{{ company.description }}</span>{% endif %}
     </div>
 
     <!-- Submenu -->
@@ -18,6 +19,9 @@
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_companies_developers') }}">Developers</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_companies_car_manufacturers') }}">Car manufacturers</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_companies_car_part_manufacturers') }}">Part manufacturers</a></li>
+                        {% if company %}
+                        <li class="active"><a href="#">{{ company.name_display }}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

@@ -61,13 +61,13 @@ def edit_country(id):
         try:
             database.session.commit()
         except RuntimeError:
-            flash("There was a problem editing {}.", "danger")
-            return redirect(url_for("edit_country"))
+            flash("There was a problem editing {}.".format(country.name_display), "danger")
+            return redirect(url_for("edit_country", id=country.id))
 
         flash("{} ({}, {}) has been successfully edited.".format(country.name_display,
                                                                  country.name_full,
                                                                  country.get_name_short()), "success")
-        return redirect(url_for("overview_countries"))
+        return redirect(url_for("detail_country", id=country.id))
 
     return render_template("misc_countries_form.html",
                            title="Edit country",
@@ -101,7 +101,6 @@ def detail_country(id):
 
     country = Country.query.get(id)
     cars = country.cars.all()
-    companies = country.companies.all()
     locations = country.locations.all()
 
     return render_template("misc_countries_detail.html",
@@ -109,5 +108,4 @@ def detail_country(id):
                            heading="{}".format(country.name_full),
                            country=country,
                            cars=cars,
-                           companies=companies,
                            locations=locations)

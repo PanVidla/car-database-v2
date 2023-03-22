@@ -46,6 +46,50 @@ class Company(database.Model):
     texts = database.relationship('CompanyText', backref='company', lazy='dynamic')
     images = database.relationship('CompanyImage', backref='company', lazy='dynamic')
 
+    def get_ceased_to_exist(self):
+        return self.date_ceased_to_exist if self.date_ceased_to_exist != None else "n/a"
+
+    def get_established(self):
+        return self.date_established if self.date_established != None else "n/a"
+
+    def get_name_short(self):
+        return self.name_short if self.name_short is not (None or "") else "n/a"
+
+    def is_game_company(self):
+        return "✓" if self.is_game_developer is True else "x"
+
+    def is_car_company(self):
+        return "✓" if self.is_car_manufacturer is True else "x"
+
+    def is_part_company(self):
+        return "✓" if self.is_car_part_manufacturer is True else "x"
+
+    def edit_company_from_form(self, form):
+
+        form.populate_obj(self)
+
+        if form.country_id.data == -1:
+            self.country_id = None
+
+        if form.owner_id.data == -1:
+            self.owner_id = None
+
+        return self
+
+
+def create_company_from_form(form):
+
+    new_company = Company()
+    form.populate_obj(new_company)
+
+    if form.country_id.data == -1:
+        new_company.country_id = None
+
+    if form.owner_id.data == -1:
+        new_company.owner_id = None
+
+    return new_company
+
 
 # Represents a car competition (e.g. F1, GT3, NASCAR, WRC...)
 class Competition(database.Model):

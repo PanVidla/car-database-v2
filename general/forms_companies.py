@@ -21,8 +21,8 @@ class CompanyForm(FlaskForm):
     country_id = SelectField("Country", coerce=int)
 
     # Dates
-    date_established = DateField("Established", validators=[Optional()], format='%d-%m-%Y')
-    date_ceased_to_exist = DateField("Ceased to exist", validators=[Optional()], format='%d-%m-%Y')
+    date_established = DateField("Established", validators=[Optional()])
+    date_ceased_to_exist = DateField("Ceased to exist", validators=[Optional()])
 
     # Initialization
     def __init__(self, *args, **kwargs):
