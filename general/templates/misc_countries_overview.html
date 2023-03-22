@@ -1,0 +1,33 @@
+{% extends "misc_countries_base.html" %}
+
+{% block countries_content %}
+
+    <div>
+        <table class="table table-hover table-striped table-bordered table-condensed">
+
+            {% if countries == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no countries in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><b>ID</b></td>
+                <td class="col-sm-3"><b>Name</b></td>
+                <td class="col-sm-1"><b>Short name</b></td>
+                <td class="col-sm-7"><b>Full name</b></td>
+            </tr>
+
+                {% for country in countries %}
+            <tr>
+                <td class="col-sm-1">{{ country.id }}</td>
+                <td class="col-sm-3"><a href="{{ url_for('detail_country', id=country.id) }}">{{ country.name_display }}</a></td>
+                <td class="col-sm-1">{{ country.get_name_short() }}</td>
+                <td class="col-sm-7">{{ country.name_full }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

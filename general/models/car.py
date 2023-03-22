@@ -25,6 +25,7 @@ class Car(database.Model):
     model = database.Column(database.Unicode, index=True, nullable=False)
     name_display = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     name_short = database.Column(database.Unicode, nullable=True)
+    country_id = database.Column(database.Integer, database.ForeignKey("countries.id"), nullable=True)
     is_prototype = database.Column(database.Boolean, default=False, index=True, nullable=False)
     is_fictional = database.Column(database.Boolean, default=False, index=True, nullable=False)
     competitions = database.relationship('Competition', secondary="car_competition")

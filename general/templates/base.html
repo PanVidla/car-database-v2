@@ -19,7 +19,12 @@
                     <li><a class="hover-underline-animation" href="{{ url_for('overview_cars') }}">Cars</a></li>
                     <li><a class="hover-underline-animation" href="{{ url_for('overview_instances') }}">Instances</a></li>
                     <li><a class="hover-underline-animation" href="{{ url_for('overview_companies') }}">Companies</a></li>
-                    <li><a class="hover-underline-animation" href="#">Miscellaneous</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Miscellaneous <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{{ url_for('overview_countries') }}">Countries</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -32,7 +37,7 @@
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert" role="alert">{{ message }}</div>
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
                 {% endfor %}
             {% endif %}
         {% endwith %}

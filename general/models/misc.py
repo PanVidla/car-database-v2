@@ -93,9 +93,18 @@ class Country(database.Model):
 
     # Relationships
     companies = database.relationship('Company', backref='country', lazy='dynamic')
+    cars = database.relationship('Car', backref='country', lazy='dynamic')
     texts = database.relationship('CountryText', backref='country', lazy='dynamic')
     images = database.relationship('CountryImage', backref='country', lazy='dynamic')
     locations = database.relationship('Location', backref='country', lazy='dynamic')
+
+    def get_name_short(self):
+
+        if self.name_short == "":
+            return "n/a"
+
+        else:
+            return self.name_short
 
 
 class Location(database.Model):

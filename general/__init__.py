@@ -15,7 +15,7 @@ migrate = Migrate(cardb, database)
 from general.models import blueprint as models_general_blueprint
 cardb.register_blueprint(models_general_blueprint)
 
-from general import routes_general, routes_companies
+from general import routes_general, routes_companies, routes_misc
 
 # Crazy Taxi
 from games.crazy_taxi import blueprint as crazy_taxi_blueprint
