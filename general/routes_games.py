@@ -4,9 +4,10 @@ from flask import render_template, flash, redirect, url_for
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
     GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm, GameStateAddForm, GameStateEditForm, \
-    GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm
+    GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm, GameActivityNonInitialAddForm, \
+    GameStateChangeForm
 from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form, GameState, GameActivity, \
-    create_initial_activity_from_form, GamePlatform
+    create_initial_activity_from_form, GamePlatform, create_non_initial_activity_from_form
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -157,6 +158,82 @@ def add_game_activity(id):
                            heading="Add game",
                            form=form,
                            viewing="games")
+
+
+# Add activity (not to be confused with add_game_activity, which only adds the initial activity)
+@cardb.route("/games/activities/add-activity/<game_id>", methods=['GET', 'POST'])
+def add_activity(game_id):
+
+    game = Game.query.get(game_id)
+    form = GameActivityNonInitialAddForm()
+
+    if form.validate_on_submit():
+
+        new_activity = create_non_initial_activity_from_form(form, game)
+
+        if new_activity == -1:
+            flash("An activity for this game with the same order number already exists!", "danger")
+            return redirect(url_for("add_activity", game_id=game.id))
+
+        try:
+            database.session.add(new_activity)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the activity \"{}\" to the game.".format(new_activity.name), "danger")
+            return redirect(url_for("add_activity", game_id=game.id))
+
+        flash("The activity \"{}\" has been successfully added to {}.".format(new_activity.name, game.name_display), "success")
+        return redirect(url_for("detail_game", id=game.id))
+
+    return render_template("games_form_3_non_initial_activity.html",
+                           title="Add game",
+                           heading="Add game",
+                           form=form,
+                           viewing="games")
+
+
+# Next activity
+@cardb.route("/games/activities/next-activity/<game_id>", methods=['GET', 'POST'])
+def next_activity(game_id):
+
+    game = Game.query.get(game_id)
+    active_activity = GameActivity.query.filter(GameActivity.game_id == game_id, GameActivity.is_active == True).first()
+    next_activity = GameActivity.query.filter(GameActivity.game_id == game_id, GameActivity.order == active_activity.order + 1).first()
+
+    if next_activity is None:
+        next_activity = GameActivity.query.filter(GameActivity.game_id == game_id, GameActivity.order == 1).first()
+
+    active_activity.is_active = False
+    next_activity.is_active = True
+
+    try:
+        database.session.commit()
+    except RuntimeError:
+        flash("Next activity couldn't be selected.", "danger")
+
+    return redirect(url_for("detail_game", id=game.id))
+
+
+@cardb.route("/games/activities/previous-activity/<game_id>", methods=['GET', 'POST'])
+def previous_activity(game_id):
+
+    game = Game.query.get(game_id)
+    active_activity = GameActivity.query.filter(GameActivity.game_id == game_id, GameActivity.is_active == True).first()
+    previous_activity = GameActivity.query.filter(GameActivity.game_id == game_id, GameActivity.order == active_activity.order - 1).first()
+
+    if previous_activity is None:
+        previous_activity = GameActivity.query.filter(GameActivity.game_id == game_id).order_by(GameActivity.order.desc()).all()
+        previous_activity = previous_activity[0]
+
+    active_activity.is_active = False
+    previous_activity.is_active = True
+
+    try:
+        database.session.commit()
+    except RuntimeError:
+        flash("Next activity couldn't be selected.", "danger")
+
+    return redirect(url_for("detail_game", id=game.id))
 
 
 # Add game series
@@ -454,6 +531,23 @@ def edit_state(id):
                            viewing="states")
 
 
+# Change state
+@cardb.route("/games/state/change-state/<game_id>/<state_id>", methods=['GET', 'POST'])
+def change_state(game_id, state_id):
+
+    game = Game.query.get(id)
+    game.game_state_id = state_id
+
+    try:
+        database.session.commit()
+    except RuntimeError:
+        flash("There was a problem changing the state for {}.".format(game.name_display), "danger")
+        return redirect(url_for("detail_game", id=game.id))
+
+    flash("The state of {} has been successfully changed.".format(game.name), "success")
+    return redirect(url_for("detail_game", id=game.id))
+
+
 # Delete game
 @cardb.route("/games/delete-game/<id>", methods=['GET', 'POST'])
 def delete_game(id):
@@ -557,12 +651,27 @@ def delete_state(id):
 def detail_game(id):
 
     game = Game.query.get(id)
+    change_state_form = GameStateChangeForm()
+
+    if change_state_form.submit_change_state.data and change_state_form.validate():
+
+        game.game_state_id = change_state_form.id.data
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem changing the state for {}.".format(game.name_display), "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        flash("The state of {} has been successfully changed to \"{}\".".format(game.name_display, game.state.name), "success")
+        return redirect(url_for("detail_game", id=game.id))
 
     return render_template("games_detail.html",
                            title="{}".format(game.name_display),
                            heading="{}".format(game.name_full),
                            game=game,
-                           viewing="games")
+                           viewing="games",
+                           change_state_form=change_state_form)
 
 
 # Game series detail

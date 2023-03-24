@@ -42,6 +42,7 @@ class Game(database.Model):
     no_of_times_played = database.Column(database.Integer, default=0, nullable=False)
 
     # Relationships
+    instances = database.relationship('Instance', backref='game', lazy='dynamic')
     texts = database.relationship('GameText', backref='game', lazy='dynamic')
     images = database.relationship('GameImage', backref='game', lazy='dynamic')
 
@@ -94,6 +95,23 @@ class Game(database.Model):
         else:
             datetime_string += ":{}".format(self.datetime_edited.minute)
         return datetime_string
+
+    def get_description(self):
+
+        description_string = ""
+
+        if self.genre.name == ("arcade" or "arcade-simcade"):
+            description_string += "An"
+
+        else:
+            description_string += "A"
+
+        description_string += " {} game from {} developed by {} for {}".format(self.genre.name,
+                                                                               self.get_year_released(),
+                                                                               self.developer.name_display,
+                                                                               self.get_platforms())
+
+        return description_string
 
     def get_last_played(self):
         if self.datetime_played is not None:
@@ -230,13 +248,39 @@ class GameActivity(database.Model):
     game_id = database.Column(database.Integer, database.ForeignKey("games.id"), nullable=False)
 
 
+def activity_with_same_order_number_exists(game, order):
+
+    activity = GameActivity.query.filter(GameActivity.game_id == game.id, GameActivity.order == order).first()
+
+    if activity is None:
+        return False
+    else:
+        return True
+
+
 def create_initial_activity_from_form(form, game):
+
+    if activity_with_same_order_number_exists(game, form.order.data):
+        return -1
 
     new_activity = GameActivity()
     form.populate_obj(new_activity)
     new_activity.game_id = game.id
     new_activity.order = 1
     new_activity.is_active = True
+
+    return new_activity
+
+
+def create_non_initial_activity_from_form(form, game):
+
+    if activity_with_same_order_number_exists(game, form.order.data):
+        return -1
+
+    new_activity = GameActivity()
+    form.populate_obj(new_activity)
+    new_activity.game_id = game.id
+    new_activity.is_active = False
 
     return new_activity
 

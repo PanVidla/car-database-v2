@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, DateField, SubmitField, IntegerField, SelectMultipleField
 from wtforms.validators import DataRequired, Optional, NumberRange
 
-from general.models.game import GameSeries, GameGenre, Platform
+from general.models.game import GameSeries, GameGenre, Platform, GameState
 from general.models.misc import Company
 
 
@@ -79,7 +79,7 @@ class GameActivityForm(FlaskForm):
 
 
 class GameActivityNonInitialForm(GameActivityForm):
-    order = StringField("Order", validators=[DataRequired(), NumberRange(min=1)])
+    order = IntegerField("Order", validators=[DataRequired(), NumberRange(min=1)])
 
 
 class GameActivityInitialAddForm(GameActivityForm):
@@ -107,6 +107,20 @@ class GameStateAddForm(GameStateForm):
 
 class GameStateEditForm(GameStateForm):
     submit = SubmitField("Edit state")
+
+
+class GameStateChangeForm(FlaskForm):
+
+    id = SelectField("State", coerce=int)
+    submit_change_state = SubmitField("Change state")
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(GameStateChangeForm, self).__init__(*args, **kwargs)
+
+        self.id.choices = [(state.id, "{}".format(state.name))
+                            for state
+                            in GameState.query.order_by(GameState.order.asc()).all()]
 
 
 # Game series

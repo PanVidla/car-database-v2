@@ -5,6 +5,7 @@
     <!--  Heading  -->
     <div class="page-header">
         <h1>{{ heading }}</h1>
+        {% if game %}<span class="help-block">{{ game.get_description() }}</span>{% endif %}
     </div>
 
     <!-- Submenu -->

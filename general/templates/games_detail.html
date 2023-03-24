@@ -1,4 +1,5 @@
 {% extends "games_base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block games_content %}
 
@@ -11,6 +12,8 @@
                         {% if game %}
                         <li><a href="{{ url_for('edit_game_general', id=game.id) }}"><button type="button" class="btn btn-info">Edit general info</button></a></li>
                         <li><a href="{{ url_for('edit_game_platforms', id=game.id) }}"><button type="button" class="btn btn-info">Edit platforms</button></a></li>
+                        <li><a href="{{ url_for('add_activity', game_id=game.id) }}"><button type="button" class="btn btn-info">Add activity</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeStateModal">Change state</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete game</button></a></li>
                         {% endif %}
                     </ul>
@@ -72,8 +75,16 @@
       <div class="panel-heading">
         <h3 class="panel-title">Activities</h3>
       </div>
+      {% if game.activities.all() != [] %}
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('previous_activity', game_id=game.id) }}"><button type="button" class="btn btn-info">Previous</button></a></li>
+                <li><a href="{{ url_for('next_activity', game_id=game.id) }}"><button type="button" class="btn btn-info">Next</button></a></li>
+            </ul>
+        </div>
+      {% endif %}
       <div class="table-responsive">
-          <table class="table table-striped table-bordered table-condensed">
+          <table class="table table-bordered table-condensed">
               {% if game.activities.all() == [] %}
               <tr>
                   <td class="text-center"><strong>This game doesn't have any activities.</strong></td>
@@ -99,13 +110,29 @@
       </div>
     </div>
 
+    <!--  There should be instances here  -->
+
     <!--  Modals  -->
+    <div class="modal fade" id="changeStateModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="deleteModalLabel">Change state</h4>
+          </div>
+          <div class="modal-body">
+              {{ wtf.quick_form(change_state_form, button_map={"submit_change_state": "info"}) }}
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Delete game</h4>
+            <h4 class="modal-title" id="changeStateModalLabel">Delete game</h4>
           </div>
           <div class="modal-body">
               <p>Are you sure you want to delete {{ game.name_display }}? If you delete this game, it will go to deleted mode, but won't break the database.</p>
