@@ -301,6 +301,23 @@ class GameGenre(database.Model):
     # Relationships
     games = database.relationship('Game', backref='genre', lazy='dynamic')
 
+    def get_css_name(self):
+
+        if self.name == "arcade":
+            return "genre-arcade"
+
+        if self.name == "arcade-simcade":
+            return "genre-arcade-simcade"
+
+        if self.name == "simcade":
+            return "genre-simcade"
+
+        if self.name == "simcade-simulation":
+            return "genre-simcade-simulation"
+
+        if self.name == "simulation":
+            return "genre-simulation"
+
 
 # Represents a series of games (e.g. Need for Speed, Forza, Test Drive...)
 class GameSeries(database.Model):
@@ -333,6 +350,26 @@ class GameState(database.Model):
 
     # Relationships
     games = database.relationship('Game', backref='state', lazy='dynamic')
+
+    def get_css_name(self):
+
+        if self.name == "not started":
+            return "state-not-started"
+
+        if self.name == "in-progress":
+            return "state-in-progress"
+
+        if self.name == "complete":
+            return "state-complete"
+
+        if self.name == "100%":
+            return "state-100"
+
+        if self.name == "paused":
+            return "state-paused"
+
+        if self.name == "aborted":
+            return "state-aborted"
 
 
 # Represents a video game platform (e.g. PC, PlayStation 3, Android...)

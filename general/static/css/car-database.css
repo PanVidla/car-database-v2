@@ -27,6 +27,61 @@
     background: #5bc0de;
 }
 
+.genre-arcade {
+    color: #ffffff;
+    background: #d91c07;
+}
+
+.genre-arcade-simcade {
+    color: #ffffff;
+    background: #ed6402;
+}
+
+.genre-simcade {
+    color: #ffffff;
+    background: #ed8002;
+}
+
+.genre-simcade-simulation {
+    color: #ffffff;
+    background: #edaf02;
+}
+
+.genre-simulation {
+    color: #ffffff;
+    background: #d6b706;
+}
+
+.state-100 {
+    color: #ffffff;
+    background: #d91c07;
+}
+
+.state-aborted {
+    color: #ffffff;
+    background: #000000;
+}
+
+.state-complete {
+    color: #ffffff;
+    background: #d6b706;
+}
+
+.state-in-progress {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
+.state-not-started {
+    color: #ffffff;
+    background: #b1b2b3;
+}
+
+.state-paused {
+    color: #ffffff;
+    background: #b1b2b3;
+}
+
 .true-neutral {
     color: #ffffff;
     background: #5bc0de;
