@@ -3,8 +3,8 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
-    GameGenreAddForm, GameGenreEditForm
-from general.models.game import Game, Platform, GameSeries, GameGenre
+    GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm
+from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -54,6 +54,67 @@ def overview_platforms():
                            heading="All platforms",
                            platforms=platforms,
                            viewing="platforms")
+
+
+# Add game (general information)
+@cardb.route("/games/add-game/general", methods=['GET', 'POST'])
+def add_game_general():
+
+    form = GameGeneralAddForm()
+
+    if form.validate_on_submit():
+
+        new_game = create_game_from_form(form)
+
+        if new_game == -1:
+            return redirect(url_for("overview_games"))
+
+        try:
+            database.session.add(new_game)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new game to the database.", "danger")
+            return redirect(url_for("add_game_general"))
+
+        flash("{} ({}, {}) has been successfully added to the database.".format(new_game.name_display,
+                                                                                new_game.name_full,
+                                                                                new_game.name_short), "success")
+        return redirect(url_for("add_game_platforms", id=new_game.id))
+
+    return render_template("games_form_1_general.html",
+                           title="Add game",
+                           heading="Add game",
+                           form=form,
+                           viewing="games")
+
+
+# Add game (platform information)
+@cardb.route("/games/add-game/platforms/<id>", methods=['GET', 'POST'])
+def add_game_platforms(id):
+
+    game = Game.query.get(id)
+    form = GamePlatformsAddForm()
+
+    if form.validate_on_submit():
+
+        game.set_platforms(form.platforms.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding platforms to the game.", "danger")
+            return redirect(url_for("add_game_platforms"))
+
+        for platform in game.platforms:
+            flash("{} now exists on platform {}.".format(game.name_display, platform.name_display), "success")
+
+        return redirect(url_for("overview_games"))
+
+    return render_template("games_form_2_platforms.html",
+                           title="Add game",
+                           heading="Add game",
+                           form=form,
+                           viewing="games")
 
 
 # Add game series

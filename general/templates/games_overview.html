@@ -18,7 +18,7 @@
                 <td class="col-sm-2"><strong>Developer</strong></td>
                 <td class="col-sm-1"><strong>Genre</strong></td>
                 <td class="col-sm-1"><strong>Status</strong></td>
-                <td class="col-sm-1"><strong>No. of instances</strong></td>
+                <td class="col-sm-1"><strong>Instances</strong></td>
                 <td class="col-sm-1"><strong>Last played</strong></td>
             </tr>
 
@@ -27,12 +27,12 @@
                 <td class="col-sm-1">{{ game.id }}</td>
                 <td class="col-sm-3">{{ game.name_display }}</strong></td>
                 <td class="col-sm-1">{{ game.name_short }}</strong></td>
-                <td class="col-sm-1">year</td>
-                <td class="col-sm-2">developer</td>
-                <td class="col-sm-1">genre</td>
+                <td class="col-sm-1">{{ game.get_year_released() }}</td>
+                <td class="col-sm-2">{{ game.developer.name_display }}</td>
+                <td class="col-sm-1">{{ game.genre.name }}</td>
                 <td class="col-sm-1">status</td>
                 <td class="col-sm-1">{{ game.no_of_instances }}</td>
-                <td class="col-sm-1">last_played</td>
+                <td class="col-sm-1">{{ game.get_last_played() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

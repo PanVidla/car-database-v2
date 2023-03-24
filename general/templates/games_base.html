@@ -15,7 +15,7 @@
                     <ul class="nav navbar-nav">
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_games') }}">All games</a></li>
                         {% if viewing == "games" %}
-                        <li><a class="hover-underline-animation" href="#"><strong>Add game</strong></a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_game_general') }}"><strong>Add game</strong></a></li>
                         {% endif %}
                         {% if viewing == "platforms" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_platform') }}"><strong>Add platform</strong></a></li>

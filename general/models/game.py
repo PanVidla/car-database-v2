@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask import flash, redirect, url_for
 from sqlalchemy.orm import backref
 
 from general import database
@@ -43,6 +44,66 @@ class Game(database.Model):
     # Relationships
     texts = database.relationship('GameText', backref='game', lazy='dynamic')
     images = database.relationship('GameImage', backref='game', lazy='dynamic')
+
+    def get_last_played(self):
+        return self.datetime_played if self.datetime_played is not None else "never"
+
+    def get_year_released(self):
+        return self.date_released.year if self.date_released is not None else "n/a"
+
+    def set_platforms(self, platform_ids):
+
+        # Delete the old game-platform associations
+        game_platform_old = GamePlatform.query.filter(GamePlatform.game_id == self.id).all()
+
+        for game_platform_association in game_platform_old:
+
+            try:
+                database.session.delete(game_platform_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_display, game_platform_association.platform.name_display), "danger")
+
+            database.session.commit()
+
+        # Create new game-platform associations
+        for platform_id in platform_ids:
+
+            try:
+                game_platform_association = GamePlatform(game_id=self.id, platform_id=platform_id)
+                database.session.add(game_platform_association)
+
+            except RuntimeError:
+                platform = Platform.query.get(platform_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_display, platform.name_display), "danger")
+
+            database.session.commit()
+
+
+def create_game_from_form(form):
+
+    new_game = Game()
+    form.populate_obj(new_game)
+
+    # If the game is not in a series
+    if form.game_series_id.data == -1:
+        new_game.game_series_id = None
+        new_game.order_in_series = None
+
+    else:
+        # If the game in the same series with the same order exists
+        if Game.query.filter(
+                Game.game_series_id == form.game_series_id.data,
+                Game.order_in_series == form.game_series_id.data).first() is not None:
+            flash("There is already a game in the same series with the same order in the series!", "warning")
+            return -1
+
+    # If the game is in a series, but order in series is not filled out
+    if (form.game_series_id.data != -1) and (form.order_in_series.data == -1):
+        flash("If the game is a part of a series, the order in the series needs to be filled out!", "warning")
+        return -1
+
+    return new_game
 
 
 # Serves to keep track of what should be played next in the game (e.g. multiplayer (co-op), tournament...)

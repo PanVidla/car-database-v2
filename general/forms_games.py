@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, DateField, SubmitField, IntegerField
+from wtforms import StringField, SelectField, DateField, SubmitField, IntegerField, SelectMultipleField
 from wtforms.validators import DataRequired, Optional, NumberRange
 
-from general.models.game import GameSeries, GameGenre
+from general.models.game import GameSeries, GameGenre, Platform
 from general.models.misc import Company
 
 
-class GameForm(FlaskForm):
+# Game
+class GameGeneralForm(FlaskForm):
 
     # General
     name_full = StringField("Full name", validators=[DataRequired()])
@@ -15,12 +16,13 @@ class GameForm(FlaskForm):
 
     developer_id = SelectField("Developed by", coerce=int)
     game_series_id = SelectField("Part of series", coerce=int)
+    order_in_series = IntegerField("No. in series", validators=[Optional(), NumberRange(min=1)])
     date_released = DateField("Date of release", validators=[Optional()])
     genre_id = SelectField("Genre", coerce=int)
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(GameForm, self).__init__(*args, **kwargs)
+        super(GameGeneralForm, self).__init__(*args, **kwargs)
 
         self.developer_id.choices = [(company.id, "{}".format(company.name_display))
                                       for company
@@ -38,6 +40,38 @@ class GameForm(FlaskForm):
                                  in GameGenre.query.order_by(GameGenre.name.asc()).all()]
 
 
+class GameGeneralAddForm(GameGeneralForm):
+    submit = SubmitField("Add game")
+
+
+class GameGeneralEditForm(GameGeneralForm):
+    submit = SubmitField("Edit game")
+
+
+class GamePlatformsForm(FlaskForm):
+
+    # General
+    platforms = SelectMultipleField("Platforms", validators=[DataRequired()], coerce=int)
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(GamePlatformsForm, self).__init__(*args, **kwargs)
+
+        self.platforms.choices = [(platform.id, "{}".format(platform.name_display))
+                                   for platform
+                                   in Platform.query
+                                   .order_by(Platform.name_display.asc()).all()]
+
+
+class GamePlatformsAddForm(GamePlatformsForm):
+    submit = SubmitField("Add platforms")
+
+
+class GamePlatformsEditForm(GamePlatformsForm):
+    submit = SubmitField("Add platforms")
+
+
+# Game series
 class GameSeriesForm(FlaskForm):
 
     # General
@@ -54,6 +88,7 @@ class GameSeriesEditForm(GameSeriesForm):
     submit = SubmitField("Edit game series")
 
 
+# Genre
 class GameGenreForm(FlaskForm):
 
     name = StringField("Name", validators=[DataRequired()])
@@ -69,6 +104,7 @@ class GameGenreEditForm(GameGenreForm):
     submit = SubmitField("Edit genre")
 
 
+# Platform
 class PlatformForm(FlaskForm):
 
     # General
