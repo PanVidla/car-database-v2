@@ -25,12 +25,12 @@
                 {% for game in games %}
             <tr>
                 <td class="col-sm-1">{{ game.id }}</td>
-                <td class="col-sm-3">{{ game.name_display }}</strong></td>
-                <td class="col-sm-1">{{ game.name_short }}</strong></td>
+                <td class="col-sm-3"><a href="{{ url_for('detail_game', id=game.id) }}">{{ game.name_display }}</a></td>
+                <td class="col-sm-1">{{ game.name_short }}</td>
                 <td class="col-sm-1">{{ game.get_year_released() }}</td>
                 <td class="col-sm-2">{{ game.developer.name_display }}</td>
                 <td class="col-sm-1">{{ game.genre.name }}</td>
-                <td class="col-sm-1">status</td>
+                <td class="col-sm-1">{{ game.get_state() }}</td>
                 <td class="col-sm-1">{{ game.no_of_instances }}</td>
                 <td class="col-sm-1">{{ game.get_last_played() }}</td>
             </tr>

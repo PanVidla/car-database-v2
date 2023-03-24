@@ -22,6 +22,11 @@
   transform-origin: bottom left;
 }
 
+.active-line {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
 .true-neutral {
     color: #ffffff;
     background: #5bc0de;

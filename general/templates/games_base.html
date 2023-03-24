@@ -26,9 +26,13 @@
                         {% if viewing == "game_series" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_game_series') }}"><strong>Add game series</strong></a></li>
                         {% endif %}
+                        {% if viewing == "states" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_state') }}"><strong>Add state</strong></a></li>
+                        {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_game_series') }}">Game series</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_genres') }}">Genres</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_platforms') }}">Platforms</a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_states') }}">States</a></li>
                         {% if platform %}
                         <li class="active"><a href="#">{{ platform.name_display }}</a></li>
                         {% endif %}

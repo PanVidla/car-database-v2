@@ -45,8 +45,108 @@ class Game(database.Model):
     texts = database.relationship('GameText', backref='game', lazy='dynamic')
     images = database.relationship('GameImage', backref='game', lazy='dynamic')
 
+    def edit_game_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # If the game is not in a series
+        if form.game_series_id.data == -1:
+            self.game_series_id = None
+            self.order_in_series = None
+
+        else:
+            # If the game in the same series with the same order exists
+            if Game.query.filter(
+                    Game.game_series_id == form.game_series_id.data,
+                    Game.order_in_series == form.game_series_id.data).first() is not None:
+                flash("There is already a game in the same series with the same order in the series!", "warning")
+                return -1
+
+        # If the game is in a series, but order in series is not filled out
+        if (form.game_series_id.data != -1) and (form.order_in_series.data == -1):
+            flash("If the game is a part of a series, the order in the series needs to be filled out!", "warning")
+            return -1
+
+        self.datetime_edited = datetime.utcnow()
+
+        return 0
+
+    def get_datetime_added(self):
+        datetime_string = "" if self.datetime_added is not None else "n/a"
+        datetime_string += "{}".format(self.datetime_added.day)
+        datetime_string += "/{}".format(self.datetime_added.month)
+        datetime_string += "/{}".format(self.datetime_added.year)
+        datetime_string += " {}".format(self.datetime_added.hour)
+        if self.datetime_added.minute < 10:
+            datetime_string += ":0{}".format(self.datetime_added.minute)
+        else:
+            datetime_string += ":{}".format(self.datetime_added.minute)
+        return datetime_string
+
+    def get_datetime_edited(self):
+        datetime_string = "" if self.datetime_edited is not None else "n/a"
+        datetime_string += "{}".format(self.datetime_edited.day)
+        datetime_string += "/{}".format(self.datetime_edited.month)
+        datetime_string += "/{}".format(self.datetime_edited.year)
+        datetime_string += " {}".format(self.datetime_edited.hour)
+        if self.datetime_edited.minute < 10:
+            datetime_string += ":0{}".format(self.datetime_edited.minute)
+        else:
+            datetime_string += ":{}".format(self.datetime_edited.minute)
+        return datetime_string
+
     def get_last_played(self):
-        return self.datetime_played if self.datetime_played is not None else "never"
+        if self.datetime_played is not None:
+            datetime_string = ""
+            datetime_string += "{}".format(self.datetime_played.day)
+            datetime_string += "/{}".format(self.datetime_played.month)
+            datetime_string += "/{}".format(self.datetime_played.year)
+            datetime_string += " {}".format(self.datetime_played.hour)
+            if self.datetime_played.minute < 10:
+                datetime_string += ":0{}".format(self.datetime_played.minute)
+            else:
+                datetime_string += ":{}".format(self.datetime_played.minute)
+
+            datetime_string += " ({}x played)".format(self.no_of_times_played)
+
+        else:
+            datetime_string = "never"
+
+        return datetime_string
+
+    def get_date_released(self):
+        if self.date_released is not None:
+            date_string = "{}/{}/{}".format(self.date_released.day, self.date_released.month, self.date_released.year)
+        else:
+            date_string = "n/a"
+
+        return date_string
+
+    def get_platforms(self):
+
+        game_platform_associations = GamePlatform.query.filter(GamePlatform.game_id == self.id).all()
+
+        if game_platform_associations == []:
+            return "n/a"
+
+        platform_string = ""
+        first = True
+
+        for game_platform_association in game_platform_associations:
+            if first is not True:
+                platform_string += " / "
+
+            platform_string += game_platform_association.platform.name_short
+
+            first = False
+
+        return platform_string
+
+    def get_state(self):
+        return self.state.name if self.state is not None else "n/a"
+
+    def get_series(self):
+        return self.series.name if self.series is not None else "n/a"
 
     def get_year_released(self):
         return self.date_released.year if self.date_released is not None else "n/a"
@@ -79,11 +179,17 @@ class Game(database.Model):
 
             database.session.commit()
 
+        self.datetime_edited = datetime.utcnow()
+
 
 def create_game_from_form(form):
 
     new_game = Game()
     form.populate_obj(new_game)
+
+    # Assign a base game state
+    initial_game_state = GameState.query.order_by(GameState.order.asc()).first()
+    new_game.game_state_id = initial_game_state.id
 
     # If the game is not in a series
     if form.game_series_id.data == -1:
@@ -122,6 +228,17 @@ class GameActivity(database.Model):
 
     # Relationships
     game_id = database.Column(database.Integer, database.ForeignKey("games.id"), nullable=False)
+
+
+def create_initial_activity_from_form(form, game):
+
+    new_activity = GameActivity()
+    form.populate_obj(new_activity)
+    new_activity.game_id = game.id
+    new_activity.order = 1
+    new_activity.is_active = True
+
+    return new_activity
 
 
 # Represents a (racing) game genre (e.g. arcade, simcade, simulation...)

@@ -68,7 +68,45 @@ class GamePlatformsAddForm(GamePlatformsForm):
 
 
 class GamePlatformsEditForm(GamePlatformsForm):
-    submit = SubmitField("Add platforms")
+    submit = SubmitField("Edit platforms")
+
+
+class GameActivityForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+    description = StringField("Description", validators=[Optional()])
+
+
+class GameActivityNonInitialForm(GameActivityForm):
+    order = StringField("Order", validators=[DataRequired(), NumberRange(min=1)])
+
+
+class GameActivityInitialAddForm(GameActivityForm):
+    submit = SubmitField("Add activity")
+
+
+class GameActivityNonInitialAddForm(GameActivityNonInitialForm):
+    submit = SubmitField("Add activity")
+
+
+class GameActivityEditForm(GameActivityNonInitialForm):
+    submit = SubmitField("Edit activity")
+
+
+class GameStateForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+    order = IntegerField("Order", validators=[DataRequired(), NumberRange(min=1)])
+
+
+class GameStateAddForm(GameStateForm):
+    submit = SubmitField("Add state")
+
+
+class GameStateEditForm(GameStateForm):
+    submit = SubmitField("Edit state")
 
 
 # Game series

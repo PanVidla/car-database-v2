@@ -3,8 +3,10 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
-    GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm
-from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form
+    GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm, GameStateAddForm, GameStateEditForm, \
+    GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm
+from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form, GameState, GameActivity, \
+    create_initial_activity_from_form, GamePlatform
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -54,6 +56,18 @@ def overview_platforms():
                            heading="All platforms",
                            platforms=platforms,
                            viewing="platforms")
+
+
+@cardb.route("/games/states", methods=['GET'])
+def overview_states():
+
+    states = GameState.query.order_by(GameState.order.asc()).all()
+
+    return render_template("games_overview_states.html",
+                           title="Platforms",
+                           heading="All platforms",
+                           states=states,
+                           viewing="states")
 
 
 # Add game (general information)
@@ -108,9 +122,37 @@ def add_game_platforms(id):
         for platform in game.platforms:
             flash("{} now exists on platform {}.".format(game.name_display, platform.name_display), "success")
 
-        return redirect(url_for("overview_games"))
+        return redirect(url_for("add_game_activity", id=game.id))
 
     return render_template("games_form_2_platforms.html",
+                           title="Add game",
+                           heading="Add game",
+                           form=form,
+                           viewing="games")
+
+
+# Add game (initial activity)
+@cardb.route("/games/add-game/activities/<id>", methods=['GET', 'POST'])
+def add_game_activity(id):
+
+    game = Game.query.get(id)
+    form = GameActivityInitialAddForm()
+
+    if form.validate_on_submit():
+
+        new_activity = create_initial_activity_from_form(form, game)
+
+        try:
+            database.session.add(new_activity)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the initial activity \"{}\" to the game.".format(new_activity.name), "danger")
+            return redirect(url_for("add_game_activity", id=game.id))
+
+        flash("The initial activity \"{}\" has been successfully added to {}.".format(new_activity.name, game.name_display), "success")
+        return redirect(url_for("overview_games"))
+
+    return render_template("games_form_3_initial_activity.html",
                            title="Add game",
                            heading="Add game",
                            form=form,
@@ -204,6 +246,104 @@ def add_platform():
                            viewing="platforms")
 
 
+# Add state
+@cardb.route("/games/states/add-state", methods=['GET', 'POST'])
+def add_state():
+
+    form = GameStateAddForm()
+
+    if form.validate_on_submit():
+
+        new_state = GameState()
+        form.populate_obj(new_state)
+
+        try:
+            database.session.add(new_state)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new game state to the database.", "danger")
+            return redirect(url_for("add_state"))
+
+        flash("The state \"{}\" has been successfully added to the database.".format(new_state.name), "success")
+        return redirect(url_for("overview_states"))
+
+    return render_template("games_form_states.html",
+                           title="Add state",
+                           heading="Add game state",
+                           form=form,
+                           viewing="states")
+
+
+# Edit game (general information)
+@cardb.route("/games/edit-game/<id>/general", methods=['GET', 'POST'])
+def edit_game_general(id):
+
+    game = Game.query.get(id)
+    form = GameGeneralEditForm(obj=game)
+
+    if form.validate_on_submit():
+
+        edit_status = game.edit_game_from_form(form)
+
+        if edit_status == -1:
+            flash("There was a problem editing the game.", "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the game.", "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        flash("{} ({}, {}) has been successfully edited.".format(game.name_display,
+                                                                                game.name_full,
+                                                                                game.name_short), "success")
+        return redirect(url_for("detail_game", id=game.id))
+
+    return render_template("games_form_1_general.html",
+                           title="{}".format(game.name_display),
+                           heading="{}".format(game.name_full),
+                           form=form,
+                           viewing="games",
+                           editing=True)
+
+
+# Edit game (platforms)
+@cardb.route("/games/edit-game/<id>/platforms", methods=['GET', 'POST'])
+def edit_game_platforms(id):
+
+    game = Game.query.get(id)
+    platforms = GamePlatform.query.filter(GamePlatform.game_id == game.id).all()
+    platform_ids = []
+
+    for platform in platforms:
+        platform_ids += str(platform.platform_id)
+
+    form = GamePlatformsEditForm(platforms=platform_ids)
+
+    if form.validate_on_submit():
+
+        game.set_platforms(form.platforms.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the game.", "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        flash("{} ({}, {}) has been successfully edited.".format(game.name_display,
+                                                                 game.name_full,
+                                                                 game.name_short), "success")
+        return redirect(url_for("detail_game", id=game.id))
+
+    return render_template("games_form_2_platforms.html",
+                           title="{}".format(game.name_display),
+                           heading="{}".format(game.name_full),
+                           form=form,
+                           viewing="games",
+                           editing=True)
+
+
 # Edit game series
 @cardb.route("/games/game-series/edit-game-series/<id>", methods=['GET', 'POST'])
 def edit_game_series(id):
@@ -287,6 +427,57 @@ def edit_platform(id):
                            viewing="platforms")
 
 
+# Edit state
+@cardb.route("/games/state/edit-state/<id>", methods=['GET', 'POST'])
+def edit_state(id):
+
+    state = GameState.query.get(id)
+    form = GameStateEditForm(obj=state)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(state)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the state \"{}\".".format(state.name), "danger")
+            return redirect(url_for("edit_state", id=state.id))
+
+        flash("The state \"{}\" has been successfully edited.".format(state.name, "success"))
+        return redirect(url_for("detail_state", id=state.id))
+
+    return render_template("games_form_states.html",
+                           title="Edit state",
+                           heading="Edit state",
+                           form=form,
+                           viewing="states")
+
+
+# Delete game
+@cardb.route("/games/delete-game/<id>", methods=['GET', 'POST'])
+def delete_game(id):
+
+    game = Game.query.get(id)
+    game.is_deleted = True
+
+    # TODO: This method should also delete everything related to the game (instances, event records...)
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting {} ({}, {}).".format(game.name_display,
+                                                                      game.name_full,
+                                                                      game.name_short), "danger")
+        return redirect(url_for("detail_game", id=game.id))
+
+    flash("{} ({}, {}) has been successfully deleted.".format(game.name_display,
+                                                              game.name_full,
+                                                              game.name_short), "success")
+    return redirect(url_for("overview_games"))
+
+
 # Delete game series
 @cardb.route("/games/game-series/delete-game-series/<id>", methods=['GET', 'POST'])
 def delete_game_series(id):
@@ -343,6 +534,37 @@ def delete_platform(id):
     return redirect(url_for("overview_platforms"))
 
 
+# Delete state
+@cardb.route("/games/states/delete-state/<id>", methods=['GET', 'POST'])
+def delete_state(id):
+
+    state = GameState.query.get(id)
+
+    try:
+        database.session.delete(state)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the state \"{}\".".format(state.name), "danger")
+        return redirect(url_for("detail_state", id=state.id))
+
+    flash("The state \"{}\" has been successfully deleted.".format(state.name), "success")
+    return redirect(url_for("overview_states"))
+
+
+# Game detail
+@cardb.route("/games/detail/<id>", methods=['GET', 'POST'])
+def detail_game(id):
+
+    game = Game.query.get(id)
+
+    return render_template("games_detail.html",
+                           title="{}".format(game.name_display),
+                           heading="{}".format(game.name_full),
+                           game=game,
+                           viewing="games")
+
+
 # Game series detail
 @cardb.route("/games/game-series/detail/<id>", methods=['GET', 'POST'])
 def detail_game_series(id):
@@ -380,3 +602,16 @@ def detail_platform(id):
                            heading="{}".format(platform.name_full),
                            platform=platform,
                            viewing="platforms")
+
+
+# State detail
+@cardb.route("/games/states/detail/<id>", methods=['GET', 'POST'])
+def detail_state(id):
+
+    state = GameState.query.get(id)
+
+    return render_template("games_detail_state.html",
+                           title="{}".format(state.name),
+                           heading="{}".format(state.name),
+                           state=state,
+                           viewing="states")
