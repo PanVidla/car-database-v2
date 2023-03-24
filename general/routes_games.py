@@ -1,11 +1,13 @@
 # Overviews
+from datetime import datetime
+
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
     GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm, GameStateAddForm, GameStateEditForm, \
     GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm, GameActivityNonInitialAddForm, \
-    GameStateChangeForm
+    GameStateChangeForm, GameActivityEditForm
 from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form, GameState, GameActivity, \
     create_initial_activity_from_form, GamePlatform, create_non_initial_activity_from_form
 
@@ -421,6 +423,34 @@ def edit_game_platforms(id):
                            editing=True)
 
 
+# Edit activity
+@cardb.route("/games/activities/edit-activity/<id>", methods=['GET', 'POST'])
+def edit_activity(id):
+
+    activity = GameActivity.query.get(id)
+    form = GameActivityEditForm(obj=activity)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(activity)
+        activity.game.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing \"{}\".".format(activity.name), "danger")
+            return redirect(url_for("edit_activity", id=activity.id))
+
+        flash("Activity \"{}\" has been successfully edited.".format(activity.name, "success"))
+        return redirect(url_for("detail_game", id=activity.game_id))
+
+    return render_template("games_form_3_non_initial_activity.html",
+                           title="Edit activity",
+                           heading="Edit activity",
+                           form=form,
+                           viewing="games")
+
+
 # Edit game series
 @cardb.route("/games/game-series/edit-game-series/<id>", methods=['GET', 'POST'])
 def edit_game_series(id):
@@ -572,6 +602,25 @@ def delete_game(id):
     return redirect(url_for("overview_games"))
 
 
+# Delete activity
+@cardb.route("/games/activities/delete-activity/<id>", methods=['GET', 'POST'])
+def delete_activity(id):
+
+    activity = GameActivity.query.get(id)
+    activity.game.datetime_edited = datetime.utcnow()
+
+    try:
+        database.session.delete(activity)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting {}.".format(activity.name), "danger")
+        return redirect(url_for("detail_game", id=activity.game_id))
+
+    flash("Activity \"{}\" has been successfully deleted.".format(activity.name), "success")
+    return redirect(url_for("detail_game", id=activity.game_id))
+
+
 # Delete game series
 @cardb.route("/games/game-series/delete-game-series/<id>", methods=['GET', 'POST'])
 def delete_game_series(id):
@@ -651,11 +700,13 @@ def delete_state(id):
 def detail_game(id):
 
     game = Game.query.get(id)
+    activities = GameActivity.query.filter(GameActivity.game_id == game.id).order_by(GameActivity.order.asc()).all()
     change_state_form = GameStateChangeForm()
 
     if change_state_form.submit_change_state.data and change_state_form.validate():
 
         game.game_state_id = change_state_form.id.data
+        game.datetime_edited = datetime.utcnow()
 
         try:
             database.session.commit()
@@ -671,7 +722,8 @@ def detail_game(id):
                            heading="{}".format(game.name_full),
                            game=game,
                            viewing="games",
-                           change_state_form=change_state_form)
+                           change_state_form=change_state_form,
+                           activities=activities)
 
 
 # Game series detail

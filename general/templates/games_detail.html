@@ -94,15 +94,17 @@
                 <td class="col-sm-1"><strong>ID</strong></td>
                 <td class="col-sm-1"><strong>Order</strong></td>
                 <td class="col-sm-2"><strong>Name</strong></td>
-                <td class="col-sm-8"><strong>Description</strong></td>
+                <td class="col-sm-7"><strong>Description</strong></td>
+                <td class="col-sm-1 text-center"><strong>Controls</strong></td>
               </tr>
 
-                {% for activity in game.activities %}
+                {% for activity in activities %}
               <tr class="{% if activity.is_active %}active-line{% endif %}">
                 <td class="col-sm-1">{{ activity.id }}</td>
                 <td class="col-sm-1">{{ activity.order }}</td>
                 <td class="col-sm-2">{{ activity.name }}</td>
-                <td class="col-sm-8">{{ activity.description }}</strong></td>
+                <td class="col-sm-7">{{ activity.description }}</td>
+                  <td class="col-sm-1 text-center"><a href="{{ url_for('edit_activity', id=activity.id) }}">[edit]</a> <a href="{{ url_for('delete_activity', id=activity.id) }}">[x]</a></td>
               </tr>
                 {% endfor %}
               {% endif %}
@@ -113,12 +115,12 @@
     <!--  There should be instances here  -->
 
     <!--  Modals  -->
-    <div class="modal fade" id="changeStateModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="changeStateModal" tabindex="-1" role="dialog" aria-labelledby="changeStateModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="deleteModalLabel">Change state</h4>
+            <h4 class="modal-title" id="changeStateModalLabel">Change state</h4>
           </div>
           <div class="modal-body">
               {{ wtf.quick_form(change_state_form, button_map={"submit_change_state": "info"}) }}
@@ -132,7 +134,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="changeStateModalLabel">Delete game</h4>
+            <h4 class="modal-title" id="deleteModalLabel">Delete game</h4>
           </div>
           <div class="modal-body">
               <p>Are you sure you want to delete {{ game.name_display }}? If you delete this game, it will go to deleted mode, but won't break the database.</p>
