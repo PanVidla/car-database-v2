@@ -1,0 +1,29 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if aspiration_types == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no aspiration types in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+            </tr>
+
+                {% for aspiration in aspiration_types %}
+            <tr>
+                <td class="col-sm-1">{{ aspiration.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_aspiration', id=aspiration.id) }}">{{ aspiration.name }}</a></td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

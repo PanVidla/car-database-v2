@@ -3,6 +3,23 @@ from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Optional
 
 
+# Aspiration
+class AspirationForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+
+
+class AspirationAddForm(AspirationForm):
+
+    submit = SubmitField("Add aspiration")
+
+
+class AspirationEditForm(AspirationForm):
+
+    submit = SubmitField("Edit aspiration")
+
+
 # Assists
 class AssistForm(FlaskForm):
 

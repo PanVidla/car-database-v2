@@ -14,6 +14,9 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_cars') }}">All cars</a></li>
+                        {% if viewing == "aspiration" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_aspiration') }}"><strong>Add aspiration</strong></a></li>
+                        {% endif %}
                         {% if viewing == "assists" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_assist') }}"><strong>Add assist</strong></a></li>
                         {% endif %}
@@ -35,12 +38,17 @@
                         {% if viewing == "fuels" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_fuel') }}"><strong>Add fuel type</strong></a></li>
                         {% endif %}
+
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_aspiration') }}">Aspiration</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_assists') }}">Assists</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_body_styles') }}">Body styles</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_car_classes') }}">Car classes</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_drivetrains') }}">Drivetrains</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_engine_layouts') }}">Engine layouts</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_fuels') }}">Fuel types</a></li>
+                        {% if aspiration %}
+                        <li class="active"><a href="#">{{ aspiration.name }}</a></li>
+                        {% endif %}
                         {% if assist %}
                         <li class="active"><a href="#">{{ assist.name_full }}</a></li>
                         {% endif %}
@@ -59,8 +67,8 @@
                         {% if engine_layout %}
                         <li class="active"><a href="#">{{ engine_layout.name }}</a></li>
                         {% endif %}
-                        {% if fuel_type %}
-                        <li class="active"><a href="#">{{ fuel_type.name }}</a></li>
+                        {% if fuel %}
+                        <li class="active"><a href="#">{{ fuel.name }}</a></li>
                         {% endif %}
                     </ul>
                 </div>

@@ -3,9 +3,9 @@ from flask import render_template, flash, redirect, url_for
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm
+    FuelEditForm, AspirationEditForm, AspirationAddForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout
-from general.models.part import FuelType
+from general.models.part import FuelType, Aspiration
 
 
 # Cars overview
@@ -22,6 +22,20 @@ def overview_cars():
                            viewing="cars")
 
 
+# Aspiration overview
+@cardb.route("/cars/aspiration", methods=['GET'])
+@cardb.route("/cars/aspiration/all", methods=['GET'])
+def overview_aspiration():
+
+    aspiration = Aspiration.query.order_by(Aspiration.id.asc()).all()
+
+    return render_template("cars_overview_aspiration.html",
+                           title="Aspiration",
+                           heading="Aspiration",
+                           aspiration_types=aspiration,
+                           viewing="aspiration")
+
+
 # Assists overview
 @cardb.route("/cars/assists", methods=['GET'])
 @cardb.route("/cars/assists/all", methods=['GET'])
@@ -30,8 +44,8 @@ def overview_assists():
     assists = Assist.query.order_by(Assist.name_short.asc()).all()
 
     return render_template("cars_overview_assists.html",
-                           title="All assists",
-                           heading="All assists",
+                           title="Assists",
+                           heading="Assists",
                            assists=assists,
                            viewing="assists")
 
@@ -44,8 +58,8 @@ def overview_body_styles():
     body_styles = BodyStyle.query.order_by(BodyStyle.name.asc()).all()
 
     return render_template("cars_overview_body_styles.html",
-                           title="All body styles",
-                           heading="All body styles",
+                           title="Body styles",
+                           heading="Body styles",
                            body_styles=body_styles,
                            viewing="body_styles")
 
@@ -58,8 +72,8 @@ def overview_car_classes():
     car_classes = CarClass.query.order_by(CarClass.name_custom.asc()).all()
 
     return render_template("cars_overview_car_classes.html",
-                           title="All car classes",
-                           heading="All car classes",
+                           title="Car classes",
+                           heading="Car classes",
                            car_classes=car_classes,
                            viewing="car_classes")
 
@@ -104,6 +118,34 @@ def overview_fuels():
                            heading="Fuel types",
                            fuels=fuels,
                            viewing="fuels")
+
+
+# Add aspiration
+@cardb.route("/cars/aspiration/add-aspiration", methods=['GET', 'POST'])
+def add_aspiration():
+
+    form = AspirationAddForm()
+
+    if form.validate_on_submit():
+
+        new_aspiration = Aspiration()
+        form.populate_obj(new_aspiration)
+
+        try:
+            database.session.add(new_aspiration)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding new aspiration to the database.", "danger")
+            return redirect(url_for("add_aspiration"))
+
+        flash("Aspiration \"{}\" has been successfully added to the database.".format(new_aspiration.name), "success")
+        return redirect(url_for("overview_aspiration"))
+
+    return render_template("cars_form_aspiration.html",
+                           title="Add aspiration",
+                           heading="Add aspiration",
+                           form=form,
+                           viewing="aspiration")
 
 
 # Add assist
@@ -275,6 +317,33 @@ def add_fuel():
                            viewing="fuels")
 
 
+# Edit aspiration
+@cardb.route("/cars/aspiration/edit-aspiration/<id>", methods=['GET', 'POST'])
+def edit_aspiration(id):
+
+    aspiration = Aspiration.query.get(id)
+    form = AspirationEditForm(obj=aspiration)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(aspiration)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing aspiration \"{}\".".format(aspiration.name), "danger")
+            return redirect(url_for("edit_aspiration", id=aspiration.id))
+
+        flash("Aspiration \"{}\" has been successfully edited.".format(aspiration.name), "success")
+        return redirect(url_for("detail_aspiration", id=aspiration.id))
+
+    return render_template("cars_form_aspiration.html",
+                           title="Edit aspiration",
+                           heading="Edit aspiration",
+                           form=form,
+                           viewing="aspiration")
+
+
 # Edit assist
 @cardb.route("/cars/assists/edit-assist/<id>", methods=['GET', 'POST'])
 def edit_assist(id):
@@ -439,6 +508,24 @@ def edit_fuel(id):
                            viewing="fuels")
 
 
+# Delete aspiration
+@cardb.route("/cars/aspiration/delete-aspiration/<id>", methods=['GET', 'POST'])
+def delete_aspiration(id):
+
+    aspiration = Aspiration.query.get(id)
+
+    try:
+        database.session.delete(aspiration)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting aspiration \"{}\".".format(aspiration.name), "danger")
+        return redirect(url_for("detail_aspiration", id=aspiration.id))
+
+    flash("Aspiration \"{}\" has been successfully deleted.".format(aspiration.name), "success")
+    return redirect(url_for("overview_aspiration"))
+
+
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
 def delete_assist(id):
@@ -547,6 +634,19 @@ def delete_fuel(id):
 
     flash("The fuel \"{}\" has been successfully deleted.".format(fuel.name), "success")
     return redirect(url_for("overview_fuels"))
+
+
+# Aspiration detail
+@cardb.route("/cars/aspiration/detail/<id>", methods=['GET', 'POST'])
+def detail_aspiration(id):
+
+    aspiration = Aspiration.query.get(id)
+
+    return render_template("cars_detail_aspiration.html",
+                           title="{}".format(aspiration.name),
+                           heading="{}".format(aspiration.name),
+                           aspiration=aspiration,
+                           viewing="aspiration")
 
 
 # Assist detail
