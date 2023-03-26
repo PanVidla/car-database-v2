@@ -1,0 +1,31 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if body_styles == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no body styles in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-1"><strong>Name</strong></td>
+                <td class="col-sm-10"><strong># of doors</strong></td>
+            </tr>
+
+                {% for body_style in body_styles %}
+            <tr>
+                <td class="col-sm-1">{{ body_style.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_body_style', id=body_style.id) }}">{{ body_style.name }}</a></td>
+                <td class="col-sm-10">{{ body_style.no_of_doors }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

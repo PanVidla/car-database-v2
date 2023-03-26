@@ -17,10 +17,23 @@
                         {% if viewing == "assists" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_assist') }}"><strong>Add assist</strong></a></li>
                         {% endif %}
+                        {% if viewing == "body_styles" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_body_style') }}"><strong>Add body style</strong></a></li>
+                        {% endif %}
                         {% if viewing == "cars" %}
                         <li><a class="hover-underline-animation" href="#"><strong>Add car</strong></a></li>
                         {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_assists') }}">Assists</a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_body_styles') }}">Body styles</a></li>
+                        {% if car %}
+                        <li class="active"><a href="#">{{ car.name_display }}</a></li>
+                        {% endif %}
+                        {% if assist %}
+                        <li class="active"><a href="#">{{ assist.name_full }}</a></li>
+                        {% endif %}
+                        {% if body_style %}
+                        <li class="active"><a href="#">{{ body_style.name }}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

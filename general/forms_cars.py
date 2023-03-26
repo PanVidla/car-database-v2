@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired
 
 
+# Assists
 class AssistForm(FlaskForm):
 
     # General
@@ -18,3 +19,21 @@ class AssistAddForm(AssistForm):
 class AssistEditForm(AssistForm):
 
     submit = SubmitField("Edit assist")
+
+
+# Body styles
+class BodyStyleForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+    no_of_doors = IntegerField("No. of doors", validators=[DataRequired()])
+
+
+class BodyStyleAddForm(BodyStyleForm):
+
+    submit = SubmitField("Add body style")
+
+
+class BodyStyleEditForm(BodyStyleForm):
+
+    submit = SubmitField("Edit body style")
