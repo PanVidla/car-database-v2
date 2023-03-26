@@ -9,6 +9,7 @@ from general.strings import *
 
 
 # Overviews
+@cardb.route("/", methods=['GET'])
 @cardb.route("/instances", methods=['GET'])
 def overview_instances():
 

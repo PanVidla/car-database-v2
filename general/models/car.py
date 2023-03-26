@@ -92,7 +92,7 @@ class Assist(database.Model):
     name_full = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     name_short = database.Column(database.Unicode, index=True, nullable=False, unique=True)
 
-    assists = database.relationship('Car', secondary="car_assist")
+    cars = database.relationship('Car', secondary="car_assist")
 
 
 class BodyStyle(database.Model):
