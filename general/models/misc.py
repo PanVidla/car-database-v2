@@ -55,6 +55,9 @@ class Company(database.Model):
     def get_name_short(self):
         return self.name_short if self.name_short is not (None or "") else "n/a"
 
+    def get_owner(self):
+        return self.owner.name_display if self.owner is not None else "n/a"
+
     def is_game_company(self):
         return "✓" if self.is_game_developer is True else "x"
 
