@@ -115,6 +115,15 @@ class Competition(database.Model):
     texts = database.relationship('CompetitionText', backref='competition', lazy='dynamic')
     images = database.relationship('CompetitionImage', backref='competition', lazy='dynamic')
 
+    def get_date_ended(self):
+        return self.date_ended if self.date_ended is not None else "n/a"
+
+    def get_date_started(self):
+        return self.date_started if self.date_started is not None else "n/a"
+
+    def get_is_virtual(self):
+        return "✓" if self.is_virtual else "x"
+
 
 # Represents a country (e.g. Italy, Germany, United States of America...)
 class Country(database.Model):

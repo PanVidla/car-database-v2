@@ -1,0 +1,39 @@
+{% extends "misc_competitions_base.html" %}
+
+{% block competitions_content %}
+
+    <div>
+        <table class="table table-hover table-striped table-bordered table-condensed">
+
+            {% if competitions == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no competitions in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><b>ID</b></td>
+                <td class="col-sm-3"><b>Name</b></td>
+                <td class="col-sm-1"><b>Short name</b></td>
+                <td class="col-sm-4"><b>Full name</b></td>
+                <td class="col-sm-1"><b>Date started</b></td>
+                <td class="col-sm-1"><b>Date ended</b></td>
+                <td class="col-sm-1"><b>Is virtual?</b></td>
+            </tr>
+
+                {% for competition in competitions %}
+            <tr>
+                <td class="col-sm-1">{{ competition.id }}</td>
+                <td class="col-sm-3"><a href="{{ url_for('detail_competition', id=competition.id) }}">{{ competition.name_display }}</a></td>
+                <td class="col-sm-1">{{ competition.name_short }}</td>
+                <td class="col-sm-4">{{ competition.name_full }}</td>
+                <td class="col-sm-1">{{ competition.get_date_started() }}</td>
+                <td class="col-sm-1">{{ competition.get_date_ended() }}</td>
+                <td class="col-sm-1">{{ competition.get_is_virtual() }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}
