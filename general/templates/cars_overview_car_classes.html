@@ -1,0 +1,37 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if car_classes == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no car classes in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-3"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Short</strong></td>
+                <td class="col-sm-2"><strong>Euro</strong></td>
+                <td class="col-sm-2"><strong>US</strong></td>
+                <td class="col-sm-3"><strong>Alternative</strong></td>
+            </tr>
+
+                {% for car_class in car_classes %}
+            <tr>
+                <td class="col-sm-1">{{ car_class.id }}</td>
+                <td class="col-sm-3"><a href="{{ url_for('detail_car_class', id=car_class.id) }}">{{ car_class.name_custom }}</a></td>
+                <td class="col-sm-1">{{ car_class.name_short }}</td>
+                <td class="col-sm-2">{{ car_class.name_euro }}</td>
+                <td class="col-sm-2">{{ car_class.name_us }}</td>
+                <td class="col-sm-3">{{ car_class.name_alternative }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

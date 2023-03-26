@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional
 
 
 # Assists
@@ -37,3 +37,24 @@ class BodyStyleAddForm(BodyStyleForm):
 class BodyStyleEditForm(BodyStyleForm):
 
     submit = SubmitField("Edit body style")
+
+
+# Car class
+class CarClassForm(FlaskForm):
+
+    # General
+    name_custom = StringField("Name", validators=[DataRequired()])
+    name_short = StringField("Name", validators=[Optional()])
+    name_euro = StringField("Euro", validators=[Optional()])
+    name_us = StringField("US", validators=[Optional()])
+    name_alternative = StringField("Alternative", validators=[Optional()])
+
+
+class CarClassAddForm(CarClassForm):
+
+    submit = SubmitField("Add car class")
+
+
+class CarClassEditForm(CarClassForm):
+
+    submit = SubmitField("Edit car class")

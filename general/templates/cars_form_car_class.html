@@ -1,0 +1,57 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_custom.label }}</label>
+                <div class="col-sm-6">
+                    {{ form.name_custom(class_="form-control", placeholder="Custom name (e.g. sports car)") }}
+                </div><label class="col-sm-2 control-label">{{ form.name_short.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.name_short(class_="form-control", placeholder="Shortcut") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_euro.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_euro(class_="form-control", placeholder="Euro car segment (e.g. S-segment sport coupés)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_us.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_us(class_="form-control", placeholder="US EPA size class (e.g. two-seater)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_alternative.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_alternative(class_="form-control", placeholder="Alternative name (e.g. roadster)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

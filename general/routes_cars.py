@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
-from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm
-from general.models.car import Car, Assist, BodyStyle
+from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
+    CarClassEditForm
+from general.models.car import Car, Assist, BodyStyle, CarClass
 
 
 # Cars overview
@@ -45,6 +46,20 @@ def overview_body_styles():
                            heading="All body styles",
                            body_styles=body_styles,
                            viewing="body_styles")
+
+
+# Car classes overview
+@cardb.route("/cars/car-classes", methods=['GET'])
+@cardb.route("/cars/car-classes/all", methods=['GET'])
+def overview_car_classes():
+
+    car_classes = CarClass.query.order_by(CarClass.name_custom.asc()).all()
+
+    return render_template("cars_overview_car_classes.html",
+                           title="All car classes",
+                           heading="All car classes",
+                           car_classes=car_classes,
+                           viewing="car_classes")
 
 
 # Add assist
@@ -104,6 +119,34 @@ def add_body_style():
                            viewing="body_styles")
 
 
+# Add body style
+@cardb.route("/cars/car-classes/add-car-class", methods=['GET', 'POST'])
+def add_car_class():
+
+    form = CarClassAddForm()
+
+    if form.validate_on_submit():
+
+        new_car_class = CarClass()
+        form.populate_obj(new_car_class)
+
+        try:
+            database.session.add(new_car_class)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new car class to the database.", "danger")
+            return redirect(url_for("add_car_class"))
+
+        flash("Car class \"{}\" has been successfully added to the database.".format(new_car_class.name_custom), "success")
+        return redirect(url_for("overview_car_classes"))
+
+    return render_template("cars_form_car_class.html",
+                           title="Add car class",
+                           heading="Add car class",
+                           form=form,
+                           viewing="car_classes")
+
+
 # Edit assist
 @cardb.route("/cars/assists/edit-assist/<id>", methods=['GET', 'POST'])
 def edit_assist(id):
@@ -160,6 +203,33 @@ def edit_body_style(id):
                            viewing="body_styles")
 
 
+# Edit car class
+@cardb.route("/cars/car-classes/edit-car-class/<id>", methods=['GET', 'POST'])
+def edit_car_class(id):
+
+    car_class = CarClass.query.get(id)
+    form = CarClassEditForm(obj=car_class)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car_class)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the \"{}\" car class.".format(car_class.name_custom), "danger")
+            return redirect(url_for("edit_car_class", id=car_class.id))
+
+        flash("The car class \"{}\" has been successfully edited.".format(car_class.name_custom), "success")
+        return redirect(url_for("detail_car_class", id=car_class.id))
+
+    return render_template("cars_form_car_class.html",
+                           title="Edit car class",
+                           heading="Edit car class",
+                           form=form,
+                           viewing="car_classes")
+
+
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
 def delete_assist(id):
@@ -198,6 +268,24 @@ def delete_body_style(id):
     return redirect(url_for("overview_body_styles"))
 
 
+# Delete car class
+@cardb.route("/cars/car-classes/delete-car-class/<id>", methods=['GET', 'POST'])
+def delete_car_class(id):
+
+    car_class = CarClass.query.get(id)
+
+    try:
+        database.session.delete(car_class)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the car class \"{}\".".format(car_class.name_custom), "danger")
+        return redirect(url_for("detail_car_class", id=car_class.id))
+
+    flash("The car class \"{}\" has been successfully deleted.".format(car_class.name_custom), "success")
+    return redirect(url_for("overview_car_classes"))
+
+
 # Assist detail
 @cardb.route("/cars/assists/detail/<id>", methods=['GET', 'POST'])
 def detail_assist(id):
@@ -222,3 +310,16 @@ def detail_body_style(id):
                            heading="{}".format(body_style.name),
                            body_style=body_style,
                            viewing="body_styles")
+
+
+# Car class detail
+@cardb.route("/cars/car-classes/detail/<id>", methods=['GET', 'POST'])
+def detail_car_class(id):
+
+    car_class = CarClass.query.get(id)
+
+    return render_template("cars_detail_car_class.html",
+                           title="{}".format(car_class.name_custom),
+                           heading="{}".format(car_class.name_custom),
+                           car_class=car_class,
+                           viewing="car_classes")

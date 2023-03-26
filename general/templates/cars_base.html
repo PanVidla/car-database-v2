@@ -23,16 +23,23 @@
                         {% if viewing == "cars" %}
                         <li><a class="hover-underline-animation" href="#"><strong>Add car</strong></a></li>
                         {% endif %}
+                        {% if viewing == "car_classes" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_car_class') }}"><strong>Add car class</strong></a></li>
+                        {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_assists') }}">Assists</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_body_styles') }}">Body styles</a></li>
-                        {% if car %}
-                        <li class="active"><a href="#">{{ car.name_display }}</a></li>
-                        {% endif %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_car_classes') }}">Car classes</a></li>
                         {% if assist %}
                         <li class="active"><a href="#">{{ assist.name_full }}</a></li>
                         {% endif %}
                         {% if body_style %}
                         <li class="active"><a href="#">{{ body_style.name }}</a></li>
+                        {% endif %}
+                        {% if car %}
+                        <li class="active"><a href="#">{{ car.name_display }}</a></li>
+                        {% endif %}
+                        {% if car_class %}
+                        <li class="active"><a href="#">{{ car_class.name_custom }}</a></li>
                         {% endif %}
                     </ul>
                 </div>
