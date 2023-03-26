@@ -1,0 +1,31 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if drivetrains == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no drivetrains in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-1"><strong>Short</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+            </tr>
+
+                {% for drivetrain in drivetrains %}
+            <tr>
+                <td class="col-sm-1">{{ drivetrain.id }}</td>
+                <td class="col-sm-1"><a href="{{ url_for('detail_drivetrain', id=drivetrain.id) }}">{{ drivetrain.name_short }}</a></td>
+                <td class="col-sm-10">{{ drivetrain.name_full }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

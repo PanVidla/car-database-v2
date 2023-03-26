@@ -58,3 +58,21 @@ class CarClassAddForm(CarClassForm):
 class CarClassEditForm(CarClassForm):
 
     submit = SubmitField("Edit car class")
+
+
+# Drivetrain
+class DrivetrainForm(FlaskForm):
+
+    # General
+    name_full = StringField("Name", validators=[DataRequired()])
+    name_short = StringField("Name", validators=[DataRequired()])
+
+
+class DrivetrainAddForm(DrivetrainForm):
+
+    submit = SubmitField("Add drivetrain")
+
+
+class DrivetrainEditForm(DrivetrainForm):
+
+    submit = SubmitField("Edit drivetrain")

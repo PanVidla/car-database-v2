@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
-    CarClassEditForm
-from general.models.car import Car, Assist, BodyStyle, CarClass
+    CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm
+from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain
 
 
 # Cars overview
@@ -60,6 +60,20 @@ def overview_car_classes():
                            heading="All car classes",
                            car_classes=car_classes,
                            viewing="car_classes")
+
+
+# Drivetrains overview
+@cardb.route("/cars/drivetrains", methods=['GET'])
+@cardb.route("/cars/drivetrains/all", methods=['GET'])
+def overview_drivetrains():
+
+    drivetrains = Drivetrain.query.order_by(Drivetrain.name_full.asc()).all()
+
+    return render_template("cars_overview_drivetrains.html",
+                           title="Drivetrains",
+                           heading="Drivetrains",
+                           drivetrains=drivetrains,
+                           viewing="drivetrains")
 
 
 # Add assist
@@ -119,7 +133,7 @@ def add_body_style():
                            viewing="body_styles")
 
 
-# Add body style
+# Add car class
 @cardb.route("/cars/car-classes/add-car-class", methods=['GET', 'POST'])
 def add_car_class():
 
@@ -145,6 +159,34 @@ def add_car_class():
                            heading="Add car class",
                            form=form,
                            viewing="car_classes")
+
+
+# Add drivetrain
+@cardb.route("/cars/drivetrains/add-drivetrain", methods=['GET', 'POST'])
+def add_drivetrain():
+
+    form = DrivetrainAddForm()
+
+    if form.validate_on_submit():
+
+        drivetrain = Drivetrain()
+        form.populate_obj(drivetrain)
+
+        try:
+            database.session.add(drivetrain)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new drivetrain to the database.", "danger")
+            return redirect(url_for("add_drivetrain"))
+
+        flash("Drivetrain \"{}\" ({}) has been successfully added to the database.".format(drivetrain.name_full, drivetrain.name_short), "success")
+        return redirect(url_for("overview_drivetrains"))
+
+    return render_template("cars_form_drivetrain.html",
+                           title="Drivetrains",
+                           heading="Drivetrains",
+                           form=form,
+                           viewing="drivetrains")
 
 
 # Edit assist
@@ -230,6 +272,33 @@ def edit_car_class(id):
                            viewing="car_classes")
 
 
+# Edit drivetrain
+@cardb.route("/cars/drivetrains/edit-drivetrain/<id>", methods=['GET', 'POST'])
+def edit_drivetrain(id):
+
+    drivetrain = Drivetrain.query.get(id)
+    form = DrivetrainEditForm(obj=drivetrain)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(drivetrain)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the \"{}\" drivetrain.".format(drivetrain.name_full), "danger")
+            return redirect(url_for("edit_drivetrain", id=drivetrain.id))
+
+        flash("The drivetrain \"{}\" has been successfully edited.".format(drivetrain.name_full), "success")
+        return redirect(url_for("detail_drivetrain", id=drivetrain.id))
+
+    return render_template("cars_form_drivetrain.html",
+                           title="Edit drivetrain",
+                           heading="Edit drivetrain",
+                           form=form,
+                           viewing="drivetrains")
+
+
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
 def delete_assist(id):
@@ -286,6 +355,24 @@ def delete_car_class(id):
     return redirect(url_for("overview_car_classes"))
 
 
+# Delete drivetrain
+@cardb.route("/cars/drivetrains/delete-drivetrain/<id>", methods=['GET', 'POST'])
+def delete_drivetrain(id):
+
+    drivetrain = Drivetrain.query.get(id)
+
+    try:
+        database.session.delete(drivetrain)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the drivetrain \"{}\".".format(drivetrain.name_full), "danger")
+        return redirect(url_for("detail_drivetrain", id=drivetrain.id))
+
+    flash("The drivetrain \"{}\" has been successfully deleted.".format(drivetrain.name_full), "success")
+    return redirect(url_for("overview_drivetrains"))
+
+
 # Assist detail
 @cardb.route("/cars/assists/detail/<id>", methods=['GET', 'POST'])
 def detail_assist(id):
@@ -323,3 +410,16 @@ def detail_car_class(id):
                            heading="{}".format(car_class.name_custom),
                            car_class=car_class,
                            viewing="car_classes")
+
+
+# Drivetrain detail
+@cardb.route("/cars/drivetrains/detail/<id>", methods=['GET', 'POST'])
+def detail_drivetrain(id):
+
+    drivetrain = Drivetrain.query.get(id)
+
+    return render_template("cars_detail_drivetrain.html",
+                           title="{}".format(drivetrain.name_short),
+                           heading="{}".format(drivetrain.name_full),
+                           drivetrain=drivetrain,
+                           viewing="drivetrains")
