@@ -1,0 +1,29 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if fuels == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no fuel types in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+            </tr>
+
+                {% for fuel in fuels %}
+            <tr>
+                <td class="col-sm-1">{{ fuel.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_fuel', id=fuel.id) }}">{{ fuel.name }}</a></td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

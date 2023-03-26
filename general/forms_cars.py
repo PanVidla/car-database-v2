@@ -93,3 +93,20 @@ class EngineLayoutAddForm(EngineLayoutForm):
 class EngineLayoutEditForm(EngineLayoutForm):
 
     submit = SubmitField("Edit engine layout")
+
+
+# Fuel type
+class FuelForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+
+
+class FuelAddForm(FuelForm):
+
+    submit = SubmitField("Add fuel type")
+
+
+class FuelEditForm(FuelForm):
+
+    submit = SubmitField("Edit fuel type")

@@ -2,8 +2,10 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
-    CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm
+    CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
+    FuelEditForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout
+from general.models.part import FuelType
 
 
 # Cars overview
@@ -88,6 +90,20 @@ def overview_engine_layouts():
                            heading="Engine layouts",
                            engine_layouts=engine_layouts,
                            viewing="engine_layouts")
+
+
+# Engine fuels
+@cardb.route("/cars/fuels", methods=['GET'])
+@cardb.route("/cars/fuels/all", methods=['GET'])
+def overview_fuels():
+
+    fuels = FuelType.query.order_by(FuelType.name.asc()).all()
+
+    return render_template("cars_overview_fuels.html",
+                           title="Fuels",
+                           heading="Fuel types",
+                           fuels=fuels,
+                           viewing="fuels")
 
 
 # Add assist
@@ -225,10 +241,38 @@ def add_engine_layout():
         return redirect(url_for("overview_engine_layouts"))
 
     return render_template("cars_form_engine_layout.html",
-                           title="Engine layouts",
-                           heading="Engine layouts",
+                           title="Add engine layout",
+                           heading="Add engine layout",
                            form=form,
                            viewing="engine_layouts")
+
+
+# Add fuel type
+@cardb.route("/cars/fuels/add-fuel", methods=['GET', 'POST'])
+def add_fuel():
+
+    form = FuelAddForm()
+
+    if form.validate_on_submit():
+
+        new_fuel_type = FuelType()
+        form.populate_obj(new_fuel_type)
+
+        try:
+            database.session.add(new_fuel_type)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new fuel type to the database.", "danger")
+            return redirect(url_for("add_fuel"))
+
+        flash("Fuel type \"{}\" has been successfully added to the database.".format(new_fuel_type.name), "success")
+        return redirect(url_for("overview_fuels"))
+
+    return render_template("cars_form_fuel.html",
+                           title="Add fuel",
+                           heading="Add fuel type",
+                           form=form,
+                           viewing="fuels")
 
 
 # Edit assist
@@ -368,6 +412,33 @@ def edit_engine_layout(id):
                            viewing="engine_layouts")
 
 
+# Edit fuel type
+@cardb.route("/cars/fuels/edit-fuel/<id>", methods=['GET', 'POST'])
+def edit_fuel(id):
+
+    fuel = FuelType.query.get(id)
+    form = FuelEditForm(obj=fuel)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(fuel)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the fuel \"{}\".".format(fuel.name), "danger")
+            return redirect(url_for("edit_fuel", id=fuel.id))
+
+        flash("The fuel \"{}\" has been successfully edited.".format(fuel.name), "success")
+        return redirect(url_for("detail_fuel", id=fuel.id))
+
+    return render_template("cars_form_fuel.html",
+                           title="Edit fuel",
+                           heading="Edit fuel type",
+                           form=form,
+                           viewing="fuels")
+
+
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
 def delete_assist(id):
@@ -460,6 +531,24 @@ def delete_engine_layout(id):
     return redirect(url_for("overview_engine_layout"))
 
 
+# Delete fuel
+@cardb.route("/cars/fuels/delete-fuel/<id>", methods=['GET', 'POST'])
+def delete_fuel(id):
+
+    fuel = FuelType.query.get(id)
+
+    try:
+        database.session.delete(fuel)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting \"{}\".".format(fuel.name), "danger")
+        return redirect(url_for("detail_fuel", id=fuel.id))
+
+    flash("The fuel \"{}\" has been successfully deleted.".format(fuel.name), "success")
+    return redirect(url_for("overview_fuels"))
+
+
 # Assist detail
 @cardb.route("/cars/assists/detail/<id>", methods=['GET', 'POST'])
 def detail_assist(id):
@@ -523,3 +612,16 @@ def detail_engine_layout(id):
                            heading="{}".format(engine_layout.name),
                            engine_layout=engine_layout,
                            viewing="engine_layouts")
+
+
+# Fuel type detail
+@cardb.route("/cars/fuels/detail/<id>", methods=['GET', 'POST'])
+def detail_fuel(id):
+
+    fuel = FuelType.query.get(id)
+
+    return render_template("cars_detail_fuel.html",
+                           title="{}".format(fuel.name),
+                           heading="{}".format(fuel.name),
+                           fuel=fuel,
+                           viewing="fuels")
