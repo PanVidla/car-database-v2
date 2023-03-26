@@ -132,6 +132,17 @@ class Game(database.Model):
 
         return datetime_string
 
+    def get_last_played_date(self):
+
+        if self.datetime_played is not None:
+            date_string = "{}/{}/{}".format(self.datetime_played.day,
+                                            self.datetime_played.month,
+                                            self.datetime_played.year)
+            return date_string
+
+        else:
+            return "never"
+
     def get_date_released(self):
         if self.date_released is not None:
             date_string = "{}/{}/{}".format(self.date_released.day, self.date_released.month, self.date_released.year)
@@ -259,9 +270,6 @@ def activity_with_same_order_number_exists(game, order):
 
 
 def create_initial_activity_from_form(form, game):
-
-    if activity_with_same_order_number_exists(game, form.order.data):
-        return -1
 
     new_activity = GameActivity()
     form.populate_obj(new_activity)

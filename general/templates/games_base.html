@@ -34,8 +34,20 @@
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_genres') }}">Genres</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_platforms') }}">Platforms</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_states') }}">States</a></li>
+                        {% if game %}
+                        <li class="active"><a href="#">{{ game.name_display }}</a></li>
+                        {% endif %}
+                        {% if game_series %}
+                        <li class="active"><a href="#">{{ game_series.name }}</a></li>
+                        {% endif %}
+                        {% if genre %}
+                        <li class="active"><a href="#">{{ genre.name }}</a></li>
+                        {% endif %}
                         {% if platform %}
                         <li class="active"><a href="#">{{ platform.name_display }}</a></li>
+                        {% endif %}
+                        {% if state %}
+                        <li class="active"><a href="#">{{ state.name }}</a></li>
                         {% endif %}
                     </ul>
                 </div>
