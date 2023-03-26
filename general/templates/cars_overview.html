@@ -1,0 +1,41 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if cars == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no cars in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-1"><strong>Year</strong></td>
+                <td class="col-sm-2"><strong>Manufacturer</strong></td>
+                <td class="col-sm-3"><strong>Model</strong></td>
+                <td class="col-sm-2"><strong>Country</strong></td>
+                <td class="col-sm-1"><strong>No. of instances</strong></td>
+                <td class="col-sm-1"><strong>Body style</strong></td>
+                <td class="col-sm-1"><strong>Fictional?</strong></td>
+            </tr>
+
+                {% for car in cars %}
+            <tr>
+                <td class="col-sm-1">{{ car.id }}</td>
+                <td class="col-sm-1">{{ car.year }}</td>
+                <td class="col-sm-2">{{ car.manufacturers_display }}</td>
+                <td class="col-sm-3">{{ car.model }}</td>
+                <td class="col-sm-2">{{ car.country }}</td>
+                <td class="col-sm-1">{{ car.no_of_instances }}</td>
+                <td class="col-sm-1">{{ car.body_style }}</td>
+                <td class="col-sm-1">{{ car.is_fictional }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

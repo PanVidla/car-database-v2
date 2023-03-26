@@ -9,18 +9,6 @@ from general.strings import *
 
 
 # Overviews
-@cardb.route("/", methods=['GET'])
-@cardb.route("/cars", methods=['GET'])
-def overview_cars():
-
-    cars = Car.query.order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()).all()
-
-    return render_template("overview_cars.html",
-                           title=title_cars,
-                           overview_heading=overview_heading_cars,
-                           cars=cars)
-
-
 @cardb.route("/instances", methods=['GET'])
 def overview_instances():
 

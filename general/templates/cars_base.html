@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block cardb_content %}
+
+    <!--  Heading  -->
+    <div class="page-header">
+        <h1>{{ heading }}</h1>
+    </div>
+
+    <!-- Submenu -->
+    {% block submenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="hover-underline-animation" href="#">All cars</a></li>
+                        {% if viewing == "cars" %}
+                        <li><a class="hover-underline-animation" href="#"><strong>Add car</strong></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block cars_content %}
+    {% endblock %}
+
+{% endblock %}
