@@ -76,3 +76,20 @@ class DrivetrainAddForm(DrivetrainForm):
 class DrivetrainEditForm(DrivetrainForm):
 
     submit = SubmitField("Edit drivetrain")
+
+
+# Engine layout
+class EngineLayoutForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+
+
+class EngineLayoutAddForm(EngineLayoutForm):
+
+    submit = SubmitField("Add engine layout")
+
+
+class EngineLayoutEditForm(EngineLayoutForm):
+
+    submit = SubmitField("Edit engine layout")

@@ -29,10 +29,14 @@
                         {% if viewing == "drivetrains" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_drivetrain') }}"><strong>Add drivetrain</strong></a></li>
                         {% endif %}
+                        {% if viewing == "engine_layouts" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_engine_layout') }}"><strong>Add engine layout</strong></a></li>
+                        {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_assists') }}">Assists</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_body_styles') }}">Body styles</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_car_classes') }}">Car classes</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_drivetrains') }}">Drivetrains</a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_engine_layouts') }}">Engine layouts</a></li>
                         {% if assist %}
                         <li class="active"><a href="#">{{ assist.name_full }}</a></li>
                         {% endif %}
@@ -47,6 +51,9 @@
                         {% endif %}
                         {% if drivetrain %}
                         <li class="active"><a href="#">{{ drivetrain.name_full }}</a></li>
+                        {% endif %}
+                        {% if engine_layout %}
+                        <li class="active"><a href="#">{{ engine_layout.name }}</a></li>
                         {% endif %}
                     </ul>
                 </div>

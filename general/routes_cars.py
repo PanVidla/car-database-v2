@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
-    CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm
-from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain
+    CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm
+from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout
 
 
 # Cars overview
@@ -74,6 +74,20 @@ def overview_drivetrains():
                            heading="Drivetrains",
                            drivetrains=drivetrains,
                            viewing="drivetrains")
+
+
+# Engine layouts overview
+@cardb.route("/cars/engine-layouts", methods=['GET'])
+@cardb.route("/cars/engine-layouts/all", methods=['GET'])
+def overview_engine_layouts():
+
+    engine_layouts = EngineLayout.query.order_by(EngineLayout.name.asc()).all()
+
+    return render_template("cars_overview_engine_layouts.html",
+                           title="Engine layouts",
+                           heading="Engine layouts",
+                           engine_layouts=engine_layouts,
+                           viewing="engine_layouts")
 
 
 # Add assist
@@ -189,6 +203,34 @@ def add_drivetrain():
                            viewing="drivetrains")
 
 
+# Add engine layout
+@cardb.route("/cars/engine-layouts/add-engine-layout", methods=['GET', 'POST'])
+def add_engine_layout():
+
+    form = EngineLayoutAddForm()
+
+    if form.validate_on_submit():
+
+        new_engine_layout = EngineLayout()
+        form.populate_obj(new_engine_layout)
+
+        try:
+            database.session.add(new_engine_layout)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new engine layout to the database.", "danger")
+            return redirect(url_for("add_engine_layout"))
+
+        flash("Engine layout \"{}\" has been successfully added to the database.".format(new_engine_layout.name), "success")
+        return redirect(url_for("overview_engine_layouts"))
+
+    return render_template("cars_form_engine_layout.html",
+                           title="Engine layouts",
+                           heading="Engine layouts",
+                           form=form,
+                           viewing="engine_layouts")
+
+
 # Edit assist
 @cardb.route("/cars/assists/edit-assist/<id>", methods=['GET', 'POST'])
 def edit_assist(id):
@@ -299,6 +341,33 @@ def edit_drivetrain(id):
                            viewing="drivetrains")
 
 
+# Edit engine layout
+@cardb.route("/cars/engine-layouts/edit-engine-layout/<id>", methods=['GET', 'POST'])
+def edit_engine_layout(id):
+
+    engine_layout = EngineLayout.query.get(id)
+    form = EngineLayoutEditForm(obj=engine_layout)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(engine_layout)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the \"{}\" engine layout.".format(engine_layout.name), "danger")
+            return redirect(url_for("edit_engine_layout", id=engine_layout.id))
+
+        flash("The engine layout \"{}\" has been successfully edited.".format(engine_layout.name), "success")
+        return redirect(url_for("detail_engine_layout", id=engine_layout.id))
+
+    return render_template("cars_form_engine_layout.html",
+                           title="Edit engine layout",
+                           heading="Edit engine layout",
+                           form=form,
+                           viewing="engine_layouts")
+
+
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
 def delete_assist(id):
@@ -373,6 +442,24 @@ def delete_drivetrain(id):
     return redirect(url_for("overview_drivetrains"))
 
 
+# Delete engine layout
+@cardb.route("/cars/engine-layouts/delete-engine-layout/<id>", methods=['GET', 'POST'])
+def delete_engine_layout(id):
+
+    engine_layout = EngineLayout.query.get(id)
+
+    try:
+        database.session.delete(engine_layout)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the engine layout \"{}\".".format(engine_layout.name), "danger")
+        return redirect(url_for("detail_engine_layout", id=engine_layout.id))
+
+    flash("The engine layout \"{}\" has been successfully deleted.".format(engine_layout.name), "success")
+    return redirect(url_for("overview_engine_layout"))
+
+
 # Assist detail
 @cardb.route("/cars/assists/detail/<id>", methods=['GET', 'POST'])
 def detail_assist(id):
@@ -423,3 +510,16 @@ def detail_drivetrain(id):
                            heading="{}".format(drivetrain.name_full),
                            drivetrain=drivetrain,
                            viewing="drivetrains")
+
+
+# Engine layout detail
+@cardb.route("/cars/engine-layouts/detail/<id>", methods=['GET', 'POST'])
+def detail_engine_layout(id):
+
+    engine_layout = EngineLayout.query.get(id)
+
+    return render_template("cars_detail_engine_layout.html",
+                           title="{}".format(engine_layout.name),
+                           heading="{}".format(engine_layout.name),
+                           engine_layout=engine_layout,
+                           viewing="engine_layouts")
