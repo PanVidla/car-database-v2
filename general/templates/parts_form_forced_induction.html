@@ -1,0 +1,57 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.manufacturer_id.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.manufacturer_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.name_official.label }}</label>
+                <div class="col-sm-5">
+                    {{ form.name_official(class_="form-control", placeholder="Official name (optional)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_display.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_display(class_="form-control input-lg", placeholder="Display name (e.g. BMW M43B18 1.8L naturally-aspirated I4)") }}
+                </div>
+            </div>
+        </div>
+
+        <h2>Technical information</h2>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.force_induction_type_id.label }}</label>
+                <div class="col-sm-5">
+                    {{ form.force_induction_type_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.boost_pressure_bar.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.boost_pressure_bar(class_="form-control", placeholder="Boost pressure [bar] (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

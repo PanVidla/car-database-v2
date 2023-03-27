@@ -119,3 +119,43 @@ class EngineTypeAddForm(EngineTypeForm):
 class EngineTypeEditForm(EngineTypeForm):
 
     submit = SubmitField("Edit engine type")
+
+
+# Forced induction
+class ForcedInductionForm(FlaskForm):
+
+    # General
+    manufacturer_id = SelectField("Manufacturer", coerce=int)
+    name_official = StringField("Official name", validators=[Optional()])
+    name_display = StringField("Display name", validators=[DataRequired()])
+
+    # Technical
+    boost_pressure_bar = DecimalField("Boost pressure", validators=[Optional()])
+    force_induction_type_id = SelectField("Type", coerce=int)
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(ForcedInductionForm, self).__init__(*args, **kwargs)
+
+        self.manufacturer_id.choices = [(0, "n/a")]
+        self.manufacturer_id.choices += [(manufacturer.id, "{}".format(manufacturer.name_display))
+                                         for manufacturer
+                                         in Company.query
+                                         .filter(Company.is_car_part_manufacturer == True)
+                                         .order_by(Company.name_display.asc()).all()]
+
+        self.force_induction_type_id.choices = [(forced_induction_type.id, "{}".format(forced_induction_type.name))
+                                                for forced_induction_type
+                                                in Aspiration.query
+                                                .filter(Aspiration.name != "naturally aspirated")
+                                                .order_by(Aspiration.id.asc()).all()]
+
+
+class ForcedInductionAddForm(ForcedInductionForm):
+
+    submit = SubmitField("Add forced induction")
+
+
+class ForcedInductionEditForm(ForcedInductionForm):
+
+    submit = SubmitField("Edit forced induction")

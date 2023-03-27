@@ -21,6 +21,9 @@
                         <li><a class="hover-underline-animation" href="{{ url_for('add_engine_type_combustion') }}"><strong>Add combustion engine type</strong></a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('add_engine_type_electric') }}"><strong>Add electric engine type</strong></a></li>
                         {% endif %}
+                        {% if viewing == "forced_induction" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_forced_induction') }}"><strong>Add forced induction</strong></a></li>
+                        {% endif %}
                         <li class="dropdown">
                         <a href="{{ url_for('overview_engines') }}" class="dropdown-toggle" data-toggle="dropdown">Engines <b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -29,9 +32,16 @@
                           <li><a href="{{ url_for('overview_engine_types_combustion') }}">Combustion engine types</a></li>
                           <li><a href="{{ url_for('overview_engine_types_electric') }}">Electric engine types</a></li>
                         </ul>
+                        <li><a href="{{ url_for('overview_forced_induction') }}">Forced induction</a></li>
                     </li>
                         {% if engine %}
                         <li class="active"><a href="#">{{ engine.name_display }}</a></li>
+                        {% endif %}
+                        {% if engine_type %}
+                        <li class="active"><a href="#">{{ engine_type.name }}</a></li>
+                        {% endif %}
+                        {% if forced_induction %}
+                        <li class="active"><a href="#">{{ forced_induction.name_display }}</a></li>
                         {% endif %}
                     </ul>
                 </div>

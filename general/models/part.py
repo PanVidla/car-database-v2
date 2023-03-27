@@ -268,6 +268,32 @@ class ForcedInduction(database.Model):
     texts = database.relationship('ForcedInductionText', backref='forced_induction', lazy='dynamic')
     images = database.relationship('ForcedInductionImage', backref='forced_induction', lazy='dynamic')
 
+    def edit_forced_induction_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # No manufacturer is selected
+        if form.manufacturer_id.data == 0:
+            self.manufacturer_id = None
+
+    def get_manufacturer_name_display(self):
+        return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
+
+    def get_boost_pressure_bar(self):
+        return "{} bar".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"
+
+
+def create_forced_induction_from_form(form):
+
+    new_forced_induction = ForcedInduction()
+    form.populate_obj(new_forced_induction)
+
+    # No manufacturer is selected
+    if form.manufacturer_id.data == 0:
+        new_forced_induction.manufacturer_id = None
+
+    return new_forced_induction
+
 
 class FuelType(database.Model):
 

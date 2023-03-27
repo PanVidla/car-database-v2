@@ -2,9 +2,10 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_parts import EngineCombustionAddForm, EngineElectricAddForm, EngineCombustionEditForm, \
-    EngineElectricEditForm, EngineTypeAddForm, EngineTypeEditForm
+    EngineElectricEditForm, EngineTypeAddForm, EngineTypeEditForm, ForcedInductionAddForm, ForcedInductionEditForm
 from general.models.part import Engine, create_combustion_engine_from_form, create_electric_engine_from_form, \
-    EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType
+    EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType, ForcedInduction, \
+    create_forced_induction_from_form
 
 
 # Engines overview
@@ -45,6 +46,20 @@ def overview_engine_types_electric():
                            heading="Electric engine types",
                            engine_types=engine_types,
                            viewing="engine_types")
+
+
+# Forced induction
+@cardb.route("/parts/forced-induction/", methods=['GET'])
+@cardb.route("/parts/forced-induction/all", methods=['GET'])
+def overview_forced_induction():
+
+    forced_induction_parts = ForcedInduction.query.order_by(ForcedInduction.name_display.asc()).all()
+
+    return render_template("parts_overview_forced_induction.html",
+                           title="Forced induction",
+                           heading="All forced induction",
+                           forced_induction_parts=forced_induction_parts,
+                           viewing="forced_induction")
 
 
 # Add engine (combustion)
@@ -157,6 +172,33 @@ def add_engine_type_electric():
                            viewing="engine_types")
 
 
+# Add forced induction
+@cardb.route("/parts/forced-induction/add-forced-induction", methods=['GET', 'POST'])
+def add_forced_induction():
+
+    form = ForcedInductionAddForm()
+
+    if form.validate_on_submit():
+
+        new_forced_induction = create_forced_induction_from_form(form)
+
+        try:
+            database.session.add(new_forced_induction)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding new forced induction to the database.", "danger")
+            return redirect(url_for("add_forced_induction"))
+
+        flash("The {} has been successfully added to the database.".format(new_forced_induction.name_display), "success")
+        return redirect(url_for("overview_forced_induction"))
+
+    return render_template("parts_form_forced_induction.html",
+                           title="Add forced induction",
+                           heading="Add forced induction",
+                           form=form,
+                           viewing="forced_induction")
+
+
 # Edit engine (combustion)
 @cardb.route("/parts/engines/edit-engine/combustion/<id>", methods=['GET', 'POST'])
 def edit_engine_combustion(id):
@@ -265,6 +307,33 @@ def edit_engine_type_electric(id):
                            viewing="engines")
 
 
+# Edit forced induction
+@cardb.route("/parts/forced-induction/edit-forced-induction/<id>", methods=['GET', 'POST'])
+def edit_forced_induction(id):
+
+    forced_induction = ForcedInduction.query.get(id)
+    form = ForcedInductionEditForm(obj=forced_induction)
+
+    if form.validate_on_submit():
+
+        forced_induction.edit_forced_induction_from_form(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing {}.".format(forced_induction.name_display), "danger")
+            return redirect(url_for("edit_forced_induction", id=forced_induction.id))
+
+        flash("The {} has been successfully edited.".format(forced_induction.name_display), "success")
+        return redirect(url_for("detail_forced_induction", id=forced_induction.id))
+
+    return render_template("parts_form_forced_induction.html",
+                           title="Edit forced induction",
+                           heading="Edit forced induction",
+                           form=form,
+                           viewing="forced_induction")
+
+
 # Delete engine
 @cardb.route("/parts/engines/delete-engine/<id>", methods=['GET', 'POST'])
 def delete_engine(id):
@@ -319,6 +388,24 @@ def delete_engine_type_electric(id):
     return redirect(url_for("overview_engine_types_electric"))
 
 
+# Delete forced induction
+@cardb.route("/parts/forced-induction/delete-forced-induction/<id>", methods=['GET', 'POST'])
+def delete_forced_induction(id):
+
+    forced_induction = ForcedInduction.query.get(id)
+
+    try:
+        database.session.delete(forced_induction)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {}.".format(forced_induction.name_display), "danger")
+        return redirect(url_for("overview_forced_induction", id=forced_induction.id))
+
+    flash("The {} has been successfully deleted.".format(forced_induction.name_display), "success")
+    return redirect(url_for("overview_forced_induction"))
+
+
 # Engine detail (combustion)
 @cardb.route("/parts/engines/detail/combustion/<id>", methods=['GET', 'POST'])
 def detail_engine_combustion(id):
@@ -369,3 +456,16 @@ def detail_engine_type_electric(id):
                            heading="{}".format(engine_type.name),
                            engine_type=engine_type,
                            viewing="engines")
+
+
+# Forced induction detail
+@cardb.route("/parts/forced-induction/detail/<id>", methods=['GET', 'POST'])
+def detail_forced_induction(id):
+
+    forced_induction = ForcedInduction.query.get(id)
+
+    return render_template("parts_detail_forced_induction.html",
+                           title="{}".format(forced_induction.name_display),
+                           heading="{}".format(forced_induction.name_display),
+                           forced_induction=forced_induction,
+                           viewing="forced_induction")
