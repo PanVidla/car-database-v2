@@ -102,3 +102,20 @@ class EngineElectricAddForm(EngineElectricForm):
 class EngineElectricEditForm(EngineElectricForm):
 
     submit = SubmitField("Edit electric engine")
+
+
+# Engine type
+class EngineTypeForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+
+
+class EngineTypeAddForm(EngineTypeForm):
+
+    submit = SubmitField("Add engine type")
+
+
+class EngineTypeEditForm(EngineTypeForm):
+
+    submit = SubmitField("Edit engine type")
