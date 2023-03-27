@@ -47,6 +47,57 @@ class Engine(database.Model):
     texts = database.relationship('EngineText', backref='engine', lazy='dynamic')
     images = database.relationship('EngineImage', backref='engine', lazy='dynamic')
 
+    def get_fuel(self):
+        return self.fuel_type.name
+
+    def get_manufacturer_name_display(self):
+        return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
+
+    def get_max_power_output_kw(self):
+        return self.max_power_output_kw if self.max_power_output_kw is not None else "n/a"
+
+    def get_max_power_output_hp(self):
+        return self.max_power_output_kw * 1.34 if self.max_power_output_kw is not None else "n/a"
+
+    def get_max_power_output_rpm(self):
+        return self.max_power_output_rpm if self.max_power_output_rpm is not None else "n/a"
+
+    def get_max_power_output_string_kw(self):
+
+        string = ""
+
+        if self.max_power_output_kw is not None:
+            string += "{} kW".format(self.max_power_output_kw)
+
+            if self.max_power_output_rpm is not None:
+                string += " @ {} RPM".format(self.max_power_output_rpm)
+
+        else:
+            string = "n/a"
+
+        return string
+
+    def get_max_torque_string_nm(self):
+
+        string = ""
+
+        if self.max_torque_nm is not None:
+            string += "{} N⋅m".format(self.max_torque_nm)
+
+            if self.max_torque_rpm is not None:
+                string += " @ {} RPM".format(self.max_torque_rpm)
+
+        else:
+            string = "n/a"
+
+        return string
+
+    def get_max_torque_nm(self):
+        return self.max_torque_nm if self.max_torque_nm is not None else "n/a"
+
+    def get_max_torque_rpm(self):
+        return self.max_torque_rpm if self.max_torque_rpm is not None else "n/a"
+
 
 class EngineCombustion(Engine):
 
@@ -65,6 +116,54 @@ class EngineCombustion(Engine):
     valves_per_cylinder = database.Column(database.Integer, nullable=True)
     cylinder_alignment = database.Column(database.Unicode, nullable=True)
 
+    def edit_combustion_engine_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # No manufacturer is selected
+        if form.manufacturer_id.data == 0:
+            self.manufacturer_id = None
+
+        # No type of combustion engine is selected
+        if form.combustion_engine_type_id.data == 0:
+            self.combustion_engine_type_id = None
+
+        # No type of aspiration is selected
+        if form.aspiration_id.data == 0:
+            self.aspiration_id = None
+
+    def get_aspiration(self):
+        return self.aspiration.name if self.aspiration_id is not None else "n/a"
+
+    def get_cylinder_alignment(self):
+        return self.cylinder_alignment if self.cylinder_alignment is not (None or "") else "n/a"
+
+    def get_engine_type(self):
+        return self.engine_type.name if self.engine_type is not None else "n/a"
+
+    def get_valves_per_cylinder(self):
+        return self.valves_per_cylinder if self.valves_per_cylinder is not (None or "") else "n/a"
+
+
+def create_combustion_engine_from_form(form):
+
+    new_engine = EngineCombustion()
+    form.populate_obj(new_engine)
+
+    # No manufacturer is selected
+    if form.manufacturer_id.data == 0:
+        new_engine.manufacturer_id = None
+
+    # No type of combustion engine is selected
+    if form.combustion_engine_type_id.data == 0:
+        new_engine.combustion_engine_type_id = None
+
+    # No type of aspiration is selected
+    if form.aspiration_id.data == 0:
+        new_engine.aspiration_id = None
+
+    return new_engine
+
 
 class EngineElectric(Engine):
 
@@ -79,6 +178,43 @@ class EngineElectric(Engine):
                                               index=True, nullable=True)
     battery_voltage = database.Column(database.Integer, index=True, nullable=True)
     battery_technology = database.Column(database.Unicode, index=True, nullable=True)
+
+    def edit_electric_engine_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # No manufacturer is selected
+        if form.manufacturer_id.data == 0:
+            self.manufacturer_id = None
+
+        # No type of electric engine is selected
+        if form.electric_engine_type_id.data == 0:
+            self.electric_engine_type_id = None
+
+    def get_battery_technology(self):
+        return self.battery_technology if self.battery_technology is not (None or "") else "n/a"
+
+    def get_battery_voltage(self):
+        return "{} V".format(self.battery_voltage) if self.battery_technology is not (None or "") else "n/a"
+
+    def get_engine_type(self):
+        return self.engine_type.name if self.engine_type is not None else "n/a"
+
+
+def create_electric_engine_from_form(form):
+
+    new_engine = EngineElectric()
+    form.populate_obj(new_engine)
+
+    # No manufacturer is selected
+    if form.manufacturer_id.data == 0:
+        new_engine.manufacturer_id = None
+
+    # No type of electric engine is selected
+    if form.electric_engine_type_id.data == 0:
+        new_engine.electric_engine_type_id = None
+
+    return new_engine
 
 
 class CombustionEngineType(database.Model):

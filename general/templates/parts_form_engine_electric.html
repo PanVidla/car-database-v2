@@ -1,0 +1,101 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.manufacturer_id.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.manufacturer_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.name_official.label }}</label>
+                <div class="col-sm-5">
+                    {{ form.name_official(class_="form-control", placeholder="Official name (e.g. M43B18) (optional)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_display.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_display(class_="form-control input-lg", placeholder="Display name (e.g. BMW M43B18 1.8L naturally-aspirated I4)") }}
+                </div>
+            </div>
+        </div>
+
+        <h2>Technical information</h2>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.fuel_type_id.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.fuel_type_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.max_power_output_kw.label }}</label>
+                <div class="col-sm-5">
+                    {{ form.max_power_output_kw(class_="form-control", placeholder="Maximum power [kW] (optional)") }}
+                    <span class="help-block">Maximum power values can later be displayed in HP.</span>
+                </div>
+                <label class="col-sm-2 control-label">{{ form.max_power_output_rpm.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.max_power_output_rpm(class_="form-control", placeholder="@ RPM (optional)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.max_torque_nm.label }}</label>
+                <div class="col-sm-5">
+                    {{ form.max_torque_nm(class_="form-control", placeholder="Maximum torque [N⋅m] (optional)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.max_torque_rpm.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.max_torque_rpm(class_="form-control", placeholder="@ RPM (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.electric_engine_type_id.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.electric_engine_type_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.battery_voltage.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.battery_voltage(class_="form-control", placeholder="Battery voltage [V] (optional)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.battery_technology.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.battery_technology(class_="form-control", placeholder="Battery technology (e.g. Li-on) (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <!-- Sub-sub-menu -->
+    {% block subsubmenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        {% if engine %}
+                        <li><a href="{{ url_for('edit_engine_combustion', id=engine.id) }}"><button type="button" class="btn btn-info">Edit engine</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete engine</button></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    <!--  Content  -->
+    <div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">General information</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ engine.name_official }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4">{% if engine.get_manufacturer_name_display() != "n/a" %}<a href="{{ url_for('detail_company', id=engine.manufacturer_id) }}">{{ engine.get_manufacturer_name_display() }}</a>{% else %}{{ engine.get_manufacturer_name_display() }}{% endif %}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Fuel type</b></div>
+                  <div class="col-sm-10">{{ engine.get_fuel() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Technical information</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Engine type</b></div>
+                  <div class="col-sm-10">{{ engine.get_engine_type() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ engine.get_max_power_output_string_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ engine.get_max_torque_string_nm() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Aspiration</b></div>
+                  <div class="col-sm-10">{{ engine.get_aspiration() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Cylinder alignment</b></div>
+                  <div class="col-sm-4">{{ engine.get_cylinder_alignment() }}</div>
+                  <div class="col-sm-2 text-right"><b>Valves per cylinder</b></div>
+                  <div class="col-sm-4">{{ engine.get_valves_per_cylinder() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Modals  -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Delete engine</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete {{ engine.name_display }}? This action cannot be undone.</p>
+              <p>Deleting engine with cars assigned to it could break the database.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a href="{{ url_for('delete_engine', id=engine.id) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
