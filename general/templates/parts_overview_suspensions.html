@@ -1,0 +1,31 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if suspensions == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no suspensions in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Short</strong></td>
+            </tr>
+
+                {% for suspension in suspensions %}
+            <tr>
+                <td class="col-sm-1">{{ suspension.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_suspension', id=suspension.id) }}">{{ suspension.name_full }}</a></td>
+                <td class="col-sm-1">{{ suspension.name_short }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

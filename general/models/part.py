@@ -349,6 +349,29 @@ class Transmission(database.Model):
     texts = database.relationship('TransmissionText', backref='transmission', lazy='dynamic')
     images = database.relationship('TransmissionImage', backref='transmission', lazy='dynamic')
 
+    def edit_transmission_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # No manufacturer is selected
+        if form.manufacturer_id.data == 0:
+            self.manufacturer_id = None
+
+    def get_manufacturer_name_display(self):
+        return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
+
+
+def create_transmission_from_form(form):
+
+    new_transmission = Transmission()
+    form.populate_obj(new_transmission)
+
+    # No manufacturer is selected
+    if form.manufacturer_id.data == 0:
+        new_transmission.manufacturer_id = None
+
+    return new_transmission
+
 
 class TransmissionType(database.Model):
 

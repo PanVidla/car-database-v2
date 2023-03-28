@@ -1,0 +1,29 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if transmission_types == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no transmission types in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-11"><strong>Name</strong></td>
+            </tr>
+
+                {% for transmission_type in transmission_types %}
+            <tr>
+                <td class="col-sm-1">{{ transmission_type.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_transmission_type', id=transmission_type.id) }}">{{ transmission_type.name }}</a></td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

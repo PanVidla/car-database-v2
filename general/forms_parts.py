@@ -3,7 +3,7 @@ from wtforms import SelectField, StringField, DecimalField, IntegerField, Submit
 from wtforms.validators import Optional, DataRequired, NumberRange
 
 from general.models.misc import Company
-from general.models.part import FuelType, CombustionEngineType, Aspiration, ElectricEngineType
+from general.models.part import FuelType, CombustionEngineType, Aspiration, ElectricEngineType, TransmissionType
 
 
 # Engine
@@ -159,3 +159,75 @@ class ForcedInductionAddForm(ForcedInductionForm):
 class ForcedInductionEditForm(ForcedInductionForm):
 
     submit = SubmitField("Edit forced induction")
+
+
+# Suspension
+class SuspensionForm(FlaskForm):
+
+    # General
+    name_full = StringField("Full name", validators=[DataRequired()])
+    name_short = StringField("Short name", validators=[Optional()])
+
+
+class SuspensionAddForm(SuspensionForm):
+
+    submit = SubmitField("Add suspension")
+
+
+class SuspensionEditForm(SuspensionForm):
+
+    submit = SubmitField("Edit suspension")
+
+
+# Transmission
+class TransmissionForm(FlaskForm):
+
+    # General
+    manufacturer_id = SelectField("Manufacturer", coerce=int)
+    name_official = StringField("Official name", validators=[Optional()])
+    name_display = StringField("Display name", validators=[DataRequired()])
+    no_of_gears = IntegerField("No. of gears", validators=[DataRequired()])
+    type_id = SelectField("Transmission type", coerce=int)
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(TransmissionForm, self).__init__(*args, **kwargs)
+
+        self.manufacturer_id.choices = [(0, "n/a")]
+        self.manufacturer_id.choices += [(manufacturer.id, "{}".format(manufacturer.name_display))
+                                         for manufacturer
+                                         in Company.query
+                                         .filter(Company.is_car_part_manufacturer == True)
+                                         .order_by(Company.name_display.asc()).all()]
+
+        self.type_id.choices = [(transmission_type.id, "{}".format(transmission_type.name))
+                                for transmission_type
+                                in TransmissionType.query
+                                .order_by(TransmissionType.id.asc()).all()]
+
+
+class TransmissionAddForm(TransmissionForm):
+
+    submit = SubmitField("Add transmission")
+
+
+class TransmissionEditForm(TransmissionForm):
+
+    submit = SubmitField("Edit transmission")
+
+
+# Transmission type
+class TransmissionTypeForm(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+
+
+class TransmissionTypeAddForm(TransmissionTypeForm):
+
+    submit = SubmitField("Add transmission type")
+
+
+class TransmissionTypeEditForm(TransmissionTypeForm):
+
+    submit = SubmitField("Edit transmission type")

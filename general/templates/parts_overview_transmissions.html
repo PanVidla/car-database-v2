@@ -1,0 +1,35 @@
+{% extends "parts_base.html" %}
+
+{% block parts_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if transmissions == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no transmissions in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-6"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong># of gears</strong></td>
+                <td class="col-sm-2"><strong>Type</strong></td>
+                <td class="col-sm-2"><strong>Manufacturer</strong></td>
+            </tr>
+
+                {% for transmission in transmissions %}
+            <tr>
+                <td class="col-sm-1">{{ transmission.id }}</td>
+                <td class="col-sm-6"><a href="{{ url_for('detail_transmission', id=transmission.id) }}">{{ transmission.name_display }}</a></td>
+                <td class="col-sm-1">{{ transmission.no_of_gears }}</td>
+                <td class="col-sm-1">{{ transmission.type.name }}</td>
+                <td class="col-sm-2">{% if transmission.get_manufacturer_name_display() != "n/a" %}<a href="{{ url_for('detail_company', id=transmission.manufacturer_id) }}">{{ transmission.get_manufacturer_name_display() }}</a>{% else %}{{ transmission.get_manufacturer_name_display() }}{% endif %}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

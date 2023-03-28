@@ -24,6 +24,15 @@
                         {% if viewing == "forced_induction" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_forced_induction') }}"><strong>Add forced induction</strong></a></li>
                         {% endif %}
+                        {% if viewing == "suspensions" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_suspension') }}"><strong>Add suspension</strong></a></li>
+                        {% endif %}
+                        {% if viewing == "transmissions" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_transmission') }}"><strong>Add transmission</strong></a></li>
+                        {% endif %}
+                        {% if viewing == "transmission_types" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_transmission_type') }}"><strong>Add transmission type</strong></a></li>
+                        {% endif %}
                         <li class="dropdown">
                         <a href="{{ url_for('overview_engines') }}" class="dropdown-toggle" data-toggle="dropdown">Engines <b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -32,8 +41,17 @@
                           <li><a href="{{ url_for('overview_engine_types_combustion') }}">Combustion engine types</a></li>
                           <li><a href="{{ url_for('overview_engine_types_electric') }}">Electric engine types</a></li>
                         </ul>
+                        </li>
                         <li><a href="{{ url_for('overview_forced_induction') }}">Forced induction</a></li>
-                    </li>
+                        <li><a href="{{ url_for('overview_suspensions') }}">Suspension</a></li>
+                        <li class="dropdown">
+                        <a href="{{ url_for('overview_transmissions') }}" class="dropdown-toggle" data-toggle="dropdown">Transmissions <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{{ url_for('overview_transmissions') }}">All transmissions</a></li>
+                          <li role="presentation" class="divider"></li>
+                          <li><a href="{{ url_for('overview_transmission_types') }}">Transmission types</a></li>
+                        </ul>
+                        </li>
                         {% if engine %}
                         <li class="active"><a href="#">{{ engine.name_display }}</a></li>
                         {% endif %}
@@ -42,6 +60,15 @@
                         {% endif %}
                         {% if forced_induction %}
                         <li class="active"><a href="#">{{ forced_induction.name_display }}</a></li>
+                        {% endif %}
+                        {% if suspension %}
+                        <li class="active"><a href="#">{{ suspension.name_full }}</a></li>
+                        {% endif %}
+                        {% if transmission %}
+                        <li class="active"><a href="#">{{ transmission.name_display }}</a></li>
+                        {% endif %}
+                        {% if transmission_type %}
+                        <li class="active"><a href="#">{{ transmission_type.name }}</a></li>
                         {% endif %}
                     </ul>
                 </div>
