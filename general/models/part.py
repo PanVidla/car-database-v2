@@ -323,8 +323,10 @@ class Suspension(database.Model):
     name_short = database.Column(database.Unicode, index=True, nullable=True, unique=True)
 
     # Relationships
-    cars = database.relationship('Car', backref='suspension', lazy='dynamic')
-    instances = database.relationship('Instance', backref='suspension', lazy='dynamic')
+    cars_front = database.relationship('Car', foreign_keys="Car.suspension_front_id", backref='front_suspension', lazy='dynamic')
+    cars_rear = database.relationship('Car', foreign_keys="Car.suspension_rear_id", backref='rear_suspension', lazy='dynamic')
+    instances_front = database.relationship('Instance', foreign_keys="Instance.suspension_front_id", backref='front_suspension', lazy='dynamic')
+    instances_rear = database.relationship('Instance', foreign_keys="Instance.suspension_rear_id", backref='rear_suspension', lazy='dynamic')
     texts = database.relationship('SuspensionText', backref='suspension', lazy='dynamic')
     images = database.relationship('SuspensionImage', backref='suspension', lazy='dynamic')
 

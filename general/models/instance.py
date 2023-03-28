@@ -61,7 +61,8 @@ class Instance(database.Model):
     drivetrain_id = database.Column(database.Integer, database.ForeignKey("drivetrains.id"), index=True, nullable=False)
 
     # Platform
-    suspension_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
+    suspension_front_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
+    suspension_rear_id = database.Column(database.Integer, database.ForeignKey("suspension.id"), index=True, nullable=True)
     curb_weight_kg = database.Column(database.Double, index=True, nullable=True)
     weight_distribution = database.Column(database.Double, index=True, nullable=True)
     tires_front = database.Column(database.Unicode, nullable=True)
