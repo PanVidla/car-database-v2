@@ -72,7 +72,7 @@ class CarEdit1Form(Car1Form):
     submit = SubmitField("Edit general info")
 
 
-class CarAdd21Form(FlaskForm):
+class Car21Form(FlaskForm):
 
     # Technical
     # Engine
@@ -82,7 +82,7 @@ class CarAdd21Form(FlaskForm):
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd21Form, self).__init__(*args, **kwargs)
+        super(Car21Form, self).__init__(*args, **kwargs)
 
         self.engines.choices = [(engine.id, "{} ({})".format(engine.name_display, engine.fuel_type.name))
                                 for engine
@@ -90,21 +90,21 @@ class CarAdd21Form(FlaskForm):
                                 .order_by(Engine.fuel_type_id.asc(), Engine.name_display.asc()).all()]
 
 
-class CarAdd22Form(FlaskForm):
+class Car22Form(FlaskForm):
 
     submit_skip_engine = SubmitField("Skip")
 
 
-class CarAdd3Form(FlaskForm):
+class Car3Form(FlaskForm):
 
     # Technical
     # Engine
     additional_forced_induction_id = SelectField("Forced induction", coerce=int)
-    submit = SubmitField("Add forced induction")
+    submit = SubmitField("Set forced induction")
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd3Form, self).__init__(*args, **kwargs)
+        super(Car3Form, self).__init__(*args, **kwargs)
 
         self.additional_forced_induction_id.choices = [(0, "None")]
         self.additional_forced_induction_id.choices += [(forced_induction.id, "{}".format(forced_induction.name_display))
@@ -113,7 +113,7 @@ class CarAdd3Form(FlaskForm):
                                                        .order_by(ForcedInduction.name_display.asc()).all()]
 
 
-class CarAdd4Form(FlaskForm):
+class Car4Form(FlaskForm):
 
     # Engine
     max_power_output_kw_actual = DecimalField("Maximum power", validators=[Optional()])
@@ -124,7 +124,7 @@ class CarAdd4Form(FlaskForm):
     submit = SubmitField("Confirm values")
 
 
-class CarAdd5Form(FlaskForm):
+class Car5Form(FlaskForm):
 
     # Transmission
     transmission_id = SelectField("Transmission", coerce=int)
@@ -133,11 +133,11 @@ class CarAdd5Form(FlaskForm):
     engine_layout_id = SelectField("Engine layout", coerce=int)
     drivetrain_id = SelectField("Drivetrain", coerce=int)
 
-    submit = SubmitField("Add transmission & drivetrain")
+    submit = SubmitField("Set transmission & drivetrain")
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd5Form, self).__init__(*args, **kwargs)
+        super(Car5Form, self).__init__(*args, **kwargs)
 
         self.transmission_id.choices = [(0, "None")]
         self.transmission_id.choices += [
@@ -165,7 +165,7 @@ class CarAdd5Form(FlaskForm):
             .order_by(Drivetrain.name_full.asc()).all()]
 
 
-class CarAdd6Form(FlaskForm):
+class Car6Form(FlaskForm):
 
     # Platform
     suspension_front_id = SelectField("Front suspension", coerce=int)
@@ -175,11 +175,11 @@ class CarAdd6Form(FlaskForm):
     tires_front = StringField("Front tires", validators=[Optional()])
     tires_rear = StringField("Rear tires", validators=[Optional()])
 
-    submit = SubmitField("Add platform")
+    submit = SubmitField("Set platform")
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd6Form, self).__init__(*args, **kwargs)
+        super(Car6Form, self).__init__(*args, **kwargs)
 
         self.suspension_front_id.choices = [(0, "None")]
         self.suspension_front_id.choices += [
@@ -196,29 +196,29 @@ class CarAdd6Form(FlaskForm):
             .order_by(Suspension.name_full.asc()).all()]
 
 
-class CarAdd7Form(FlaskForm):
+class Car7Form(FlaskForm):
 
     # Performance
     acceleration_0_to_100_kmh_sec = DecimalField("0 to 100 km/h", validators=[Optional()])
     maximum_speed_kmh = DecimalField("Maximum speed", validators=[Optional()])
 
-    submit = SubmitField("Add performance data")
+    submit = SubmitField("Set performance data")
 
 
-class CarAdd8Form(FlaskForm):
+class Car8Form(FlaskForm):
 
     # Assists
-    assists = SelectMultipleField("Assists", coerce=int)
+    assists_select = SelectMultipleField("Assists", coerce=int)
 
-    submit = SubmitField("Add assists")
+    submit = SubmitField("Set assists")
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd8Form, self).__init__(*args, **kwargs)
+        super(Car8Form, self).__init__(*args, **kwargs)
 
-        self.assists.choices = [(assist.id, "{} ({})".format(assist.name_full, assist.name_short))
-                                for assist
-                                in Assist.query
+        self.assists_select.choices = [(assist.id, "{} ({})".format(assist.name_full, assist.name_short))
+                                       for assist
+                                       in Assist.query
                                 .order_by(Assist.name_full.asc()).all()]
 
 

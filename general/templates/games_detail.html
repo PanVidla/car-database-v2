@@ -10,7 +10,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         {% if game %}
-                        <li><a href="{{ url_for('edit_game_general', id=game.id) }}"><button type="button" class="btn btn-info">Edit general info</button></a></li>
+                        <li><a href="{{ url_for('edit_game_general', id=game.id) }}"><button type="button" class="btn btn-primary">Edit general info</button></a></li>
                         <li><a href="{{ url_for('edit_game_platforms', id=game.id) }}"><button type="button" class="btn btn-info">Edit platforms</button></a></li>
                         <li><a href="{{ url_for('add_activity', game_id=game.id) }}"><button type="button" class="btn btn-info">Add activity</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeStateModal">Change state</button></a></li>

@@ -3,7 +3,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ## v1.0.0.0
 ### General
-* The ability to add, edit, delete and view all instances of objects defined in the general model.
+* ~~The ability to add, edit, delete and view all instances of objects defined in the general model.~~
   * All views should have relevant tables of objects that they are in relationship with.
   * All add methods with multiple steps should have their progress bars set correctly.
   * All attributes of all objects should be protected from invalid data.

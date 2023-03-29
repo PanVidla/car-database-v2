@@ -5,10 +5,10 @@ from flask import render_template, flash, redirect, url_for
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, CarAdd21Form, CarAdd22Form, CarAdd3Form, \
-    CarAdd4Form, CarAdd5Form, CarAdd6Form, CarAdd7Form, CarAdd8Form, CarAdd1Form, CarEdit1Form
+    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car21Form, Car22Form, Car3Form, \
+    Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
-    CarManufacturer, CarCompetition
+    CarManufacturer, CarCompetition, CarEngine, CarAssist
 from general.models.part import FuelType, Aspiration
 
 
@@ -163,8 +163,8 @@ def add_car_1():
 def add_car_2(id):
 
     car = Car.query.get(id)
-    form_1_engine = CarAdd21Form()
-    form_2_skip = CarAdd22Form()
+    form_1_engine = Car21Form()
+    form_2_skip = Car22Form()
 
     if form_1_engine.submit_existing_engine.data and form_1_engine.validate():
 
@@ -197,7 +197,7 @@ def add_car_2(id):
 def add_car_3(id):
 
     car = Car.query.get(id)
-    form = CarAdd3Form()
+    form = Car3Form()
 
     if form.validate_on_submit():
 
@@ -228,13 +228,13 @@ def add_car_4(id):
 
     if engines:
         first_engine = engines[0]
-        form = CarAdd4Form(max_power_output_kw_actual=first_engine.max_power_output_kw,
-                           max_power_output_rpm_actual=first_engine.max_power_output_rpm,
-                           max_torque_nm_actual=first_engine.max_torque_nm,
-                           max_torque_rpm_actual=first_engine.max_torque_rpm)
+        form = Car4Form(max_power_output_kw_actual=first_engine.max_power_output_kw,
+                        max_power_output_rpm_actual=first_engine.max_power_output_rpm,
+                        max_torque_nm_actual=first_engine.max_torque_nm,
+                        max_torque_rpm_actual=first_engine.max_torque_rpm)
 
     else:
-        form = CarAdd4Form()
+        form = Car4Form()
 
     if form.validate_on_submit():
 
@@ -261,7 +261,7 @@ def add_car_4(id):
 def add_car_5(id):
 
     car = Car.query.get(id)
-    form = CarAdd5Form()
+    form = Car5Form()
 
     if form.validate_on_submit():
 
@@ -289,7 +289,7 @@ def add_car_5(id):
 def add_car_6(id):
 
     car = Car.query.get(id)
-    form = CarAdd6Form()
+    form = Car6Form()
 
     if form.validate_on_submit():
 
@@ -317,7 +317,7 @@ def add_car_6(id):
 def add_car_7(id):
 
     car = Car.query.get(id)
-    form = CarAdd7Form()
+    form = Car7Form()
 
     if form.validate_on_submit():
 
@@ -345,11 +345,11 @@ def add_car_7(id):
 def add_car_8(id):
 
     car = Car.query.get(id)
-    form = CarAdd8Form()
+    form = Car8Form()
 
     if form.validate_on_submit():
 
-        car.set_assists(form.assists.data)
+        car.set_assists(form.assists_select.data)
 
         try:
             database.session.commit()
@@ -564,7 +564,7 @@ def add_fuel():
                            viewing="fuels")
 
 
-# Edit car
+# Edit car (general)
 @cardb.route("/cars/edit-car/<id>/general", methods=['GET', 'POST'])
 def edit_car_general(id):
 
@@ -611,6 +611,227 @@ def edit_car_general(id):
     return render_template("cars_form_1_general.html",
                            title="Edit car",
                            heading="Edit general information",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (engine)
+@cardb.route("/cars/edit-car/<id>/engine", methods=['GET', 'POST'])
+def edit_car_engine(id):
+
+    car = Car.query.get(id)
+
+    # Get engine(s) for the multiple select form
+    engines = CarEngine.query.filter(CarEngine.car_id == car.id).all()
+    engine_ids = []
+
+    for engine in engines:
+        engine_ids += str(engine.engine_id)
+
+    form = Car21Form(engines=engine_ids)
+
+    if form.validate_on_submit():
+
+        car.set_engines(form.engines.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_engine", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_2_engine.html",
+                           title="Edit car",
+                           heading="Edit engine(s)",
+                           form_1_engine=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (forced induction)
+@cardb.route("/cars/edit-car/<id>/forced-induction", methods=['GET', 'POST'])
+def edit_car_forced_induction(id):
+
+    car = Car.query.get(id)
+
+    form = Car3Form(obj=car)
+
+    if form.validate_on_submit():
+
+        car.set_forced_induction(form.additional_forced_induction_id.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_forced_induction", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_3_forced_induction.html",
+                           title="Edit car",
+                           heading="Edit forced induction",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (power values)
+@cardb.route("/cars/edit-car/<id>/power-values", methods=['GET', 'POST'])
+def edit_car_power_values(id):
+
+    car = Car.query.get(id)
+
+    form = Car4Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.set_power_to_weight_ratio()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_power_values", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_4_power_values.html",
+                           title="Edit car",
+                           heading="Edit power values",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (transmission)
+@cardb.route("/cars/edit-car/<id>/transmission", methods=['GET', 'POST'])
+def edit_car_transmission(id):
+
+    car = Car.query.get(id)
+
+    form = Car5Form(obj=car)
+
+    if form.validate_on_submit():
+
+        car.set_transmission(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_transmission", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_5_transmission.html",
+                           title="Edit car",
+                           heading="Edit transmission",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (platform)
+@cardb.route("/cars/edit-car/<id>/platform", methods=['GET', 'POST'])
+def edit_car_platform(id):
+
+    car = Car.query.get(id)
+
+    form = Car6Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.set_power_to_weight_ratio()
+        car.set_suspension(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_platform", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_6_platform.html",
+                           title="Edit car",
+                           heading="Edit platform",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (performance)
+@cardb.route("/cars/edit-car/<id>/performance", methods=['GET', 'POST'])
+def edit_car_performance(id):
+
+    car = Car.query.get(id)
+
+    form = Car7Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_performance", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_7_performance.html",
+                           title="Edit car",
+                           heading="Edit performance",
+                           form=form,
+                           viewing="car",
+                           editing=True)
+
+
+# Edit car (assists)
+@cardb.route("/cars/edit-car/<id>/assists", methods=['GET', 'POST'])
+def edit_car_assists(id):
+
+    car = Car.query.get(id)
+
+    # Get assists for the multiple select form
+    assists = CarAssist.query.filter(CarAssist.car_id == car.id).all()
+    assists_ids = []
+
+    for assist in assists:
+        assists_ids += str(assist.assist_id)
+
+    form = Car8Form(assists_select=assists_ids)
+
+    if form.validate_on_submit():
+
+        car.set_assists(form.assists_select.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_assists", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_8_assists.html",
+                           title="Edit car",
+                           heading="Edit assists",
                            form=form,
                            viewing="car",
                            editing=True)

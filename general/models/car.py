@@ -473,7 +473,7 @@ class Car(database.Model):
             if self.curb_weight_kg is not (None or ""):
                 weight = self.curb_weight_kg
 
-                self.power_to_weight_ratio = power/weight
+                self.power_to_weight_ratio = float(power)/float(weight)
 
             else:
                 self.power_to_weight_ratio = None
