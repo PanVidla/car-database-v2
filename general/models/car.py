@@ -1,9 +1,12 @@
 from datetime import datetime
 
+from flask import flash
 from sqlalchemy.orm import backref
 
 from general import database
 from general.models.info import Text, Image
+from general.models.misc import Company, Competition
+from general.models.part import Engine
 
 
 # Car
@@ -80,6 +83,223 @@ class Car(database.Model):
     instances = database.relationship('Instance', backref='car', lazy='dynamic')
     texts = database.relationship('CarText', backref='car', lazy='dynamic')
     images = database.relationship('CarImage', backref='car', lazy='dynamic')
+
+    def set_assists(self, assists_ids):
+
+        # Delete the old car-assist associations
+        car_assist_old = CarAssist.query.filter(CarAssist.car_id == self.id).all()
+
+        for car_assist_association in car_assist_old:
+
+            try:
+                database.session.delete(car_assist_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_display,
+                                                                                                  car_assist_association.assist.name_short),
+                      "danger")
+
+            database.session.commit()
+
+        # Create new car-asssist associations
+        for assist_id in assists_ids:
+
+            try:
+                car_assist_association = CarAssist(car_id=self.id, assist_id=assist_id)
+                database.session.add(car_assist_association)
+
+            except RuntimeError:
+                competition = Assist.query.get(assist_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_display,
+                                                                                               assist.short),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_engines(self, engine_ids):
+
+        # Delete the old car-engine associations
+        car_engine_old = CarEngine.query.filter(CarEngine.car_id == self.id).all()
+
+        for car_engine_association in car_engine_old:
+
+            try:
+                database.session.delete(car_engine_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_display,
+                                                                                                  car_engine_association.engine.name_display),
+                      "danger")
+
+            database.session.commit()
+
+        # Create new car-engine associations
+        for engine_id in engine_ids:
+
+            try:
+                car_engine_association = CarEngine(car_id=self.id, engine_id=engine_id)
+                database.session.add(car_engine_association)
+
+            except RuntimeError:
+                engine = Engine.query.get(engine_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_display,
+                                                                                               engine.name_display),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_forced_induction(self, forced_induction_id):
+
+        if forced_induction_id == 0:
+            self.additional_forced_induction_id = None
+
+        else:
+            self.additional_forced_induction_id = forced_induction_id
+
+    def set_competitions(self, competition_ids):
+
+        # Delete the old car-manufacturer associations
+        car_competition_old = CarCompetition.query.filter(CarCompetition.car_id == self.id).all()
+
+        for car_competition_association in car_competition_old:
+
+            try:
+                database.session.delete(car_competition_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_display,
+                                                                                                  car_competition_association.competition.name_display),
+                      "danger")
+
+            database.session.commit()
+
+        # Create new car-competition associations
+        for competition_id in competition_ids:
+
+            try:
+                car_competition_association = CarCompetition(car_id=self.id, competition_id=competition_id)
+                database.session.add(car_competition_association)
+
+            except RuntimeError:
+                competition = Competition.query.get(competition_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_display,
+                                                                                               competition.name_display),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_manufacturers(self, primary_manufacturer_id, secondary_manufacturer_ids):
+
+        # Delete the old car-manufacturer associations
+        car_manufacturer_old = CarManufacturer.query.filter(CarManufacturer.car_id == self.id).all()
+
+        for car_manufacturer_association in car_manufacturer_old:
+
+            try:
+                database.session.delete(car_manufacturer_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_display, car_manufacturer_association.manufacturer.name_display), "danger")
+
+            database.session.commit()
+
+        # Create new car-manufacturer associations
+        primary_car_manufacturer_association = CarManufacturer(car_id=self.id, company_id=primary_manufacturer_id, is_primary=True)
+        database.session.add(primary_car_manufacturer_association)
+
+        for manufacturer_id in secondary_manufacturer_ids:
+
+            try:
+                car_manufacturer_association = CarManufacturer(car_id=self.id, company_id=manufacturer_id, is_primary=False)
+                database.session.add(car_manufacturer_association)
+
+            except RuntimeError:
+                company = Company.query.get(manufacturer_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_display,
+                                                                                               company.name_display),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_power_to_weight_ratio(self):
+
+        if self.max_power_output_kw_actual is not (None or ""):
+            power = self.max_power_output_kw_actual
+            if self.curb_weight_kg is not (None or ""):
+                weight = self.curb_weight_kg
+
+                self.power_to_weight_ratio = power/weight
+
+            else:
+                self.power_to_weight_ratio = None
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_suspension(self, form):
+
+        if form.suspension_front_id.data == 0:
+            self.suspension_front_id = None
+        else:
+            self.suspension_front_id = form.suspension_front_id.data
+
+        if form.suspension_rear_id.data == 0:
+            self.suspension_rear_id = None
+        else:
+            self.suspension_rear_id = form.suspension_rear_id.data
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_transmission(self, form):
+
+        if form.transmission_id.data == 0:
+            self.transmission_id = None
+            self.transmission_type_actual_id = form.transmission_type_actual_id.data
+            self.no_of_gears_actual = form.no_of_gears_actual.data
+        else:
+            self.transmission_id = form.transmission_id.data
+            self.transmission_type_actual_id = None
+            self.no_of_gears_actual = None
+
+        self.datetime_edited = datetime.utcnow()
+
+
+def create_car_from_form(form):
+
+    new_car = Car()
+    form.populate_obj(new_car)
+
+    # Set manufacturers display string
+    primary_manufacturer = Company.query.get(form.primary_manufacturer.data)
+    secondary_manufacturers = []
+
+    for manufacturer_id in form.secondary_manufacturers.data:
+        manufacturer = Company.query.filter(Company.id == manufacturer_id)
+        secondary_manufacturers += manufacturer
+
+    manufacturers_display_string = primary_manufacturer.name_display
+
+    for secondary_manufacturer in secondary_manufacturers:
+        manufacturers_display_string += " / {}".format(secondary_manufacturer.name_display)
+
+    new_car.manufacturers_display = manufacturers_display_string
+
+    # If no country is selected
+    if form.country_id.data == 0:
+        new_car.country_id = None
+
+    # Temporarily set values to zero, because they cannot be nulled
+    new_car.engine_layout_id = 0
+    new_car.drivetrain_id = 0
+
+    return new_car
 
 
 class Assist(database.Model):

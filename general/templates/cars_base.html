@@ -24,7 +24,7 @@
                         <li><a class="hover-underline-animation" href="{{ url_for('add_body_style') }}"><strong>Add body style</strong></a></li>
                         {% endif %}
                         {% if viewing == "cars" %}
-                        <li><a class="hover-underline-animation" href="#"><strong>Add car</strong></a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_car_1') }}"><strong>Add car</strong></a></li>
                         {% endif %}
                         {% if viewing == "car_classes" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_car_class') }}"><strong>Add car class</strong></a></li>

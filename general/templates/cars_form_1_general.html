@@ -1,0 +1,114 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+
+        {% if not editing %}
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+            <span class="sr-only">5% Complete</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <hr>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.primary_manufacturer.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.primary_manufacturer(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.secondary_manufacturers.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.secondary_manufacturers(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.year.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.year(class_="form-control", placeholder="Year (optional)") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.model.label }}</label>
+                <div class="col-sm-7">
+                    {{ form.model(class_="form-control", placeholder="Model") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_display.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_display(class_="form-control input-lg", placeholder="Display name") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_short.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.name_short(class_="form-control", placeholder="Short name") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.country_id.label }}</label>
+                <div class="col-sm-3">
+                    {{ form.country_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.is_prototype.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_prototype(class_="form-control") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.is_fictional.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_fictional(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.body_style_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.body_style_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.car_class_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.car_class_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.competitions.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.competitions(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

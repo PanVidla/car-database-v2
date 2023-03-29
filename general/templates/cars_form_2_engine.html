@@ -1,0 +1,51 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <div>
+
+        {% if not editing %}
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+            <span class="sr-only">5% Complete</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form_1_engine.hidden_tag() }}
+
+        <h2>Technical information</h2>
+        <hr>
+        <h3>Engine</h3>
+        <h4>Select existing engine(s)</h4>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form_1_engine.engines.label }}</label>
+                <div class="col-sm-10">
+                    {{ form_1_engine.engines(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form_1_engine.submit_existing_engine(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+        </form>
+
+        <form role="form" class="form-horizontal" method="post">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form_2_skip.submit_skip_engine(class_="btn btn-warning btn-block") }}
+            </div>
+        </div>
+        </form>
+
+    </div>
+
+{% endblock %}

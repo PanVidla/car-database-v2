@@ -3,8 +3,9 @@ from flask import render_template, flash, redirect, url_for
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm, AspirationEditForm, AspirationAddForm
-from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout
+    FuelEditForm, AspirationEditForm, AspirationAddForm, CarAdd1Form, CarAdd21Form, CarAdd22Form, CarAdd3Form, \
+    CarAdd4Form, CarAdd5Form, CarAdd6Form, CarAdd7Form, CarAdd8Form
+from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form
 from general.models.part import FuelType, Aspiration
 
 
@@ -118,6 +119,247 @@ def overview_fuels():
                            heading="Fuel types",
                            fuels=fuels,
                            viewing="fuels")
+
+
+# Add car
+# General information
+@cardb.route("/cars/add-car/1", methods=['GET', 'POST'])
+def add_car_1():
+
+    form = CarAdd1Form()
+
+    if form.validate_on_submit():
+
+        new_car = create_car_from_form(form)
+
+        try:
+            database.session.add(new_car)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the new car to the database.", "danger")
+            return redirect(url_for("add_car_1"))
+
+        flash("The {} has been successfully added to the database.".format(new_car.name_display), "success")
+
+        new_car.set_manufacturers(form.primary_manufacturer.data, form.secondary_manufacturers.data)
+        new_car.set_competitions(form.competitions.data)
+
+        return redirect(url_for("add_car_2", id=new_car.id))
+
+    return render_template("cars_form_1_general.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Engine
+@cardb.route("/cars/add-car/2/<id>", methods=['GET', 'POST'])
+def add_car_2(id):
+
+    car = Car.query.get(id)
+    form_1_engine = CarAdd21Form()
+    form_2_skip = CarAdd22Form()
+
+    if form_1_engine.submit_existing_engine.data and form_1_engine.validate():
+
+        car.set_engines(form_1_engine.engines.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning engine(s) to the car.", "danger")
+            return redirect(url_for("add_car_2"))
+
+        flash("The selected engine(s) has been successfully assigned to the car.", "success")
+        return redirect(url_for("add_car_3", id=car.id))
+
+    if form_2_skip.submit_skip_engine.data:
+
+        flash("Engine selection for this car has been skipped.", "info")
+        return redirect(url_for("add_car_3", id=car.id))
+
+    return render_template("cars_form_2_engine.html",
+                           title="Add car",
+                           heading="Add car",
+                           form_1_engine=form_1_engine,
+                           form_2_skip=form_2_skip,
+                           viewing="cars")
+
+
+# Forced induction
+@cardb.route("/cars/add-car/3/<id>", methods=['GET', 'POST'])
+def add_car_3(id):
+
+    car = Car.query.get(id)
+    form = CarAdd3Form()
+
+    if form.validate_on_submit():
+
+        car.set_forced_induction(form.additional_forced_induction_id.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning additional forced induction to the car.", "danger")
+            return redirect(url_for("add_car_3"))
+
+        flash("The selected forced induction has been successfully assigned to the car.", "success")
+        return redirect(url_for("add_car_4", id=car.id))
+
+    return render_template("cars_form_3_forced_induction.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Actual power and torque output
+@cardb.route("/cars/add-car/4/<id>", methods=['GET', 'POST'])
+def add_car_4(id):
+
+    car = Car.query.get(id)
+    engines = car.engines.all()
+
+    if engines:
+        first_engine = engines[0]
+        form = CarAdd4Form(max_power_output_kw_actual=first_engine.max_power_output_kw,
+                           max_power_output_rpm_actual=first_engine.max_power_output_rpm,
+                           max_torque_nm_actual=first_engine.max_torque_nm,
+                           max_torque_rpm_actual=first_engine.max_torque_rpm)
+
+    else:
+        form = CarAdd4Form()
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning power values of the car.", "danger")
+            return redirect(url_for("add_car_4"))
+
+        flash("The values have been successfully assigned to the car.", "success")
+        return redirect(url_for("add_car_5", id=car.id))
+
+    return render_template("cars_form_4_power_values.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Transmission and drivetrain
+@cardb.route("/cars/add-car/5/<id>", methods=['GET', 'POST'])
+def add_car_5(id):
+
+    car = Car.query.get(id)
+    form = CarAdd5Form()
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.set_transmission(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning transmission data of the car.", "danger")
+            return redirect(url_for("add_car_5"))
+
+        flash("The transmission for this car has been successfully set..", "success")
+        return redirect(url_for("add_car_6", id=car.id))
+
+    return render_template("cars_form_5_transmission.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Platform
+@cardb.route("/cars/add-car/6/<id>", methods=['GET', 'POST'])
+def add_car_6(id):
+
+    car = Car.query.get(id)
+    form = CarAdd6Form()
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.set_suspension(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning platform to the car.", "danger")
+            return redirect(url_for("add_car_6"))
+
+        flash("The platform for this car has been successfully set.", "success")
+        return redirect(url_for("add_car_7", id=car.id))
+
+    return render_template("cars_form_6_platform.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Performance
+@cardb.route("/cars/add-car/7/<id>", methods=['GET', 'POST'])
+def add_car_7(id):
+
+    car = Car.query.get(id)
+    form = CarAdd7Form()
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car)
+        car.set_power_to_weight_ratio()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning performance data to the car.", "danger")
+            return redirect(url_for("add_car_7"))
+
+        flash("The performance data has been successfully set.", "success")
+        return redirect(url_for("add_car_8", id=car.id))
+
+    return render_template("cars_form_7_performance.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
+
+
+# Assists
+@cardb.route("/cars/add-car/8/<id>", methods=['GET', 'POST'])
+def add_car_8(id):
+
+    car = Car.query.get(id)
+    form = CarAdd8Form()
+
+    if form.validate_on_submit():
+
+        car.set_assists(form.assists.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning assists to the car.", "danger")
+            return redirect(url_for("add_car_8"))
+
+        flash("The creation of {} has been successfully completed.".format(car.name_display), "success")
+        return redirect(url_for("overview_cars"))
+
+    return render_template("cars_form_8_assists.html",
+                           title="Add car",
+                           heading="Add car",
+                           form=form,
+                           viewing="cars")
 
 
 # Add aspiration
