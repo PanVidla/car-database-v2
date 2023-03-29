@@ -468,9 +468,9 @@ class Car(database.Model):
 
     def set_power_to_weight_ratio(self):
 
-        if self.max_power_output_kw_actual is not (None or ""):
+        if self.max_power_output_kw_actual is not None:
             power = self.max_power_output_kw_actual
-            if self.curb_weight_kg is not (None or ""):
+            if self.curb_weight_kg is not None:
                 weight = self.curb_weight_kg
 
                 self.power_to_weight_ratio = float(power)/float(weight)
