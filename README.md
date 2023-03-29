@@ -13,3 +13,6 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ### Crazy Taxi
 * The ability to add, edit, delete and view instances for Crazy Taxi.
+
+## v1.0.1.0
+* ADD: Add display of metadata to all the objects that support it.
