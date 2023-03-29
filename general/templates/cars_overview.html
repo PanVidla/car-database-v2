@@ -26,7 +26,7 @@
                 <td class="col-sm-1">{{ car.id }}</td>
                 <td class="col-sm-1">{{ car.year }}</td>
                 <td class="col-sm-2">{{ car.manufacturers_display }}</td>
-                <td class="col-sm-3">{{ car.model }}</td>
+                <td class="col-sm-3"><a href="{{ url_for('detail_car', id=car.id) }}">{{ car.model }}</a></td>
                 <td class="col-sm-2">{{ car.country.name_display }}</td>
                 <td class="col-sm-1">{{ car.no_of_instances }}</td>
                 <td class="col-sm-1">{{ car.body_style.name }}</td>

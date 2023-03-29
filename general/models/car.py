@@ -6,7 +6,7 @@ from sqlalchemy.orm import backref
 from general import database
 from general.models.info import Text, Image
 from general.models.misc import Company, Competition
-from general.models.part import Engine
+from general.models.part import Engine, EngineCombustion, EngineElectric
 
 
 # Car
@@ -84,6 +84,193 @@ class Car(database.Model):
     texts = database.relationship('CarText', backref='car', lazy='dynamic')
     images = database.relationship('CarImage', backref='car', lazy='dynamic')
 
+    def get_acceleration_0_to_100_kmh_sec(self):
+        return "{} s".format(self.acceleration_0_to_100_kmh_sec) if self.acceleration_0_to_100_kmh_sec is not None else "n/a"
+
+    def get_assists(self):
+
+        assists = ""
+        counter = 1
+
+        for assist in self.assists:
+
+            if counter > 1:
+                assists += ", {}".format(assist.name_short)
+
+            else:
+                assists += "{}".format(assist.name_short)
+
+            counter += 1
+
+        return assists
+
+    def get_car_class(self):
+        return self.car_class.name_custom if self.car_class_id is not None else "n/a"
+
+    def get_country(self):
+        return self.country.name_display if self.country_id is not None else "n/a"
+
+    def get_curb_weight_kg(self):
+        return "{} kg".format(self.curb_weight_kg) if self.curb_weight_kg is not None else "n/a"
+
+    def get_drivetrain(self):
+        return self.drivetrain.name_short if self.drivetrain_id != 0 else "n/a"
+
+    def get_engines(self):
+
+        engines = []
+
+        for engine in self.engines:
+            engines.append(engine)
+
+        return engines
+
+    def get_engine_layout(self):
+        return self.engine_layout.name if self.engine_layout_id != 0 else "n/a"
+
+    def get_combustion_engines(self):
+
+        engines = self.get_engines()
+        combustion_engines = []
+
+        counter = 0
+
+        for engine in engines:
+            combustion_engine = EngineCombustion.query.get(engine.id)
+            if combustion_engine is not None:
+                counter += 1
+                combustion_engines.append([combustion_engine, counter])
+
+        return combustion_engines
+
+    def get_electric_engines(self):
+
+        engines = self.get_engines()
+        electric_engines = []
+
+        counter = 0
+
+        for engine in engines:
+            electric_engine = EngineElectric.query.get(engine.id)
+            if electric_engine is not None:
+                counter += 1
+                electric_engines.append([electric_engine, counter])
+
+        return electric_engines
+
+    def get_fuel_type_name(self):
+
+        if self.fuel_type_actual_id is not None:
+            return self.fuel_type.name
+        else:
+            engines = self.get_engines()
+            if engines:
+                first_engine = engines[0]
+                return first_engine.fuel_type.name
+            else:
+                return "n/a"
+
+    def get_is_fictional(self):
+        return "✓" if self.is_fictional else "x"
+
+    def get_is_prototype(self):
+        return "✓" if self.is_prototype else "x"
+
+    def get_manufacturers(self):
+
+        manufacturers = []
+
+        primary_manufacturer = CarManufacturer.query.filter(CarManufacturer.car_id == self.id,
+                                                            CarManufacturer.is_primary == True).first()
+        secondary_manufacturers = CarManufacturer.query.filter(CarManufacturer.car_id == self.id,
+                                                               CarManufacturer.is_primary == False).all()
+
+        manufacturers.append(primary_manufacturer)
+        for manufacturer in secondary_manufacturers:
+            manufacturers.append(manufacturer)
+
+        return manufacturers
+
+    def get_maximum_power_kw(self):
+
+        maximum_power_string = ""
+
+        if self.max_power_output_kw_actual is not None:
+            maximum_power_string += "{} kW".format(self.max_power_output_kw_actual)
+
+            if self.max_power_output_rpm_actual is not None:
+                maximum_power_string += " @ {} RPM".format(self.max_power_output_rpm_actual)
+
+        else:
+            maximum_power_string = "n/a"
+
+        return maximum_power_string
+
+    def get_maximum_speed_kmh(self):
+        return "{} km/h".format(self.maximum_speed_kmh) if self.maximum_speed_kmh is not None else "n/a"
+
+    def get_maximum_torque_nm(self):
+
+        maximum_torque_string = ""
+
+        if self.max_torque_nm_actual is not None:
+            maximum_torque_string += "{} N⋅m".format(self.max_torque_nm_actual)
+
+            if self.max_torque_rpm_actual is not None:
+                maximum_torque_string += " @ {} RPM".format(self.max_torque_rpm_actual)
+
+        else:
+            maximum_torque_string = "n/a"
+
+        return maximum_torque_string
+
+    def get_name_short(self):
+        return self.name_short if self.name_short != "" else "n/a"
+
+    def get_no_of_engines(self):
+        return len(self.get_engines())
+
+    def get_no_of_combustion_engines(self):
+        return len(self.get_combustion_engines())
+
+    def get_no_of_electric_engines(self):
+        return len(self.get_electric_engines())
+
+    def get_no_of_gears_actual(self):
+        return self.no_of_gears_actual if self.no_of_gears_actual is not None else "n/a"
+
+    def get_power_to_weight_ratio(self):
+        return "%.2f" % round(self.power_to_weight_ratio, 2) if self.power_to_weight_ratio is not None else "n/a"
+
+    def get_suspension_front(self):
+        return self.front_suspension.name_full if self.suspension_front_id is not None else "n/a"
+
+    def get_suspension_rear(self):
+        return self.rear_suspension.name_full if self.suspension_rear_id is not None else "n/a"
+
+    def get_tires_front(self):
+        return self.tires_front if self.tires_front != "" else "n/a"
+
+    def get_tires_rear(self):
+        return self.tires_rear if self.tires_rear != "" else "n/a"
+
+    def get_transmission_type_actual(self):
+        return self.transmission_type.name if self.transmission_type_actual_id is not None else "n/a"
+
+    def get_weight_distribution(self):
+
+        if self.weight_distribution is not None:
+
+            weight_front = self.weight_distribution
+            weight_rear = 100 - weight_front
+            return "{} / {} %".format(weight_front, weight_rear)
+
+        else:
+            return "n/a"
+
+    def get_year(self):
+        return self.year if self.year is not None or "" else "n/a"
+
     def set_assists(self, assists_ids):
 
         # Delete the old car-assist associations
@@ -109,7 +296,7 @@ class Car(database.Model):
                 database.session.add(car_assist_association)
 
             except RuntimeError:
-                competition = Assist.query.get(assist_id)
+                assist = Assist.query.get(assist_id)
                 flash("There was a problem adding a new association between {} and {}.".format(self.name_display,
                                                                                                assist.short),
                       "danger")

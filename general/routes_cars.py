@@ -559,6 +559,13 @@ def add_fuel():
                            viewing="fuels")
 
 
+# Edit car
+@cardb.route("/cars/edit-car/<id>", methods=['GET', 'POST'])
+def edit_car(id):
+
+    pass
+
+
 # Edit aspiration
 @cardb.route("/cars/aspiration/edit-aspiration/<id>", methods=['GET', 'POST'])
 def edit_aspiration(id):
@@ -750,6 +757,13 @@ def edit_fuel(id):
                            viewing="fuels")
 
 
+# Delete car
+@cardb.route("/cars/delete-car/<id>", methods=['GET', 'POST'])
+def delete_car(id):
+
+    pass
+
+
 # Delete aspiration
 @cardb.route("/cars/aspiration/delete-aspiration/<id>", methods=['GET', 'POST'])
 def delete_aspiration(id):
@@ -876,6 +890,19 @@ def delete_fuel(id):
 
     flash("The fuel \"{}\" has been successfully deleted.".format(fuel.name), "success")
     return redirect(url_for("overview_fuels"))
+
+
+# Car detail
+@cardb.route("/cars/detail/<id>", methods=['GET', 'POST'])
+def detail_car(id):
+
+    car = Car.query.get(id)
+
+    return render_template("cars_detail.html",
+                           title="{}".format(car.name_display),
+                           heading="{}".format(car.name_display),
+                           car=car,
+                           viewing="cars")
 
 
 # Aspiration detail

@@ -192,7 +192,7 @@ class CarAdd7Form(FlaskForm):
 
     # Performance
     acceleration_0_to_100_kmh_sec = DecimalField("0 to 100 km/h", validators=[Optional()])
-    maximum_speed_kmh = StringField("Maximum speed", validators=[Optional()])
+    maximum_speed_kmh = DecimalField("Maximum speed", validators=[Optional()])
 
     submit = SubmitField("Add performance data")
 

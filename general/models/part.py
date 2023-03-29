@@ -98,6 +98,9 @@ class Engine(database.Model):
     def get_max_torque_rpm(self):
         return self.max_torque_rpm if self.max_torque_rpm is not None else "n/a"
 
+    def get_name_official(self):
+        return self.name_official if self.name_official is not None else "n/a"
+
 
 class EngineCombustion(Engine):
 
@@ -137,6 +140,9 @@ class EngineCombustion(Engine):
 
     def get_cylinder_alignment(self):
         return self.cylinder_alignment if self.cylinder_alignment is not (None or "") else "n/a"
+
+    def get_displacement(self):
+        return "{} L".format(self.displacement) if self.displacement is not None else "n/a"
 
     def get_engine_type(self):
         return self.engine_type.name if self.engine_type is not None else "n/a"
@@ -278,6 +284,9 @@ class ForcedInduction(database.Model):
 
     def get_manufacturer_name_display(self):
         return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
+
+    def get_name_official(self):
+        return self.name_official if self.name_official is not None else "n/a"
 
     def get_boost_pressure_bar(self):
         return "{} bar".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"

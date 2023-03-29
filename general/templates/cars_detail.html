@@ -1,0 +1,358 @@
+{% extends "cars_base.html" %}
+
+{% block cars_content %}
+
+    <!-- Sub-sub-menu -->
+    {% block subsubmenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        {% if car %}
+                        <li><a href="{{ url_for('edit_car', id=car.id) }}"><button type="button" class="btn btn-info">Edit car</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete car</button></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    <!--  Content  -->
+    <!--  General information  -->
+    <div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">General information</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-6">{{ car.name_display }}</div>
+                  <div class="col-sm-2 text-right"><b>Short name</b></div>
+                  <div class="col-sm-2">{{ car.get_name_short() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Year</b></div>
+                  <div class="col-sm-2">{{ car.get_year() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer(s)</b></div>
+                  <div class="col-sm-2">{{ car.manufacturers_display }}</div>
+                  <div class="col-sm-2 text-right"><b>Model</b></div>
+                  <div class="col-sm-2">{{ car.model }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Country</b></div>
+                  <div class="col-sm-2"><a href="{{ url_for('detail_country', id=car.country.id) }}">{{ car.get_country() }}</a></div>
+                  <div class="col-sm-2 text-right"><b>Prototype</b></div>
+                  <div class="col-sm-2">{{ car.get_is_prototype() }}</div>
+                  <div class="col-sm-2 text-right"><b>Fictional</b></div>
+                  <div class="col-sm-2">{{ car.get_is_fictional() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Car class</b></div>
+                  <div class="col-sm-2">{{ car.get_car_class() }}</div>
+                  <div class="col-sm-2 text-right"><b>Body style</b></div>
+                  <div class="col-sm-6">{{ car.body_style.name }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Drivetrain</b></div>
+                  <div class="col-sm-2">{{ car.get_drivetrain() }}</div>
+                  <div class="col-sm-2 text-right"><b>Engine layout</b></div>
+                  <div class="col-sm-6">{{ car.get_engine_layout() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <h2>Technical information</h2>
+
+    <!--  Technical information  -->
+    <!--  Power & Torque  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">System</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Fuel type</b></div>
+                  <div class="col-sm-4">{{ car.get_fuel_type_name() }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of engines</b></div>
+                  <div class="col-sm-4">{{ car.get_no_of_engines() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ car.get_maximum_power_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ car.get_maximum_torque_nm() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Engine  -->
+    {% if car.get_no_of_engines() == 0 %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Engine</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-12 text-center">This car has no engine information.</div>
+              </div>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if car.get_no_of_engines() >= 1 %}
+        {% if car.get_no_of_combustion_engines() > 0 %}
+            {% for combustion_engine in car.get_combustion_engines() %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {% if car.get_no_of_combustion_engines() > 1 %}
+            <h3 class="panel-title">Combustion engine #{{ combustion_engine[1] }}</h3>
+            {% else %}
+            <h3 class="panel-title">Combustion engine</h3>
+            {% endif %}
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_engine_combustion', id=combustion_engine[0].id) }}">{{ combustion_engine[0].name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=combustion_engine[0].manufacturer_id) }}">{{ combustion_engine[0].get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Engine type</b></div>
+                  <div class="col-sm-10">{{ combustion_engine[0].get_engine_type() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_max_power_output_string_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_max_torque_string_nm() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Aspiration</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_aspiration() }}</div>
+                  <div class="col-sm-2 text-right"><b>Displacement</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_displacement() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Cylinder alignment</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_cylinder_alignment() }}</div>
+                  <div class="col-sm-2 text-right"><b>Valves per cylinder</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_valves_per_cylinder() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+            {% endfor %}
+        {% endif %}
+        {% if car.get_no_of_electric_engines() > 0 %}
+            {% for electric_engine in car.get_electric_engines() %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {% if car.get_no_of_electric_engines() > 1 %}
+            <h3 class="panel-title">Electric engine #{{ electric_engine[1] }}</h3>
+            {% else %}
+            <h3 class="panel-title">Electric engine</h3>
+            {% endif %}
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_engine_electric', id=electric_engine[0].id) }}">{{ electric_engine[0].name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=electric_engine[0].manufacturer_id) }}">{{ electric_engine[0].get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Engine type</b></div>
+                  <div class="col-sm-10">{{ electric_engine[0].get_engine_type() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_max_power_output_string_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_max_torque_string_nm() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Battery technology</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_battery_technology() }}</div>
+                  <div class="col-sm-2 text-right"><b>Battery voltage</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_battery_voltage() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    <!--  Forced induction  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Additional forced induction</h3>
+          </div>
+          <div class="panel-body">
+              {% if car.forced_induction == None %}
+              <div class="row">
+                  <div class="col-sm-12 text-center">This car has no additional forced induction.</div>
+              </div>
+              {% else %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_forced_induction', id=car.forced_induction.id) }}">{{ car.forced_induction.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ car.forced_induction.get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=car.forced_induction.manufacturer.id) }}">{{ car.forced_induction.get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Induction type</b></div>
+                  <div class="col-sm-4">{{ car.forced_induction.type.name }}</div>
+                  <div class="col-sm-2 text-right"><b>Boost pressure</b></div>
+                  <div class="col-sm-4">{{ car.forced_induction.get_boost_pressure_bar() }}</div>
+              </div>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+
+    <!--  Transmission  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Transmission</h3>
+          </div>
+          <div class="panel-body">
+              {% if car.transmission != None %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_transmission', id=car.transmission_id) }}">{{ car.transmission.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ car.transmission.name_official }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=car.transmission.manufacturer.id) }}">{{ car.transmission.get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Transmission type</b></div>
+                  <div class="col-sm-4">{{ car.transmission.type.name }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of gears</b></div>
+                  <div class="col-sm-4">{{ car.transmission.no_of_gears }}</div>
+              </div>
+              {% else %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Transmission type</b></div>
+                  <div class="col-sm-4">{{ car.get_transmission_type_actual() }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of gears</b></div>
+                  <div class="col-sm-4">{{ car.get_no_of_gears_actual() }}</div>
+              </div>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+
+    <!--  Platform  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Platform</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Front suspension</b></div>
+                  <div class="col-sm-4">{{ car.get_suspension_front() }}</div>
+                  <div class="col-sm-2 text-right"><b>Rear suspension</b></div>
+                  <div class="col-sm-4">{{ car.get_suspension_rear() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Curb weight</b></div>
+                  <div class="col-sm-4">{{ car.get_curb_weight_kg() }}</div>
+                  <div class="col-sm-2 text-right"><b>Weight distribution</b></div>
+                  <div class="col-sm-4">{{ car.get_weight_distribution() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Front tires</b></div>
+                  <div class="col-sm-4">{{ car.get_tires_front() }}</div>
+                  <div class="col-sm-2 text-right"><b>Rear tires</b></div>
+                  <div class="col-sm-4">{{ car.get_tires_rear() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Performance  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Performance</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>0 to 100 km/h</b></div>
+                  <div class="col-sm-4">{{ car.get_acceleration_0_to_100_kmh_sec() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum speed</b></div>
+                  <div class="col-sm-4">{{ car.get_maximum_speed_kmh() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Power / weight ratio</b></div>
+                  <div class="col-sm-10">{{ car.get_acceleration_0_to_100_kmh_sec() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Assists  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Assists</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Assists</b></div>
+                  <div class="col-sm-10">{{ car.get_assists() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Modals  -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Delete car</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete the car "{{ car.name }}"? This action cannot be undone.</p>
+              <p>Deleting car with cars or engines assigned to it could break the database.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a href="{{ url_for('delete_car', id=car.id) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
