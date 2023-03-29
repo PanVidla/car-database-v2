@@ -13,12 +13,12 @@
             <tr>
                 <td class="col-sm-1"><strong>ID</strong></td>
                 <td class="col-sm-1"><strong>Year</strong></td>
-                <td class="col-sm-2"><strong>Manufacturer</strong></td>
+                <td class="col-sm-2"><strong>Manufacturer(s)</strong></td>
                 <td class="col-sm-3"><strong>Model</strong></td>
                 <td class="col-sm-2"><strong>Country</strong></td>
-                <td class="col-sm-1"><strong>No. of instances</strong></td>
-                <td class="col-sm-1"><strong>Body style</strong></td>
-                <td class="col-sm-1"><strong>Fictional?</strong></td>
+                <td class="col-sm-1 text-center"><strong>No. of instances</strong></td>
+                <td class="col-sm-1 text-center"><strong>Body style</strong></td>
+                <td class="col-sm-1 text-center"><strong>Fictional</strong></td>
             </tr>
 
                 {% for car in cars %}
@@ -27,10 +27,10 @@
                 <td class="col-sm-1">{{ car.year }}</td>
                 <td class="col-sm-2">{{ car.manufacturers_display }}</td>
                 <td class="col-sm-3"><a href="{{ url_for('detail_car', id=car.id) }}">{{ car.model }}</a></td>
-                <td class="col-sm-2">{{ car.country.name_display }}</td>
-                <td class="col-sm-1">{{ car.no_of_instances }}</td>
-                <td class="col-sm-1">{{ car.body_style.name }}</td>
-                <td class="col-sm-1">{{ car.is_fictional }}</td>
+                <td class="col-sm-2">{% if car.get_country() != "n/a" %}<a href="{{ url_for('detail_country', id=car.country.id) }}">{{ car.get_country() }}</a>{% else %}{{ car.get_country() }}{% endif %}</td>
+                <td class="col-sm-1 text-center">{{ car.no_of_instances }}</td>
+                <td class="col-sm-1 text-center">{{ car.body_style.name }}</td>
+                <td class="col-sm-1 text-center {% if car.is_fictional == True %}true-neutral{% else %}false-neutral{% endif %}">{{ car.get_is_fictional() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

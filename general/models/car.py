@@ -89,23 +89,50 @@ class Car(database.Model):
 
     def get_assists(self):
 
-        assists = ""
-        counter = 1
+        if self.assists:
 
-        for assist in self.assists:
+            assists = ""
+            counter = 1
 
-            if counter > 1:
-                assists += ", {}".format(assist.name_short)
+            for assist in self.assists:
 
-            else:
-                assists += "{}".format(assist.name_short)
+                if counter > 1:
+                    assists += ", {}".format(assist.name_short)
 
-            counter += 1
+                else:
+                    assists += "{}".format(assist.name_short)
 
-        return assists
+                counter += 1
+
+            return assists
+
+        else:
+            return "none"
 
     def get_car_class(self):
         return self.car_class.name_custom if self.car_class_id is not None else "n/a"
+
+    def get_competitions(self):
+
+        if self.competitions:
+
+            competitions = ""
+            counter = 1
+
+            for competition in self.competitions:
+
+                if counter > 1:
+                    competitions += ", {}".format(competition.name_display)
+
+                else:
+                    competitions += "{}".format(competition.name_display)
+
+                counter += 1
+
+            return competitions
+
+        else:
+            return "none"
 
     def get_country(self):
         return self.country.name_display if self.country_id is not None else "n/a"

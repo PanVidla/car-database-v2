@@ -14,7 +14,9 @@ from general.models.part import FuelType, Aspiration
 @cardb.route("/cars/all", methods=['GET'])
 def overview_cars():
 
-    cars = Car.query.order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()).all()
+    cars = Car.query.\
+        filter(Car.is_deleted != True)\
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()).all()
 
     return render_template("cars_overview.html",
                            title="All cars",
@@ -761,7 +763,19 @@ def edit_fuel(id):
 @cardb.route("/cars/delete-car/<id>", methods=['GET', 'POST'])
 def delete_car(id):
 
-    pass
+    car = Car.query.get(id)
+    car.is_deleted = True
+
+    try:
+        database.session.delete(car)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {}.".format(car.name_display), "danger")
+        return redirect(url_for("detail_car", id=car.id))
+
+    flash("The {} has been successfully deleted.".format(car.name_display), "success")
+    return redirect(url_for("overview_cars"))
 
 
 # Delete aspiration

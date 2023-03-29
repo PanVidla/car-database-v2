@@ -60,6 +60,10 @@
                   <div class="col-sm-2 text-right"><b>Engine layout</b></div>
                   <div class="col-sm-6">{{ car.get_engine_layout() }}</div>
               </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Competitions</b></div>
+                  <div class="col-sm-10">{{ car.get_competitions() }}</div>
+              </div>
           </div>
         </div>
     </div>
@@ -314,7 +318,7 @@
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Power / weight ratio</b></div>
-                  <div class="col-sm-10">{{ car.get_acceleration_0_to_100_kmh_sec() }}</div>
+                  <div class="col-sm-10">{{ car.get_power_to_weight_ratio() }}</div>
               </div>
           </div>
         </div>
@@ -344,8 +348,7 @@
             <h4 class="modal-title" id="myModalLabel">Delete car</h4>
           </div>
           <div class="modal-body">
-              <p>Are you sure you want to delete the car "{{ car.name }}"? This action cannot be undone.</p>
-              <p>Deleting car with cars or engines assigned to it could break the database.</p>
+              <p>Are you sure you want to delete the car "{{ car.name_display }}"?</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
