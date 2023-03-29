@@ -84,6 +84,29 @@ class Car(database.Model):
     texts = database.relationship('CarText', backref='car', lazy='dynamic')
     images = database.relationship('CarImage', backref='car', lazy='dynamic')
 
+    def edit_car_from_form(self, form):
+
+        form.populate_obj(self)
+
+        # Set manufacturers display string
+        primary_manufacturer = Company.query.get(form.primary_manufacturer.data)
+        secondary_manufacturers = []
+
+        for manufacturer_id in form.secondary_manufacturers.data:
+            manufacturer = Company.query.filter(Company.id == manufacturer_id)
+            secondary_manufacturers += manufacturer
+
+        manufacturers_display_string = primary_manufacturer.name_display
+
+        for secondary_manufacturer in secondary_manufacturers:
+            manufacturers_display_string += " / {}".format(secondary_manufacturer.name_display)
+
+        self.manufacturers_display = manufacturers_display_string
+
+        # If no country is selected
+        if form.country_id.data == 0:
+            self.country_id = None
+
     def get_acceleration_0_to_100_kmh_sec(self):
         return "{} s".format(self.acceleration_0_to_100_kmh_sec) if self.acceleration_0_to_100_kmh_sec is not None else "n/a"
 

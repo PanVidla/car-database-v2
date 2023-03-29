@@ -1,11 +1,14 @@
+from datetime import datetime
+
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm, AspirationEditForm, AspirationAddForm, CarAdd1Form, CarAdd21Form, CarAdd22Form, CarAdd3Form, \
-    CarAdd4Form, CarAdd5Form, CarAdd6Form, CarAdd7Form, CarAdd8Form
-from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form
+    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, CarAdd21Form, CarAdd22Form, CarAdd3Form, \
+    CarAdd4Form, CarAdd5Form, CarAdd6Form, CarAdd7Form, CarAdd8Form, CarAdd1Form, CarEdit1Form
+from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
+    CarManufacturer, CarCompetition
 from general.models.part import FuelType, Aspiration
 
 
@@ -144,7 +147,7 @@ def add_car_1():
         flash("The {} has been successfully added to the database.".format(new_car.name_display), "success")
 
         new_car.set_manufacturers(form.primary_manufacturer.data, form.secondary_manufacturers.data)
-        new_car.set_competitions(form.competitions.data)
+        new_car.set_competitions(form.competitions_select.data)
 
         return redirect(url_for("add_car_2", id=new_car.id))
 
@@ -562,10 +565,55 @@ def add_fuel():
 
 
 # Edit car
-@cardb.route("/cars/edit-car/<id>", methods=['GET', 'POST'])
-def edit_car(id):
+@cardb.route("/cars/edit-car/<id>/general", methods=['GET', 'POST'])
+def edit_car_general(id):
 
-    pass
+    car = Car.query.get(id)
+
+    # Get manufacturers for the multiple select form
+    primary_manufacturer = CarManufacturer.query.filter(CarManufacturer.car_id == car.id,
+                                                        CarManufacturer.is_primary == True).first()
+    secondary_manufacturers = CarManufacturer.query.filter(CarManufacturer.car_id == car.id,
+                                                           CarManufacturer.is_primary == False).all()
+    secondary_manufacturer_ids = []
+
+    for secondary_manufactuer in secondary_manufacturers:
+        secondary_manufacturer_ids += str(secondary_manufactuer.company_id)
+
+    # Get competitions for the multiple select form
+    competitions = CarCompetition.query.filter(CarCompetition.car_id == car.id).all()
+    competition_ids = []
+
+    for competition in competitions:
+        competition_ids += str(competition.competition_id)
+
+    form = CarEdit1Form(obj=car,
+                        primary_manufacturer=primary_manufacturer.manufacturer.id,
+                        secondary_manufacturers=secondary_manufacturer_ids,
+                        competitions_select=competition_ids)
+
+    if form.validate_on_submit():
+
+        car.edit_car_from_form(form)
+        car.set_manufacturers(form.primary_manufacturer.data, form.secondary_manufacturers.data)
+        car.set_competitions(form.competitions_select.data)
+        car.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(car.name_display), "danger")
+            return redirect(url_for("edit_car_general", id=car.id))
+
+        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
+    return render_template("cars_form_1_general.html",
+                           title="Edit car",
+                           heading="Edit general information",
+                           form=form,
+                           viewing="car",
+                           editing=True)
 
 
 # Edit aspiration

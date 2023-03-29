@@ -8,7 +8,7 @@ from general.models.part import Engine, ForcedInduction, Transmission, Transmiss
 
 
 # Car
-class CarAdd1Form(FlaskForm):
+class Car1Form(FlaskForm):
 
     # General
     year = IntegerField("Year", validators=[DataRequired()])
@@ -20,15 +20,13 @@ class CarAdd1Form(FlaskForm):
     country_id = SelectField("Country", coerce=int)
     is_prototype = BooleanField("Prototype")
     is_fictional = BooleanField("Fictional")
-    competitions = SelectMultipleField("Competitions", validators=[Optional()], coerce=int)
+    competitions_select = SelectMultipleField("Competitions", validators=[Optional()], coerce=int)
     car_class_id = SelectField("Car class", coerce=int)
     body_style_id = SelectField("Body style", coerce=int)
 
-    submit = SubmitField("Create car")
-
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(CarAdd1Form, self).__init__(*args, **kwargs)
+        super(Car1Form, self).__init__(*args, **kwargs)
 
         self.primary_manufacturer.choices = [(manufacturer.id, "{}".format(manufacturer.name_display))
                                              for manufacturer
@@ -48,9 +46,9 @@ class CarAdd1Form(FlaskForm):
                                     in Country.query
                                     .order_by(Country.name_display.asc()).all()]
 
-        self.competitions.choices = [(competition.id, "{}".format(competition.name_display))
-                                     for competition
-                                     in Competition.query
+        self.competitions_select.choices = [(competition.id, "{}".format(competition.name_display))
+                                            for competition
+                                            in Competition.query
                                      .order_by(Competition.name_display.asc()).all()]
 
         self.car_class_id.choices = [(car_class.id, "{}".format(car_class.name_custom))
@@ -62,6 +60,16 @@ class CarAdd1Form(FlaskForm):
                                       for body_style
                                       in BodyStyle.query
                                       .order_by(BodyStyle.name.asc()).all()]
+
+
+class CarAdd1Form(Car1Form):
+
+    submit = SubmitField("Create car")
+
+
+class CarEdit1Form(Car1Form):
+
+    submit = SubmitField("Edit general info")
 
 
 class CarAdd21Form(FlaskForm):
