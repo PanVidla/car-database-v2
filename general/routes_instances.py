@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, flash
 
 from general import cardb, database
-from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm
-from general.models.instance import Instance, InstanceType
+from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
+    SpecializationEditForm
+from general.models.instance import Instance, InstanceType, InstanceSpecialization
 
 
 # Overview instances
@@ -31,6 +32,20 @@ def overview_instance_types():
                            heading="All instance types",
                            instance_types=instance_types,
                            viewing="instance_types")
+
+
+# Overview instance specialization
+@cardb.route("/instances/specialization", methods=['GET'])
+@cardb.route("/instances/specialization/all", methods=['GET'])
+def overview_instance_specialization():
+
+    specialization = InstanceSpecialization.query.order_by(InstanceSpecialization.name_full.asc()).all()
+
+    return render_template("instances_overview_specialization.html",
+                           title="Instance specialization",
+                           heading="All instance specialization",
+                           specializations=specialization,
+                           viewing="specialization")
 
 
 # Add instance
@@ -82,6 +97,35 @@ def add_instance_type():
                            viewing="instance_types")
 
 
+# Add specialization
+@cardb.route("/instances/specialization/add-specialization", methods=['GET', 'POST'])
+def add_specialization():
+
+    form = SpecializationAddForm()
+
+    if form.validate_on_submit():
+
+        new_specialization = InstanceSpecialization()
+        form.populate_obj(new_specialization)
+
+        try:
+            database.session.add(new_specialization)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the new specialization to the database.", "danger")
+            return redirect(url_for("add_specialization"))
+
+        flash("The specialization \"{}\" has been successfully added to the database.".format(
+            new_specialization.name_full), "success")
+        return redirect(url_for("overview_specialization"))
+
+    return render_template("instances_form_specialization.html",
+                           title="Add specialization",
+                           heading="Add specialization",
+                           form=form,
+                           viewing="specialization")
+
+
 # Edit instance type
 @cardb.route("/instances/types/edit-type/<id>", methods=['GET', 'POST'])
 def edit_instance_type(id):
@@ -109,6 +153,33 @@ def edit_instance_type(id):
                            viewing="instance_types")
 
 
+# Edit specialization
+@cardb.route("/instances/specialization/edit-specialization/<id>", methods=['GET', 'POST'])
+def edit_specialization(id):
+
+    specialization = InstanceSpecialization.query.get(id)
+    form = SpecializationEditForm(obj=specialization)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(specialization)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the specialization \"{}\".".format(specialization.name_full), "danger")
+            return redirect(url_for("edit_specialization", id=specialization.id))
+
+        flash("The specialization \"{}\" has been successfully edited.".format(specialization.name_full), "success")
+        return redirect(url_for("detail_specialization", id=specialization.id))
+
+    return render_template("instances_form_specialization.html",
+                           title="Edit specialization",
+                           heading="Edit specialization",
+                           form=form,
+                           viewing="specialization")
+
+
 # Delete instance type
 @cardb.route("/instances/types/delete-type/<id>", methods=['GET', 'POST'])
 def delete_instance_type(id):
@@ -127,6 +198,24 @@ def delete_instance_type(id):
     return redirect(url_for("overview_instance_types"))
 
 
+# Delete specialization
+@cardb.route("/instances/specialization/delete-specialization/<id>", methods=['GET', 'POST'])
+def delete_specialization(id):
+
+    specialization = InstanceSpecialization.query.get(id)
+
+    try:
+        database.session.delete(specialization)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the \"{}\" specialization.".format(specialization.name_full), "danger")
+        return redirect(url_for("detail_specialization", id=specialization.id))
+
+    flash("The specialization \"{}\" has been successfully deleted.".format(specialization.name_full), "success")
+    return redirect(url_for("overview_instance_specialization"))
+
+
 # Instance detail
 @cardb.route("/instances/types/detail/<id>", methods=['GET', 'POST'])
 def detail_instance_type(id):
@@ -138,3 +227,16 @@ def detail_instance_type(id):
                            heading="{}".format(instance_type.name_full),
                            instance_type=instance_type,
                            viewing="instance_types")
+
+
+# Specialization detail
+@cardb.route("/instances/specialization/detail/<id>", methods=['GET', 'POST'])
+def detail_specialization(id):
+
+    specialization = InstanceSpecialization.query.get(id)
+
+    return render_template("instances_detail_specialization.html",
+                           title="{}".format(specialization.name_short),
+                           heading="{}".format(specialization.name_full),
+                           specialization=specialization,
+                           viewing="specialization")

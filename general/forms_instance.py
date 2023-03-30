@@ -48,15 +48,17 @@ class InstanceForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(InstanceForm, self).__init__(*args, **kwargs)
 
-        self.instance_type_id.choices = [(instance_type.name_full, "{}".format(instance_type.name_full))
-                                         for instance_type
-                                         in InstanceType.query
-                                         .order_by(InstanceType.name_full.asc()).all()]
+        self.instance_type_id.choices = [(0, "n/a")]
+        self.instance_type_id.choices += [(instance_type.name_full, "{}".format(instance_type.name_full))
+                                          for instance_type
+                                          in InstanceType.query
+                                          .order_by(InstanceType.name_full.asc()).all()]
 
-        self.specialization_id.choices = [(specialization.name_full, "{}".format(specialization.name_full))
-                                          for specialization
-                                          in InstanceSpecialization.query
-                                          .order_by(InstanceSpecialization.name_full.asc()).all()]
+        self.specialization_id.choices = [(0, "n/a")]
+        self.specialization_id.choices += [(specialization.name_full, "{}".format(specialization.name_full))
+                                           for specialization
+                                           in InstanceSpecialization.query
+                                           .order_by(InstanceSpecialization.name_full.asc()).all()]
 
 
 class InstanceTypeForm(FlaskForm):
@@ -74,3 +76,20 @@ class InstanceTypeAddForm(InstanceTypeForm):
 class InstanceTypeEditForm(InstanceTypeForm):
 
     submit = SubmitField("Edit instance type")
+
+
+class SpecializationForm(FlaskForm):
+
+    # General
+    name_full = StringField("Name", validators=[DataRequired()])
+    name_short = StringField("Shortcut", validators=[DataRequired()])
+
+
+class SpecializationAddForm(SpecializationForm):
+
+    submit = SubmitField("Add specialization")
+
+
+class SpecializationEditForm(SpecializationForm):
+
+    submit = SubmitField("Edit specialization")

@@ -1,0 +1,35 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <hr>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_full.label }}</label>
+                <div class="col-sm-7">
+                    {{ form.name_full(class_="form-control", placeholder="Name (e.g. all-rounder, straight-line speed...)") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.name_short.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.name_short(class_="form-control", placeholder="Shortcut") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

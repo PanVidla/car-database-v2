@@ -142,7 +142,6 @@ class InstanceType(database.Model):
 
     # Relationships
     instances = database.relationship('Instance', backref='type', lazy='dynamic')
-    specializations = database.relationship('InstanceSpecialization', backref='type', lazy='dynamic')
 
 
 # Represents what the car specializes within its discipline (e.g. straight-line speed, road drifting, dirt rally...)
@@ -156,8 +155,6 @@ class InstanceSpecialization(database.Model):
     # General
     name_full = database.Column(database.Unicode, index=True, nullable=False)
     name_short = database.Column(database.Unicode, index=True, nullable=False)
-    instance_type_id = database.Column(database.Integer, database.ForeignKey("instance_types.id"), index=True,
-                                       nullable=False)
 
     # Relationships
     instances = database.relationship('Instance', backref='specialization', lazy='dynamic')

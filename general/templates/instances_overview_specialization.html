@@ -1,0 +1,31 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if specializations == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There is no instance specialization in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-10"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Shortcut</strong></td>
+            </tr>
+
+                {% for specialization in specializations %}
+            <tr>
+                <td class="col-sm-1">{{ specialization.id }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_specialization', id=specialization.id) }}">{{ specialization.name_full }}</td>
+                <td class="col-sm-1">{{ specialization.name_short }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

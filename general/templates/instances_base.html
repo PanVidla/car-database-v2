@@ -20,7 +20,11 @@
                         {% if viewing == "instance_types" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_instance_type') }}"><strong>Add instance type</strong></a></li>
                         {% endif %}
+                        {% if viewing == "specialization" %}
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_specialization') }}"><strong>Add specialization</strong></a></li>
+                        {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_instance_types') }}">Types</a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_instance_specialization') }}">Specialization</a></li>
                     </ul>
                 </div>
             </div>
