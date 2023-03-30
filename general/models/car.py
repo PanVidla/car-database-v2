@@ -44,7 +44,6 @@ class Car(database.Model):
     max_power_output_rpm_actual = database.Column(database.Integer, nullable=True)
     max_torque_nm_actual = database.Column(database.Double, index=True, nullable=True)
     max_torque_rpm_actual = database.Column(database.Integer, nullable=True)
-    displacement_actual = database.Column(database.Double, index=True, nullable=True)
     # This refers to the specific car part
     additional_forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"),
                                                      nullable=True)
