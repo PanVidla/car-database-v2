@@ -21,10 +21,9 @@ from general import routes_cars, routes_companies, routes_games, routes_general,
 from games.crazy_taxi import blueprint as crazy_taxi_blueprint
 # Crazy Taxi 1
 from games.crazy_taxi.crazy_taxi import blueprint as crazy_taxi_1_blueprint
+
 crazy_taxi_blueprint.register_blueprint(crazy_taxi_1_blueprint)
 cardb.register_blueprint(crazy_taxi_blueprint)
-
-from games.crazy_taxi.crazy_taxi.models import instance
 
 # Need for Speed
 from games.need_for_speed import blueprint as need_for_speed_blueprint
@@ -33,4 +32,3 @@ from games.need_for_speed.iii_hot_pursuit import blueprint as need_for_speed_iii
 need_for_speed_blueprint.register_blueprint(need_for_speed_iii_hot_pursuit_blueprint)
 cardb.register_blueprint(need_for_speed_blueprint)
 
-from games.need_for_speed.iii_hot_pursuit.models import events, instance, records, tracks
