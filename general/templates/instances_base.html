@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block cardb_content %}
+
+    <!--  Heading  -->
+    <div class="page-header">
+        <h1>{{ heading }}</h1>
+    </div>
+
+    <!-- Submenu -->
+    {% block submenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a class="hover-underline-animation" href="{{ url_for('overview_instances') }}">All instances</a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_instance') }}"><strong>Add instance</strong></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block instances_content %}
+    {% endblock %}
+
+{% endblock %}

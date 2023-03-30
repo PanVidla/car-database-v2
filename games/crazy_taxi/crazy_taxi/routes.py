@@ -6,3 +6,9 @@ from games.crazy_taxi.crazy_taxi import blueprint
 def overview_instances():
 
     pass
+
+
+@blueprint.route("/instances/add-instance", methods=['GET', 'POST'])
+def add_instance():
+
+    return "Yes!"

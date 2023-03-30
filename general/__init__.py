@@ -15,7 +15,7 @@ migrate = Migrate(cardb, database)
 from general.models import blueprint as models_general_blueprint
 cardb.register_blueprint(models_general_blueprint)
 
-from general import routes_cars, routes_companies, routes_games, routes_general, routes_misc, routes_parts
+from general import routes_cars, routes_companies, routes_games, routes_instances, routes_misc, routes_parts
 
 # Crazy Taxi
 from games.crazy_taxi import blueprint as crazy_taxi_blueprint
@@ -31,4 +31,3 @@ from games.need_for_speed import blueprint as need_for_speed_blueprint
 from games.need_for_speed.iii_hot_pursuit import blueprint as need_for_speed_iii_hot_pursuit_blueprint
 need_for_speed_blueprint.register_blueprint(need_for_speed_iii_hot_pursuit_blueprint)
 cardb.register_blueprint(need_for_speed_blueprint)
-
