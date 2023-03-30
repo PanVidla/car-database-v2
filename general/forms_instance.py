@@ -57,3 +57,20 @@ class InstanceForm(FlaskForm):
                                           for specialization
                                           in InstanceSpecialization.query
                                           .order_by(InstanceSpecialization.name_full.asc()).all()]
+
+
+class InstanceTypeForm(FlaskForm):
+
+    # General
+    name_full = StringField("Name", validators=[DataRequired()])
+    name_short = StringField("Shortcut", validators=[DataRequired()])
+
+
+class InstanceTypeAddForm(InstanceTypeForm):
+
+    submit = SubmitField("Add instance type")
+
+
+class InstanceTypeEditForm(InstanceTypeForm):
+
+    submit = SubmitField("Edit instance type")

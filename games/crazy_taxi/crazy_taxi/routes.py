@@ -2,6 +2,8 @@ from flask import render_template
 
 from games.crazy_taxi.crazy_taxi import crazy_taxi_1
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
+from general.forms_instance import InstanceForm
+from general.models.car import Car
 
 
 @crazy_taxi_1.route("/instances/overview", methods=['GET'])
@@ -21,4 +23,8 @@ def overview_instances():
 @crazy_taxi_1.route("/instances/add-instance/<id>", methods=['GET', 'POST'])
 def add_instance(id):
 
-    return "Yes!"
+    car = Car.query.get(id)
+    form = InstanceForm(name_full=car.name_display)
+
+
+
