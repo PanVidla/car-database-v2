@@ -27,9 +27,10 @@ def add_instance():
     if form.validate_on_submit():
 
         game_name_full = form.game_name_full.data
+        car_id = form.car_id.data
 
         if game_name_full == "Crazy Taxi":
-            return redirect(url_for("crazy_taxi.crazy_taxi_1.add_instance"))
+            return redirect(url_for("crazy_taxi.crazy_taxi_1.add_instance", id=car_id))
 
     return render_template("instances_form.html",
                            title="Add instance",

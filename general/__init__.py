@@ -20,7 +20,7 @@ from general import routes_cars, routes_companies, routes_games, routes_instance
 # Crazy Taxi
 from games.crazy_taxi import blueprint as crazy_taxi_blueprint
 # Crazy Taxi 1
-from games.crazy_taxi.crazy_taxi import blueprint as crazy_taxi_1_blueprint
+from games.crazy_taxi.crazy_taxi import crazy_taxi_1 as crazy_taxi_1_blueprint
 
 crazy_taxi_blueprint.register_blueprint(crazy_taxi_1_blueprint)
 cardb.register_blueprint(crazy_taxi_blueprint)

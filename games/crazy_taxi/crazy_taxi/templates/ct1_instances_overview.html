@@ -1,0 +1,37 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if instances == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no Crazy Taxi instances in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-4"><strong>Name</strong></td>
+                <td class="col-sm-2"><strong>Nickname</strong></td>
+                <td class="col-sm-2"><strong>Type</strong></td>
+                <td class="col-sm-1"><strong>Complete</strong></td>
+                <td class="col-sm-2"><strong>Game</strong></td>
+            </tr>
+
+                {% for instance in instances %}
+            <tr>
+                <td class="col-sm-1">{{ instance.id }}</td>
+                <td class="col-sm-4">{{ instance.name_display }}</td>
+                <td class="col-sm-2">{{ instance.nickname }}</td>
+                <td class="col-sm-2">{{ instance.type.name_full }}</td>
+                <td class="col-sm-1">{{ instance.is_complete }}</td>
+                <td class="col-sm-2">{{ instance.game.name_display }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}
