@@ -228,7 +228,8 @@ def add_car_4(id):
 
     if engines:
         first_engine = engines[0]
-        form = Car4Form(max_power_output_kw_actual=first_engine.max_power_output_kw,
+        form = Car4Form(fuel_type_actual_id=first_engine.fuel_type_id,
+                        max_power_output_kw_actual=first_engine.max_power_output_kw,
                         max_power_output_rpm_actual=first_engine.max_power_output_rpm,
                         max_torque_nm_actual=first_engine.max_torque_nm,
                         max_torque_rpm_actual=first_engine.max_torque_rpm)

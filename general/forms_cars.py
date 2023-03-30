@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Optional
 
 from general.models.car import CarClass, BodyStyle, EngineLayout, Drivetrain, Assist
 from general.models.misc import Company, Country, Competition
-from general.models.part import Engine, ForcedInduction, Transmission, TransmissionType, Suspension
+from general.models.part import Engine, ForcedInduction, Transmission, TransmissionType, Suspension, FuelType
 
 
 # Car
@@ -116,12 +116,23 @@ class Car3Form(FlaskForm):
 class Car4Form(FlaskForm):
 
     # Engine
+    fuel_type_actual_id = SelectField("System fuel type", coerce=int)
     max_power_output_kw_actual = DecimalField("Maximum power", validators=[Optional()])
     max_power_output_rpm_actual = IntegerField("Maximum power RPM", validators=[Optional()])
     max_torque_nm_actual = DecimalField("Maximum torque", validators=[Optional()])
     max_torque_rpm_actual = IntegerField("Maximum torque RPM", validators=[Optional()])
 
     submit = SubmitField("Confirm values")
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(Car4Form, self).__init__(*args, **kwargs)
+
+        self.fuel_type_actual_id.choices = [
+            (fuel_type.id, "{}".format(fuel_type.name))
+            for fuel_type
+            in FuelType.query
+            .order_by(FuelType.id.asc()).all()]
 
 
 class Car5Form(FlaskForm):
