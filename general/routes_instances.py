@@ -91,8 +91,6 @@ def add_instance_general(car_id, game_id):
         new_instance.car_id = car.id
         new_instance.game_id = game.id
 
-        car.refresh_no_of_instances()
-
         try:
             database.session.add(new_instance)
             database.session.commit()
@@ -101,6 +99,9 @@ def add_instance_general(car_id, game_id):
             return redirect(url_for("add_instance_general"))
 
         flash("The {} has been successfully added to the database.".format(new_instance.name_full), "success")
+
+        car.refresh_no_of_instances()
+        database.session.commit()
 
         return redirect(url_for("add_instance_engine", instance_id=new_instance.id))
 
