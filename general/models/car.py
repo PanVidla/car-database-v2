@@ -320,6 +320,9 @@ class Car(database.Model):
     def get_year(self):
         return self.year if self.year is not None or "" else "n/a"
 
+    def refresh_no_of_instances(self):
+        self.no_of_instances = len(self.instances.all())
+
     def set_assists(self, assists_ids):
 
         # Delete the old car-assist associations

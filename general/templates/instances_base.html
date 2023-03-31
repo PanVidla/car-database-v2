@@ -15,7 +15,7 @@
                     <ul class="nav navbar-nav">
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_instances') }}">All instances</a></li>
                         {% if viewing == "instances" %}
-                        <li><a class="hover-underline-animation" href="{{ url_for('add_instance') }}"><strong>Add instance</strong></a></li>
+                        <li><a class="hover-underline-animation" href="{{ url_for('add_instance_game_car') }}"><strong>Add instance</strong></a></li>
                         {% endif %}
                         {% if viewing == "instance_types" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_instance_type') }}"><strong>Add instance type</strong></a></li>

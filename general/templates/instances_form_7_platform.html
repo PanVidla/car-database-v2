@@ -1,0 +1,79 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+
+        {% if not editing %}
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100" style="width: 69%">
+            <span class="sr-only">5% Complete</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>Technical information</h2>
+        <hr>
+        <h3>Suspension</h3>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.suspension_front_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.suspension_front_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.suspension_rear_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.suspension_rear_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3>Platform</h3>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.curb_weight_kg.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.curb_weight_kg(class_="form-control", placeholder="Curb weight [kg] (optional)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.weight_distribution.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.weight_distribution(class_="form-control", placeholder="Front weight [%] (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3>Tires</h3>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.tires_front.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.tires_front(class_="form-control", placeholder="Front tires (optional)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.tires_rear.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.tires_rear(class_="form-control", placeholder="Rear tires (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

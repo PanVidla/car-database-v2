@@ -22,8 +22,8 @@
                 {% for instance in instances %}
             <tr>
                 <td class="col-sm-1">{{ instance.id }}</td>
-                <td class="col-sm-4">{{ instance.name_display }}</td>
-                <td class="col-sm-2">{{ instance.nickname }}</td>
+                <td class="col-sm-4">{{ instance.name_full }}</td>
+                <td class="col-sm-2">{{ instance.name_nickname }}</td>
                 <td class="col-sm-2">{{ instance.type.name_full }}</td>
                 <td class="col-sm-1">{{ instance.is_complete }}</td>
                 <td class="col-sm-2">{{ instance.game.name_display }}</td>

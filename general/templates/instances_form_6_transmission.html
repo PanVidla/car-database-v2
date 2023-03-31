@@ -1,0 +1,76 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+
+        {% if not editing %}
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100" style="width: 56%">
+            <span class="sr-only">56% Complete</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>Technical information</h2>
+        <hr>
+        <h3>Transmission</h3>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.transmission_id.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.transmission_id(class_="form-control") }}
+                    <span class="help-block">Either select a transmission model, or fill in the values below.</span>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.transmission_type_actual_id.label }}</label>
+                <div class="col-sm-7">
+                    {{ form.transmission_type_actual_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.no_of_gears_actual.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.no_of_gears_actual(class_="form-control", placeholder="No. of gears") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3>Drivetrain</h3>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.engine_layout_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.engine_layout_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.drivetrain_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.drivetrain_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

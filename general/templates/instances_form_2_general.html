@@ -1,0 +1,102 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+            <span class="sr-only">5% Complete</span>
+          </div>
+        </div>
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <hr>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_full.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.name_full(class_="form-control input-lg", placeholder="Full name (e.g. 1960 Cadillac Eldorado Biarritz Convertible)") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.name_nickname.label }}</label>
+                <div class="col-sm-6">
+                    {{ form.name_nickname(class_="form-control", placeholder="Nickname (e.g. Mad Dog)") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.is_complete.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_complete(class_="form-control") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.is_for_collection.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_for_collection(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.instance_type_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.instance_type_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.specialization_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.specialization_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.drivetrain_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.drivetrain_id(class_="form-control") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.engine_layout_id.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.engine_layout_id(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Visuals</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.color_name.label }}</label>
+                <div class="col-sm-6">
+                    {{ form.color_name(class_="form-control", placeholder="Color (e.g. red)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.color_hex.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.color_hex(class_="form-control", placeholder="Hex value") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.theme.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.theme(class_="form-control", placeholder="Theme (e.g. inter-war racing)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

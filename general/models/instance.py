@@ -1,9 +1,12 @@
 from datetime import datetime
 
+from flask import flash
 from sqlalchemy.orm import backref
 
 from general import database
+from general.models.car import Assist
 from general.models.info import Text, Image
+from general.models.part import Engine
 
 
 # Represents a video game instance of a car
@@ -82,6 +85,123 @@ class Instance(database.Model):
     # Relationships
     texts = database.relationship('InstanceText', backref='instance', lazy='dynamic')
     images = database.relationship('InstanceImage', backref='instance', lazy='dynamic')
+
+    def set_assists(self, assists_ids):
+
+        # Delete the old instance-assist associations
+        instance_assist_old = InstanceAssist.query.filter(InstanceAssist.instance_id == self.id).all()
+
+        for instance_assist_association in instance_assist_old:
+
+            try:
+                database.session.delete(instance_assist_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_full,
+                                                                                                  instance_assist_association.assist.name_short),
+                      "danger")
+
+            database.session.commit()
+
+        # Create new instance-asssist associations
+        for assist_id in assists_ids:
+
+            try:
+                instance_assist_association = InstanceAssist(instance_id=self.id, assist_id=assist_id)
+                database.session.add(instance_assist_association)
+
+            except RuntimeError:
+                assist = Assist.query.get(assist_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_full,
+                                                                                               assist.short),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_engines(self, engine_ids):
+
+        # Delete the old instance-engine associations
+        instance_engine_old = InstanceEngine.query.filter(InstanceEngine.instance_id == self.id).all()
+
+        for instance_engine_association in instance_engine_old:
+
+            try:
+                database.session.delete(instance_engine_association)
+
+            except RuntimeError:
+                flash("There was a problem deleting an old association between {} and {}.".format(self.name_full,
+                                                                                                  instance_engine_association.engine.name_display),
+                      "danger")
+
+            database.session.commit()
+
+        # Create new instance-engine associations
+        for engine_id in engine_ids:
+
+            try:
+                instance_engine_association = InstanceEngine(instance_id=self.id, engine_id=engine_id)
+                database.session.add(instance_engine_association)
+
+            except RuntimeError:
+                engine = Engine.query.get(engine_id)
+                flash("There was a problem adding a new association between {} and {}.".format(self.name_full,
+                                                                                               engine.name_display),
+                      "danger")
+
+        database.session.commit()
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_forced_induction(self, forced_induction_id):
+
+        if forced_induction_id == 0:
+            self.additional_forced_induction_id = None
+
+        else:
+            self.additional_forced_induction_id = forced_induction_id
+
+    def set_power_to_weight_ratio(self):
+
+        if self.max_power_output_kw_actual is not None:
+            power = self.max_power_output_kw_actual
+            if self.curb_weight_kg is not None:
+                weight = self.curb_weight_kg
+
+                self.power_to_weight_ratio = float(power)/float(weight)
+
+            else:
+                self.power_to_weight_ratio = None
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_suspension(self, form):
+
+        if form.suspension_front_id.data == 0:
+            self.suspension_front_id = None
+        else:
+            self.suspension_front_id = form.suspension_front_id.data
+
+        if form.suspension_rear_id.data == 0:
+            self.suspension_rear_id = None
+        else:
+            self.suspension_rear_id = form.suspension_rear_id.data
+
+        self.datetime_edited = datetime.utcnow()
+
+    def set_transmission(self, form):
+
+        if form.transmission_id.data == 0:
+            self.transmission_id = None
+            self.transmission_type_actual_id = form.transmission_type_actual_id.data
+            self.no_of_gears_actual = form.no_of_gears_actual.data
+        else:
+            self.transmission_id = form.transmission_id.data
+            self.transmission_type_actual_id = None
+            self.no_of_gears_actual = None
+
+        self.datetime_edited = datetime.utcnow()
 
 
 class RacingInstance(Instance):

@@ -1,8 +1,14 @@
+from datetime import datetime
+
 from flask import render_template, redirect, url_for, flash
 
 from general import cardb, database
+from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
-    SpecializationEditForm
+    SpecializationEditForm, InstanceGeneralForm
+from general.helpers import create_instance_based_on_game
+from general.models.car import Car
+from general.models.game import Game
 from general.models.instance import Instance, InstanceType, InstanceSpecialization
 
 
@@ -48,24 +54,293 @@ def overview_instance_specialization():
                            viewing="specialization")
 
 
-# Add instance
+# Add instance (game & car)
 @cardb.route("/instances/add-instance", methods=['GET', 'POST'])
-def add_instance():
+def add_instance_game_car():
 
     form = SelectGameForm()
 
     if form.validate_on_submit():
 
-        game_name_full = form.game_name_full.data
+        game_id = form.game_name_full.data
         car_id = form.car_id.data
 
-        if game_name_full == "Crazy Taxi":
-            return redirect(url_for("crazy_taxi.crazy_taxi_1.add_instance", id=car_id))
+        return redirect(url_for("add_instance_general", car_id=car_id, game_id=game_id))
 
-    return render_template("instances_form.html",
+    return render_template("instances_form_1_game_select.html",
                            title="Add instance",
                            heading="Add instance",
-                           form=form)
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (general)
+@cardb.route("/instances/add-instance/<car_id>/<game_id>/general", methods=['GET', 'POST'])
+def add_instance_general(car_id, game_id):
+
+    car = Car.query.get(car_id)
+    game = Game.query.get(game_id)
+    form = InstanceGeneralForm(obj=car,
+                               name_full=car.name_display)
+
+    if form.validate_on_submit():
+
+        new_instance = create_instance_based_on_game(game)
+        form.populate_obj(new_instance)
+
+        new_instance.car_id = car.id
+        new_instance.game_id = game.id
+
+        car.refresh_no_of_instances()
+
+        try:
+            database.session.add(new_instance)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the new instance to the database.", "danger")
+            return redirect(url_for("add_instance_general"))
+
+        flash("The {} has been successfully added to the database.".format(new_instance.name_full), "success")
+
+        return redirect(url_for("add_instance_engine", instance_id=new_instance.id))
+
+    return render_template("instances_form_2_general.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (general)
+@cardb.route("/instances/add-instance/<instance_id>/engine", methods=['GET', 'POST'])
+def add_instance_engine(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    # Get engines
+    engines_ids = []
+    for engine in car.get_engines():
+        engines_ids.append(engine.id)
+
+    form = Car21Form(engines=engines_ids)
+
+    if form.validate_on_submit():
+
+        instance.set_engines(form.engines.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning engine(s) to the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_engine"))
+
+        flash("The engines have been successfully assigned to the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_forced_induction", instance_id=instance.id))
+
+    return render_template("instances_form_3_engine.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (forced induction)
+@cardb.route("/instances/add-instance/<instance_id>/forced-induction", methods=['GET', 'POST'])
+def add_instance_forced_induction(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    form = Car3Form(additional_forced_induction_id=car.additional_forced_induction_id)
+
+    if form.validate_on_submit():
+
+        instance.set_forced_induction(form.additional_forced_induction_id.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning forced induction to the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_forced_induction"))
+
+        flash("Forced induction has been successfully assigned to the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_power_values", instance_id=instance.id))
+
+    return render_template("instances_form_4_forced_induction.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (power values)
+@cardb.route("/instances/add-instance/<instance_id>/power-values", methods=['GET', 'POST'])
+def add_instance_power_values(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    form = Car4Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning power values to the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_power_values"))
+
+        flash("Power values have been successfully assigned to the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_transmission", instance_id=instance.id))
+
+    return render_template("instances_form_5_power_values.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (transmission)
+@cardb.route("/instances/add-instance/<instance_id>/transmission", methods=['GET', 'POST'])
+def add_instance_transmission(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    form = Car5Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_transmission(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem assigning transmission to the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_transmission"))
+
+        flash("Transmission has been successfully assigned to the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_platform", instance_id=instance.id))
+
+    return render_template("instances_form_6_transmission.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (platform)
+@cardb.route("/instances/add-instance/<instance_id>/platform", methods=['GET', 'POST'])
+def add_instance_platform(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    form = Car6Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_suspension(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem setting Platform for the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_platform"))
+
+        flash("Platform has been successfully set for the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_performance", instance_id=instance.id))
+
+    return render_template("instances_form_7_platform.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (performance)
+@cardb.route("/instances/add-instance/<instance_id>/performance", methods=['GET', 'POST'])
+def add_instance_performance(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    form = Car7Form(obj=car)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_power_to_weight_ratio()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem setting performance for the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_performance"))
+
+        flash("Performance has been successfully set for the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_assists", instance_id=instance.id))
+
+    return render_template("instances_form_8_performance.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (assists)
+@cardb.route("/instances/add-instance/<instance_id>/assists", methods=['GET', 'POST'])
+def add_instance_assists(instance_id):
+
+    instance = Instance.query.get(instance_id)
+    car = Car.query.get(instance.car_id)
+
+    # Get assists
+    assists_ids = car.get_assists()
+
+    form = Car8Form(assists=assists_ids)
+
+    if form.validate_on_submit():
+
+        instance.set_assists(form.assists_select.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem setting assists for the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("add_instance_assists"))
+
+        flash("Assists have been successfully set for the {}.".format(instance.name_full), "success")
+
+        return redirect(url_for("add_instance_game_specific", instance_id=instance.id))
+
+    return render_template("instances_form_9_assists.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances")
+
+
+# Add instance (game-specific)
+@cardb.route("/instances/add-instance/<instance_id>/game-specific", methods=['GET', 'POST'])
+def add_instance_game_specific(instance_id):
+
+    instance = Instance.query.get(instance_id)
+
+    if instance.game.name_full == "Crazy Taxi":
+        return redirect(url_for("crazy_taxi.crazy_taxi_1.add_instance"))
 
 
 # Add instance type
