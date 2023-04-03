@@ -11,6 +11,7 @@
                     <ul class="nav navbar-nav">
                         {% if game %}
                         <li><a href="{{ url_for('edit_game_general', id=game.id) }}"><button type="button" class="btn btn-primary">Edit general info</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
                         <li><a href="{{ url_for('edit_game_platforms', id=game.id) }}"><button type="button" class="btn btn-info">Edit platforms</button></a></li>
                         <li><a href="{{ url_for('add_activity', game_id=game.id) }}"><button type="button" class="btn btn-info">Add activity</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#changeStateModal">Change state</button></a></li>
@@ -69,7 +70,26 @@
               </div>
           </div>
         </div>
+
+    <!--  Text  -->
+    {% if game.texts.all() != [] %}
+    <div class="well">
+        {% for text in game.texts %}
+            {% if text.text_type == 0 %}
+                <p>{{ text.content }} <small><a href="{{ url_for('delete_game_text', id=text.id) }}">[x]</a></small></p>
+            {% endif %}
+            {% if text.text_type == 1 %}
+                <h2>{{ text.content }} <small><a href="{{ url_for('delete_game_text', id=text.id) }}">[x]</a></small></h2>
+            {% endif %}
+            {% if text.text_type == 2 %}
+                <h3>{{ text.content }} <small><a href="{{ url_for('delete_game_text', id=text.id) }}">[x]</a></small></h3>
+            {% endif %}
+            {% if text.text_type == 3 %}
+                <h4>{{ text.content }} <small><a href="{{ url_for('delete_car_text', id=text.id) }}">[x]</a></small></h4>
+            {% endif %}
+        {% endfor %}
     </div>
+    {% endif %}
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -133,8 +153,23 @@
           </table>
       </div>
     </div>
+    </div>
 
     <!--  Modals  -->
+    <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="textLabel">Add text</h4>
+          </div>
+          <div class="modal-body">
+              {{ wtf.quick_form(add_text_form, button_map={"submit_add_text": "info"}) }}
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
     <div class="modal fade" id="changeStateModal" tabindex="-1" role="dialog" aria-labelledby="changeStateModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">

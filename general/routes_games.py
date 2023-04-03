@@ -8,8 +8,10 @@ from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAdd
     GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm, GameStateAddForm, GameStateEditForm, \
     GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm, GameActivityNonInitialAddForm, \
     GameStateChangeForm, GameActivityEditForm
+from general.forms_info import TextForm
 from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form, GameState, GameActivity, \
-    create_initial_activity_from_form, GamePlatform, create_non_initial_activity_from_form
+    create_initial_activity_from_form, GamePlatform, create_non_initial_activity_from_form, GameText, GameSeriesText, \
+    PlatformText
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -695,6 +697,60 @@ def delete_state(id):
     return redirect(url_for("overview_states"))
 
 
+# Delete game text
+@cardb.route("/games/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_game_text(id):
+
+    text = GameText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_game", id=text.game_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_game", id=text.game_id))
+
+
+# Delete game series text
+@cardb.route("/games/game-series/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_game_series_text(id):
+
+    text = GameSeriesText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_game_series", id=text.game_series_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_game_series", id=text.game_series_id))
+
+
+# Delete platform text
+@cardb.route("/games/platforms/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_platform_text(id):
+
+    text = PlatformText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_platform", id=text.platform_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_platform", id=text.platform_id))
+
+
 # Game detail
 @cardb.route("/games/detail/<id>", methods=['GET', 'POST'])
 def detail_game(id):
@@ -702,7 +758,29 @@ def detail_game(id):
     game = Game.query.get(id)
     activities = GameActivity.query.filter(GameActivity.game_id == game.id).order_by(GameActivity.order.asc()).all()
     change_state_form = GameStateChangeForm()
+    add_text_form = TextForm()
 
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = GameText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(game.texts.all()) + 1
+        new_text.game_id = game.id
+
+        game.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(game.name_display), "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        flash("The text has been successfully added to {}.".format(game.name_display), "success")
+        return redirect(url_for("detail_game", id=game.id))
+
+    # Change state
     if change_state_form.submit_change_state.data and change_state_form.validate():
 
         game.game_state_id = change_state_form.id.data
@@ -722,6 +800,7 @@ def detail_game(id):
                            heading="{}".format(game.name_full),
                            game=game,
                            viewing="games",
+                           add_text_form=add_text_form,
                            change_state_form=change_state_form,
                            activities=activities)
 
@@ -731,11 +810,31 @@ def detail_game(id):
 def detail_game_series(id):
 
     game_series = GameSeries.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = GameSeriesText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(game_series.texts.all()) + 1
+        new_text.game_series_id = game_series.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(game_series.name), "danger")
+            return redirect(url_for("detail_game_series", id=game_series.id))
+
+        flash("The text has been successfully added to {}.".format(game_series.name), "success")
+        return redirect(url_for("detail_game_series", id=game_series.id))
 
     return render_template("games_detail_game_series.html",
                            title="{}".format(game_series.name),
                            heading="{}".format(game_series.name),
                            game_series=game_series,
+                           add_text_form=add_text_form,
                            viewing="game_series")
 
 
@@ -757,11 +856,31 @@ def detail_genre(id):
 def detail_platform(id):
 
     platform = Platform.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = PlatformText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(platform.texts.all()) + 1
+        new_text.platform_id = platform.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(platform.name_display), "danger")
+            return redirect(url_for("detail_platform", id=platform.id))
+
+        flash("The text has been successfully added to {}.".format(platform.name_display), "success")
+        return redirect(url_for("detail_platform", id=platform.id))
 
     return render_template("games_detail_platform.html",
                            title="{}".format(platform.name_display),
                            heading="{}".format(platform.name_full),
                            platform=platform,
+                           add_text_form=add_text_form,
                            viewing="platforms")
 
 

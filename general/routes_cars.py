@@ -7,8 +7,9 @@ from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, 
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
     FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car21Form, Car22Form, Car3Form, \
     Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form
+from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
-    CarManufacturer, CarCompetition, CarEngine, CarAssist
+    CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText
 from general.models.part import FuelType, Aspiration
 
 
@@ -1177,16 +1178,56 @@ def delete_fuel(id):
     return redirect(url_for("overview_fuels"))
 
 
+# Delete car text
+@cardb.route("/cars/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_car_text(id):
+
+    text = CarText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_car", id=text.car_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_car", id=text.car_id))
+
+
 # Car detail
 @cardb.route("/cars/detail/<id>", methods=['GET', 'POST'])
 def detail_car(id):
 
     car = Car.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = CarText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(car.texts.all()) + 1
+        new_text.car_id = car.id
+
+        car.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(car.name_display), "danger")
+            return redirect(url_for("detail_car", id=car.id))
+
+        flash("The text has been successfully added to {}.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_detail.html",
                            title="{}".format(car.name_display),
                            heading="{}".format(car.name_display),
                            car=car,
+                           add_text_form=add_text_form,
                            viewing="cars")
 
 

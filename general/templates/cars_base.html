@@ -55,7 +55,9 @@
                         {% if body_style %}
                         <li class="active"><a href="#">{{ body_style.name }}</a></li>
                         {% endif %}
-                        {% if car %}
+                        {% if car.name_short %}
+                        <li class="active"><a href="#">{{ car.name_short }}</a></li>
+                        {% else %}
                         <li class="active"><a href="#">{{ car.name_display }}</a></li>
                         {% endif %}
                         {% if car_class %}
