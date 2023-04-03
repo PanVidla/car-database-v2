@@ -6,7 +6,7 @@ from general import cardb, database
 from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
-from general.helpers import create_instance_based_on_game
+from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game
 from general.models.car import Car
 from general.models.game import Game
 from general.models.instance import Instance, InstanceType, InstanceSpecialization
@@ -17,7 +17,9 @@ from general.models.instance import Instance, InstanceType, InstanceSpecializati
 @cardb.route("/instances/all", methods=['GET'])
 def overview_instances():
 
-    instances = Instance.query.order_by(Instance.id).all()
+    instances = Instance.query.\
+        filter(Instance.is_deleted != True).\
+        order_by(Instance.id.desc()).all()
 
     return render_template("instances_overview.html",
                            title="Instances",
@@ -43,7 +45,7 @@ def overview_instance_types():
 # Overview instance specialization
 @cardb.route("/instances/specialization", methods=['GET'])
 @cardb.route("/instances/specialization/all", methods=['GET'])
-def overview_instance_specialization():
+def overview_specialization():
 
     specialization = InstanceSpecialization.query.order_by(InstanceSpecialization.name_full.asc()).all()
 
@@ -86,6 +88,7 @@ def add_instance_general(car_id, game_id):
     if form.validate_on_submit():
 
         new_instance = create_instance_based_on_game(game)
+        new_instance.set_type_and_specialization(form)
         form.populate_obj(new_instance)
 
         new_instance.car_id = car.id
@@ -492,7 +495,17 @@ def delete_specialization(id):
     return redirect(url_for("overview_instance_specialization"))
 
 
-# Instance detail
+# Instance type detail
+@cardb.route("/instances/types/detail/<id>", methods=['GET', 'POST'])
+def detail_instance(id):
+
+    instance = Instance.query.get(id)
+    game = Game.query.get(instance.game_id)
+
+    return return_redirect_to_details_based_on_game(game, id)
+
+
+# Instance type detail
 @cardb.route("/instances/types/detail/<id>", methods=['GET', 'POST'])
 def detail_instance_type(id):
 

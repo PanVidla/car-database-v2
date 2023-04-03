@@ -22,7 +22,7 @@
                 {% for instance in instances %}
             <tr>
                 <td class="col-sm-1">{{ instance.id }}</td>
-                <td class="col-sm-4">{{ instance.name_full }}</td>
+                <td class="col-sm-4"><a href="{{ url_for('detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
                 <td class="col-sm-2">{{ instance.name_nickname }}</td>
                 <td class="col-sm-2">{{ instance.type.name_full }}</td>
                 <td class="col-sm-1">{{ instance.is_complete }}</td>

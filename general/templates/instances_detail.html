@@ -1,0 +1,368 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <!-- Sub-sub-menu -->
+    {% block subsubmenu1 %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        {% if instance %}
+                        <li><a href="#"><button type="button" class="btn btn-primary">Edit general info</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit engine(s)</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit forced induction</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit power values</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit transmission</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit platform</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit performance</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info">Edit assists</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete instance</button></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    <!--  Content  -->
+    <!--  General information  -->
+    <h2>Instance information</h2>
+
+    <div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Instance name</b></div>
+                  <div class="col-sm-4">{{ instance.name_full }}</div>
+                  <div class="col-sm-2 text-right"><b>Car</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_car', id=instance.car_id) }}">{{ instance.car.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Nickname</b></div>
+                  <div class="col-sm-4">{{ instance.name_nickname }}</div>
+                  <div class="col-sm-2 text-right"><b>Game</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_game', id=instance.game_id) }}">{{ instance.game.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Drivetrain</b></div>
+                  <div class="col-sm-4">{{ instance.get_drivetrain() }}</div>
+                  <div class="col-sm-2 text-right"><b>Engine layout</b></div>
+                  <div class="col-sm-4">{{ instance.get_engine_layout() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Type</b></div>
+                  <div class="col-sm-4">{{ instance.get_instance_type() }}</div>
+                  <div class="col-sm-2 text-right"><b>Specialization</b></div>
+                  <div class="col-sm-4">{{ instance.get_specialization() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Complete</b></div>
+                  <div class="col-sm-4">{{ instance.get_is_complete() }}</div>
+                  <div class="col-sm-2 text-right"><b>For collection</b></div>
+                  <div class="col-sm-4">{{ instance.get_is_for_collection() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Color</b></div>
+                  <div class="col-sm-4">{{ instance.get_color() }}</div>
+                  <div class="col-sm-2 text-right"><b>Theme</b></div>
+                  <div class="col-sm-4">{{ instance.get_theme() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    {% block game_specific %}
+    {% endblock %}
+
+    <h2>Technical information</h2>
+
+    <!--  Technical information  -->
+    <!--  Power & Torque  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">System</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Fuel type</b></div>
+                  <div class="col-sm-4">{{ instance.get_fuel_type_name() }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of engines</b></div>
+                  <div class="col-sm-4">{{ instance.get_no_of_engines() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ instance.get_maximum_power_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ instance.get_maximum_torque_nm() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Engine  -->
+    {% if instance.get_no_of_engines() == 0 %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Engine</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-12 text-center">This instance has no engine information.</div>
+              </div>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if instance.get_no_of_engines() >= 1 %}
+        {% if instance.get_no_of_combustion_engines() > 0 %}
+            {% for combustion_engine in instance.get_combustion_engines() %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {% if instance.get_no_of_combustion_engines() > 1 %}
+            <h3 class="panel-title">Combustion engine #{{ combustion_engine[1] }}</h3>
+            {% else %}
+            <h3 class="panel-title">Combustion engine</h3>
+            {% endif %}
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_engine_combustion', id=combustion_engine[0].id) }}">{{ combustion_engine[0].name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=combustion_engine[0].manufacturer_id) }}">{{ combustion_engine[0].get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Engine type</b></div>
+                  <div class="col-sm-10">{{ combustion_engine[0].get_engine_type() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_max_power_output_string_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_max_torque_string_nm() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Aspiration</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_aspiration() }}</div>
+                  <div class="col-sm-2 text-right"><b>Displacement</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_displacement() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Cylinder alignment</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_cylinder_alignment() }}</div>
+                  <div class="col-sm-2 text-right"><b>Valves per cylinder</b></div>
+                  <div class="col-sm-4">{{ combustion_engine[0].get_valves_per_cylinder() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+            {% endfor %}
+        {% endif %}
+        {% if instance.get_no_of_electric_engines() > 0 %}
+            {% for electric_engine in instance.get_electric_engines() %}
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {% if instance.get_no_of_electric_engines() > 1 %}
+            <h3 class="panel-title">Electric engine #{{ electric_engine[1] }}</h3>
+            {% else %}
+            <h3 class="panel-title">Electric engine</h3>
+            {% endif %}
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_engine_electric', id=electric_engine[0].id) }}">{{ electric_engine[0].name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=electric_engine[0].manufacturer_id) }}">{{ electric_engine[0].get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Engine type</b></div>
+                  <div class="col-sm-10">{{ electric_engine[0].get_engine_type() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Maximum power</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_max_power_output_string_kw() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum torque</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_max_torque_string_nm() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Battery technology</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_battery_technology() }}</div>
+                  <div class="col-sm-2 text-right"><b>Battery voltage</b></div>
+                  <div class="col-sm-4">{{ electric_engine[0].get_battery_voltage() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    <!--  Forced induction  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Additional forced induction</h3>
+          </div>
+          <div class="panel-body">
+              {% if instance.forced_induction == None %}
+              <div class="row">
+                  <div class="col-sm-12 text-center">This instance has no additional forced induction.</div>
+              </div>
+              {% else %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_forced_induction', id=instance.forced_induction.id) }}">{{ instance.forced_induction.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ instance.forced_induction.get_name_official() }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=instance.forced_induction.manufacturer.id) }}">{{ instance.forced_induction.get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Induction type</b></div>
+                  <div class="col-sm-4">{{ instance.forced_induction.type.name }}</div>
+                  <div class="col-sm-2 text-right"><b>Boost pressure</b></div>
+                  <div class="col-sm-4">{{ instance.forced_induction.get_boost_pressure_bar() }}</div>
+              </div>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+
+    <!--  Transmission  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Transmission</h3>
+          </div>
+          <div class="panel-body">
+              {% if instance.transmission != None %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Display name</b></div>
+                  <div class="col-sm-10"><a href="{{ url_for('detail_transmission', id=instance.transmission_id) }}">{{ instance.transmission.name_display }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Official name</b></div>
+                  <div class="col-sm-4">{{ instance.transmission.name_official }}</div>
+                  <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_company', id=instance.transmission.manufacturer.id) }}">{{ instance.transmission.get_manufacturer_name_display() }}</a></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Transmission type</b></div>
+                  <div class="col-sm-4">{{ instance.transmission.type.name }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of gears</b></div>
+                  <div class="col-sm-4">{{ instance.transmission.no_of_gears }}</div>
+              </div>
+              {% else %}
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Transmission type</b></div>
+                  <div class="col-sm-4">{{ instance.get_transmission_type_actual() }}</div>
+                  <div class="col-sm-2 text-right"><b>No. of gears</b></div>
+                  <div class="col-sm-4">{{ instance.get_no_of_gears_actual() }}</div>
+              </div>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+
+    <!--  Platform  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Platform</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Front suspension</b></div>
+                  <div class="col-sm-4">{{ instance.get_suspension_front() }}</div>
+                  <div class="col-sm-2 text-right"><b>Rear suspension</b></div>
+                  <div class="col-sm-4">{{ instance.get_suspension_rear() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Curb weight</b></div>
+                  <div class="col-sm-4">{{ instance.get_curb_weight_kg() }}</div>
+                  <div class="col-sm-2 text-right"><b>Weight distribution</b></div>
+                  <div class="col-sm-4">{{ instance.get_weight_distribution() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Front tires</b></div>
+                  <div class="col-sm-4">{{ instance.get_tires_front() }}</div>
+                  <div class="col-sm-2 text-right"><b>Rear tires</b></div>
+                  <div class="col-sm-4">{{ instance.get_tires_rear() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Performance  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Performance</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>0 to 100 km/h</b></div>
+                  <div class="col-sm-4">{{ instance.get_acceleration_0_to_100_kmh_sec() }}</div>
+                  <div class="col-sm-2 text-right"><b>Maximum speed</b></div>
+                  <div class="col-sm-4">{{ instance.get_maximum_speed_kmh() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Power / weight ratio</b></div>
+                  <div class="col-sm-10">{{ instance.get_power_to_weight_ratio() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Assists  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Assists</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Assists</b></div>
+                  <div class="col-sm-10">{{ instance.get_assists() }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Modals  -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Delete instance</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete the instance "{{ instance.name_display }}"?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
