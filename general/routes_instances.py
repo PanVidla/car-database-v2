@@ -9,7 +9,7 @@ from general.forms_instance import SelectGameForm, InstanceTypeAddForm, Instance
 from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game
 from general.models.car import Car
 from general.models.game import Game
-from general.models.instance import Instance, InstanceType, InstanceSpecialization
+from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist
 
 
 # Overview instances
@@ -403,6 +403,278 @@ def add_specialization():
                            heading="Add specialization",
                            form=form,
                            viewing="specialization")
+
+
+# Edit instance (general)
+@cardb.route("/instances/edit-instance/<id>/general", methods=['GET', 'POST'])
+def edit_instance_general(id):
+
+    instance = Instance.query.get(id)
+
+    form = InstanceGeneralForm(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_type_and_specialization(form)
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_general", id=instance.id))
+
+        flash("The {}  has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_2_general.html",
+                           title="Edit instance",
+                           heading="Edit general information",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (engine)
+@cardb.route("/instances/edit-instance/<id>/engine", methods=['GET', 'POST'])
+def edit_instance_engine(id):
+
+    instance = Instance.query.get(id)
+
+    # Get engine(s) for the multiple select form
+    engines = InstanceEngine.query.filter(InstanceEngine.instance_id == instance.id).all()
+    engine_ids = []
+
+    for engine in engines:
+        engine_ids += str(engine.engine_id)
+
+    form = Car21Form(engines=engine_ids)
+
+    if form.validate_on_submit():
+
+        instance.set_engines(form.engines.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_engine", id=instance.id))
+
+        flash("The {}  has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_3_engine.html",
+                           title="Edit instance",
+                           heading="Edit engine(s)",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (forced induction)
+@cardb.route("/instances/edit-instance/<id>/forced-induction", methods=['GET', 'POST'])
+def edit_instance_forced_induction(id):
+
+    instance = Instance.query.get(id)
+
+    form = Car3Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        instance.set_forced_induction(form.additional_forced_induction_id.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_forced_induction", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_4_forced_induction.html",
+                           title="Edit instance",
+                           heading="Edit forced induction",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (power values)
+@cardb.route("/instances/edit-instance/<id>/power-values", methods=['GET', 'POST'])
+def edit_instance_power_values(id):
+
+    instance = Instance.query.get(id)
+
+    form = Car4Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_power_to_weight_ratio()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_power_values", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_5_power_values.html",
+                           title="Edit instance",
+                           heading="Edit power values",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (transmission)
+@cardb.route("/instances/edit-instance/<id>/transmission", methods=['GET', 'POST'])
+def edit_instance_transmission(id):
+
+    instance = Instance.query.get(id)
+
+    form = Car5Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_transmission(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_transmission", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_6_transmission.html",
+                           title="Edit instance",
+                           heading="Edit transmission",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (platform)
+@cardb.route("/cars/edit-instance/<id>/platform", methods=['GET', 'POST'])
+def edit_instance_platform(id):
+
+    instance = Instance.query.get(id)
+
+    form = Car6Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_power_to_weight_ratio()
+        instance.set_suspension(form)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_platform", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_7_platform.html",
+                           title="Edit instance",
+                           heading="Edit platform",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (performance)
+@cardb.route("/instances/edit-instance/<id>/performance", methods=['GET', 'POST'])
+def edit_instance_performance(id):
+
+    instance = Instance.query.get(id)
+
+    form = Car7Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_performance", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_8_performance.html",
+                           title="Edit instance",
+                           heading="Edit performance",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Edit instance (assists)
+@cardb.route("/cars/edit-instance/<id>/assists", methods=['GET', 'POST'])
+def edit_instance_assists(id):
+
+    instance = Instance.query.get(id)
+
+    # Get assists for the multiple select form
+    assists = InstanceAssist.query.filter(InstanceAssist.instance_id == instance.id).all()
+    assists_ids = []
+
+    for assist in assists:
+        assists_ids += str(assist.assist_id)
+
+    form = Car8Form(assists_select=assists_ids)
+
+    if form.validate_on_submit():
+
+        instance.set_assists(form.assists_select.data)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("edit_instance_assists", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    return render_template("instances_form_9_assists.html",
+                           title="Edit instance",
+                           heading="Edit assists",
+                           form=form,
+                           viewing="instances",
+                           editing=True)
+
+
+# Delete instance
+@cardb.route("/cars/delete-instance/<id>", methods=['GET', 'POST'])
+def delete_instance(id):
+
+    instance = Instance.query.get(id)
+    instance.is_deleted = True
+
+    try:
+        database.session.delete(instance)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {}.".format(instance.name_full), "danger")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    flash("The {} has been successfully deleted.".format(instance.name_full), "success")
+    return redirect(url_for("overview_instances"))
 
 
 # Edit instance type

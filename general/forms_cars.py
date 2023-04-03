@@ -76,7 +76,7 @@ class Car21Form(FlaskForm):
 
     # Technical
     # Engine
-    engines = SelectMultipleField("Engine(s)", validators=[DataRequired()], coerce=int)
+    engines = SelectMultipleField("Engine(s)", validators=[Optional()], coerce=int)
 
     submit_existing_engine = SubmitField("Select engine(s)")
 

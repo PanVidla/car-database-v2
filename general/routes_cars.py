@@ -671,7 +671,7 @@ def edit_car_forced_induction(id):
             flash("There was a problem editing the {}.".format(car.name_display), "danger")
             return redirect(url_for("edit_car_forced_induction", id=car.id))
 
-        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        flash("The {} has been successfully edited.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_form_3_forced_induction.html",
@@ -701,7 +701,7 @@ def edit_car_power_values(id):
             flash("There was a problem editing the {}.".format(car.name_display), "danger")
             return redirect(url_for("edit_car_power_values", id=car.id))
 
-        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        flash("The {} has been successfully edited.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_form_4_power_values.html",
@@ -722,6 +722,7 @@ def edit_car_transmission(id):
 
     if form.validate_on_submit():
 
+        form.populate_obj(car)
         car.set_transmission(form)
 
         try:
@@ -730,7 +731,7 @@ def edit_car_transmission(id):
             flash("There was a problem editing the {}.".format(car.name_display), "danger")
             return redirect(url_for("edit_car_transmission", id=car.id))
 
-        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        flash("The {} has been successfully edited.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_form_5_transmission.html",
@@ -791,7 +792,7 @@ def edit_car_performance(id):
             flash("There was a problem editing the {}.".format(car.name_display), "danger")
             return redirect(url_for("edit_car_performance", id=car.id))
 
-        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        flash("The {} has been successfully edited.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_form_7_performance.html",
@@ -827,7 +828,7 @@ def edit_car_assists(id):
             flash("There was a problem editing the {}.".format(car.name_display), "danger")
             return redirect(url_for("edit_car_assists", id=car.id))
 
-        flash("The {}  has been successfully edited.".format(car.name_display), "success")
+        flash("The {} has been successfully edited.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
     return render_template("cars_form_8_assists.html",
