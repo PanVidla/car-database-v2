@@ -33,6 +33,53 @@
         </div>
     </div>
 
+    <!--  Relationships  -->
+    <!--  Engines  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Engines</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if aspiration.engines.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no engines with this kind of aspiration in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_engines_top.html" %}
+                {% for engine in aspiration.engines %}
+                    {% with engine=engine %}
+                        {% include "_engines_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <!--  Forced induction  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Forced induction</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if aspiration.forced_inductions.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There is no forced induction with this kind of aspiration in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_forced_induction_top.html" %}
+                {% for forced_induction in aspiration.forced_inductions %}
+                    {% with forced_induction=forced_induction %}
+                        {% include "_forced_induction_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
     <!--  Modals  -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

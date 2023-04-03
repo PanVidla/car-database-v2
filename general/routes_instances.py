@@ -13,6 +13,7 @@ from general.models.instance import Instance, InstanceType, InstanceSpecializati
 
 
 # Overview instances
+@cardb.route("/", methods=['GET'])
 @cardb.route("/instances", methods=['GET'])
 @cardb.route("/instances/all", methods=['GET'])
 def overview_instances():
@@ -104,6 +105,7 @@ def add_instance_general(car_id, game_id):
         flash("The {} has been successfully added to the database.".format(new_instance.name_full), "success")
 
         car.refresh_no_of_instances()
+        game.refresh_no_of_instances()
         database.session.commit()
 
         return redirect(url_for("add_instance_engine", instance_id=new_instance.id))
@@ -768,7 +770,7 @@ def delete_specialization(id):
 
 
 # Instance type detail
-@cardb.route("/instances/types/detail/<id>", methods=['GET', 'POST'])
+@cardb.route("/instances/detail/<id>", methods=['GET', 'POST'])
 def detail_instance(id):
 
     instance = Instance.query.get(id)

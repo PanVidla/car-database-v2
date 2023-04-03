@@ -19,7 +19,7 @@
                 {% for instance_type in instance_types %}
             <tr>
                 <td class="col-sm-1">{{ instance_type.id }}</td>
-                <td class="col-sm-10"><a href="{{ url_for('detail_instance_type', id=instance_type.id) }}">{{ instance_type.name_full }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('detail_instance_type', id=instance_type.id) }}">{{ instance_type.name_full }}</a></td>
                 <td class="col-sm-1">{{ instance_type.name_short }}</td>
             </tr>
                 {% endfor %}

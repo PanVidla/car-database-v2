@@ -112,7 +112,27 @@
       </div>
     </div>
 
-    <!--  There should be instances here  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Instances</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if game.instances.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>This game doesn't have any instances.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_instances_top.html" %}
+                {% for instance in game.instances %}
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
 
     <!--  Modals  -->
     <div class="modal fade" id="changeStateModal" tabindex="-1" role="dialog" aria-labelledby="changeStateModalLabel" aria-hidden="true">

@@ -10,31 +10,12 @@
                 <td class="col-sm-12 text-center"><b>There are no games in the database.</b></td>
             </tr>
             {% else %}
-            <tr>
-                <td class="col-sm-1"><strong>ID</strong></td>
-                <td class="col-sm-3"><strong>Name</strong></td>
-                <td class="col-sm-1"><strong>Short name</strong></td>
-                <td class="col-sm-1"><strong>Year</strong></td>
-                <td class="col-sm-2"><strong>Developer</strong></td>
-                <td class="col-sm-1"><strong>Genre</strong></td>
-                <td class="col-sm-1"><strong>Status</strong></td>
-                <td class="col-sm-1"><strong>Instances</strong></td>
-                <td class="col-sm-1"><strong>Last played</strong></td>
-            </tr>
-
+            {% include "_games_top.html" %}
                 {% for game in games %}
-            <tr>
-                <td class="col-sm-1">{{ game.id }}</td>
-                <td class="col-sm-3"><a href="{{ url_for('detail_game', id=game.id) }}">{{ game.name_display }}</a></td>
-                <td class="col-sm-1">{{ game.name_short }}</td>
-                <td class="col-sm-1">{{ game.get_year_released() }}</td>
-                <td class="col-sm-2"><a href="{{ url_for('detail_company', id=game.developer.id) }}">{{ game.developer.name_display }}</a></td>
-                <td class="col-sm-1 {% if game.genre != None %}{{ game.genre.get_css_name() }}{% endif %}">{{ game.genre.name }}</td>
-                <td class="col-sm-1 {% if game.state != None %}{{ game.state.get_css_name() }}{% endif %}">{{ game.get_state() }}</td>
-                <td class="col-sm-1">{{ game.no_of_instances }}</td>
-                <td class="col-sm-1">{{ game.get_last_played_date() }}</td>
-            </tr>
-                {% endfor %}
+                    {% with game=game %}
+                        {% include "_games_row.html" %}
+                    {% endwith %}
+            {% endfor %}
             {% endif %}
 
         </table>

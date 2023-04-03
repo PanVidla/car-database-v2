@@ -35,6 +35,30 @@
         </div>
     </div>
 
+    <!--  Relationships  -->
+    <!--  Instances  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Instances</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if specialization.instances.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no instances with this specialization in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_instances_top.html" %}
+                {% for instance in specialization.instances %}
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
     <!--  Modals  -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

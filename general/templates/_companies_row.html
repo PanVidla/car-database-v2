@@ -1,0 +1,10 @@
+<tr>
+    <td class="col-sm-1">{{ company.id }}</td>
+    <td class="col-sm-2"><a href="{{ url_for('detail_company', id=company.id) }}">{{ company.name_display }}</a></td>
+    <td class="col-sm-1">{{ company.get_name_short() }}</td>
+    <td class="col-sm-2">{{ company.country.name_display }}</td>
+    <td class="col-sm-2">{{ company.description }}</td>
+    <td class="col-sm-1 text-center {% if company.is_game_developer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_game_company() }}</td>
+    <td class="col-sm-1 text-center {% if company.is_car_manufacturer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_car_company() }}</td>
+    <td class="col-sm-1 text-center {% if company.is_car_part_manufacturer %}true-neutral{% else %}false-neutral{% endif %}">{{ company.is_part_company() }}</td>
+</tr>

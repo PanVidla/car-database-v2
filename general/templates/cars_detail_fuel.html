@@ -33,6 +33,76 @@
         </div>
     </div>
 
+    <!--  Relationships  -->
+    <!--  Engines  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Engines</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if fuel.engines.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no engines that use this type of fuel in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_engines_top.html" %}
+                {% for engine in fuel.engines %}
+                    {% with engine=engine %}
+                        {% include "_engines_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <!--  Cars  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cars</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if fuel.cars.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no cars that use this fuel type in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_cars_top.html" %}
+                {% for car in fuel.cars %}
+                    {% with car=car %}
+                        {% include "_cars_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <!--  Instances  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Instances</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if fuel.instances.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no instances that use this type of fuel in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_instances_top.html" %}
+                {% for instance in fuel.instances %}
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
     <!--  Modals  -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

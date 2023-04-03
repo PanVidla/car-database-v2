@@ -1,0 +1,11 @@
+<tr>
+    <td class="col-sm-1">{{ game.id }}</td>
+    <td class="col-sm-3"><a href="{{ url_for('detail_game', id=game.id) }}">{{ game.name_display }}</a></td>
+    <td class="col-sm-1 text-center">{{ game.name_short }}</td>
+    <td class="col-sm-1 text-center">{{ game.get_year_released() }}</td>
+    <td class="col-sm-2"><a href="{{ url_for('detail_company', id=game.developer.id) }}">{{ game.developer.name_display }}</a></td>
+    <td class="col-sm-1 {% if game.genre != None %}{{ game.genre.get_css_name() }}{% endif %} text-center">{{ game.genre.name }}</td>
+    <td class="col-sm-1 {% if game.state != None %}{{ game.state.get_css_name() }}{% endif %} text-center">{{ game.get_state() }}</td>
+    <td class="col-sm-1 text-center">{{ game.no_of_instances }}</td>
+    <td class="col-sm-1">{{ game.get_last_played_date() }}</td>
+</tr>

@@ -1,0 +1,10 @@
+<tr>
+    <td class="col-sm-1">{{ engine.id }}</td>
+    <td class="col-sm-4">{% if engine.get_fuel() == ("petrol" or "diesel") %}<a href="{{ url_for('detail_engine_combustion', id=engine.id) }}">{% else %}<a href="{{ url_for('detail_engine_electric', id=engine.id) }}">{% endif %}{{ engine.name_display }}</a></td>
+    <td class="col-sm-1">{{ engine.fuel_type.name }}</td>
+    <td class="col-sm-1">{{ engine.get_max_power_output_kw() }}</td>
+    <td class="col-sm-1">{{ engine.get_max_power_output_rpm() }}</td>
+    <td class="col-sm-1">{{ engine.get_max_torque_nm() }}</td>
+    <td class="col-sm-1">{{ engine.get_max_torque_rpm() }}</td>
+    <td class="col-sm-2">{% if engine.get_manufacturer_name_display() != "n/a" %}<a href="{{ url_for('detail_company', id=engine.manufacturer_id) }}">{{ engine.get_manufacturer_name_display() }}</a>{% else %}{{ engine.get_manufacturer_name_display() }}{% endif %}</td>
+</tr>

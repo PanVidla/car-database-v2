@@ -50,7 +50,6 @@ class Instance(database.Model):
     # This refers to the specific car part
     additional_forced_induction_id = database.Column(database.Integer, database.ForeignKey("forced_induction.id"),
                                                      nullable=True)
-    aspiration_actual_id = database.Column(database.Integer, database.ForeignKey("aspirations.id"), nullable=True)
 
     # Drivetrain
     # This refers to the actual transmission car part and may backfill the following two values

@@ -27,6 +27,11 @@
     background: #5bc0de;
 }
 
+.active-line a {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
 .genre-arcade {
     color: #ffffff;
     background: #d91c07;
@@ -50,6 +55,16 @@
 .genre-simulation {
     color: #ffffff;
     background: #d6b706;
+}
+
+.is-complete {
+    color: #ffffff;
+    background: #e6c200;
+}
+
+.is-complete a {
+    color: #ffffff;
+    background: #e6c200;
 }
 
 .state-100 {

@@ -10,22 +10,11 @@
                 <td class="col-sm-12 text-center"><b>There is no forced induction in the database.</b></td>
             </tr>
             {% else %}
-            <tr>
-                <td class="col-sm-1"><strong>ID</strong></td>
-                <td class="col-sm-6"><strong>Name</strong></td>
-                <td class="col-sm-2"><strong>Induction type</strong></td>
-                <td class="col-sm-1"><strong>Boost pressure [bar]</strong></td>
-                <td class="col-sm-2"><strong>Manufacturer</strong></td>
-            </tr>
-
+            {% include "_forced_induction_top.html" %}
                 {% for forced_induction in forced_induction_parts %}
-            <tr>
-                <td class="col-sm-1">{{ forced_induction.id }}</td>
-                <td class="col-sm-6"><a href="{{ url_for('detail_forced_induction', id=forced_induction.id) }}">{{ forced_induction.name_display }}</a></td>
-                <td class="col-sm-2">{{ forced_induction.type.name }}</td>
-                <td class="col-sm-1">{{ forced_induction.get_boost_pressure_bar() }}</td>
-                <td class="col-sm-2">{% if forced_induction.get_manufacturer_name_display() != "n/a" %}<a href="{{ url_for('detail_company', id=forced_induction.manufacturer_id) }}">{{ forced_induction.get_manufacturer_name_display() }}</a>{% else %}{{ forced_induction.get_manufacturer_name_display() }}{% endif %}</td>
-            </tr>
+                    {% with forced_induction=forced_induction %}
+                        {% include "_forced_induction_row.html" %}
+                    {% endwith %}
                 {% endfor %}
             {% endif %}
 

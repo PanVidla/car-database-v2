@@ -3,31 +3,18 @@
 {% block instances_content %}
 
     <div>
-        <table class="table table-hover table-bordered table-striped">
+        <table class="table table-bordered">
 
             {% if instances == [] %}
             <tr>
                 <td class="col-sm-12 text-center"><b>There are no instances in the database.</b></td>
             </tr>
             {% else %}
-            <tr>
-                <td class="col-sm-1"><strong>ID</strong></td>
-                <td class="col-sm-4"><strong>Name</strong></td>
-                <td class="col-sm-2"><strong>Nickname</strong></td>
-                <td class="col-sm-2"><strong>Type</strong></td>
-                <td class="col-sm-1"><strong>Complete</strong></td>
-                <td class="col-sm-2"><strong>Game</strong></td>
-            </tr>
-
+            {% include "_instances_top.html" %}
                 {% for instance in instances %}
-            <tr>
-                <td class="col-sm-1">{{ instance.id }}</td>
-                <td class="col-sm-4"><a href="{{ url_for('detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
-                <td class="col-sm-2">{{ instance.name_nickname }}</td>
-                <td class="col-sm-2">{{ instance.type.name_full }}</td>
-                <td class="col-sm-1">{{ instance.is_complete }}</td>
-                <td class="col-sm-2">{{ instance.game.name_display }}</td>
-            </tr>
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
                 {% endfor %}
             {% endif %}
 

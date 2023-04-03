@@ -35,6 +35,95 @@
         </div>
     </div>
 
+    <!--  Relationships  -->
+    <!--  Cars  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cars (front)</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if suspension.cars_front.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no cars in the database that use this kind of suspension in the front.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_cars_top.html" %}
+                {% for car in suspension.cars_front %}
+                    {% with car=car %}
+                        {% include "_cars_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cars (rear)</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if suspension.cars_rear.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no cars in the database that use this kind of suspension in the rear.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_cars_top.html" %}
+                {% for car in suspension.cars_rear %}
+                    {% with car=car %}
+                        {% include "_cars_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <!--  Instances  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Instances (front)</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if suspension.instances_front.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no instances in the database that use this kind of suspension in the front.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_instances_top.html" %}
+                {% for instance in suspension.instances_front %}
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Instances (rear)</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if suspension.instances_rear.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no instances in the database that use this kind of suspension in the rear.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_instances_top.html" %}
+                {% for instance in suspension.instances_rear %}
+                    {% with instance=instance %}
+                        {% include "_instances_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
     <!--  Modals  -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

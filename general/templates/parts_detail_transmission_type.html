@@ -33,6 +33,30 @@
         </div>
     </div>
 
+    <!--  Relationships  -->
+    <!--  Transmissions  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Transmissions</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if transmission_type.transmissions.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no transmissions of this type in the database.</strong></td>
+              </tr>
+              {% else %}
+                {% include "_transmissions_top.html" %}
+                {% for transmission in transmission_type.transmissions %}
+                    {% with transmission=transmission %}
+                        {% include "_transmissions_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
     <!--  Modals  -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">

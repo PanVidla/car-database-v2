@@ -106,42 +106,125 @@
       </div>
     </div>
 
+    <!--  Relationships  -->
+    <h2>Products</h2>
     {% if company.is_game_developer == True %}
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Games</h3>
       </div>
       <div class="table-responsive">
-          <table class="table table-striped table-bordered">
+          <table class="table table-bordered table-condensed">
               {% if company.games.all() == [] %}
               <tr>
-                  <td class="text-center"><strong>There are no games developed by this company in the database.</strong></td>
+                  <td class="text-center"><strong>There are no games made by this company in the database.</strong></td>
               </tr>
               {% else %}
-              <tr>
-                <td class="col-sm-1"><strong>ID</strong></td>
-                <td class="col-sm-3"><strong>Name</strong></td>
-                <td class="col-sm-1"><strong>Short name</strong></td>
-                <td class="col-sm-1"><strong>Year</strong></td>
-                <td class="col-sm-2"><strong>Series</strong></td>
-                <td class="col-sm-1"><strong>Genre</strong></td>
-                <td class="col-sm-1"><strong>Status</strong></td>
-                <td class="col-sm-1"><strong>Instances</strong></td>
-                <td class="col-sm-1"><strong>Last played</strong></td>
-            </tr>
-
+                {% include "_games_top.html" %}
                 {% for game in company.games %}
-            <tr>
-                <td class="col-sm-1">{{ game.id }}</td>
-                <td class="col-sm-3"><a href="{{ url_for('detail_game', id=game.id) }}">{{ game.name_display }}</a></td>
-                <td class="col-sm-1">{{ game.name_short }}</td>
-                <td class="col-sm-1">{{ game.get_year_released() }}</td>
-                <td class="col-sm-2">{% if game.get_series() != "n/a" %}<a href="{{ url_for('detail_game_series', id=game.series.id) }}">{{ game.get_series() }}</a>{% else %}{{ game.get_series() }}{% endif %}</td>
-                <td class="col-sm-1 {% if game.genre != None %}{{ game.genre.get_css_name() }}{% endif %}">{{ game.genre.name }}</td>
-                <td class="col-sm-1 {% if game.state != None %}{{ game.state.get_css_name() }}{% endif %}">{{ game.get_state() }}</td>
-                <td class="col-sm-1">{{ game.no_of_instances }}</td>
-                <td class="col-sm-1">{{ game.get_last_played_date() }}</td>
-            </tr>
+                    {% with game=game %}
+                        {% include "_games_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!--  Cars  -->
+    {% if company.is_car_manufacturer == True %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cars</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if company.cars == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no cars produced by this company in the database</strong></td>
+              </tr>
+              {% else %}
+                {% include "_cars_top.html" %}
+                {% for car in company.cars %}
+                    {% with car=car %}
+                        {% include "_cars_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!--  Engines  -->
+    {% if company.is_car_part_manufacturer == True %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Engines</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if company.engines == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no engines produced by this company in the database</strong></td>
+              </tr>
+              {% else %}
+                {% include "_engines_top.html" %}
+                {% for engine in company.engines %}
+                    {% with engine=engine %}
+                        {% include "_engines_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!--  Forced induction  -->
+    {% if company.is_car_part_manufacturer == True %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Forced induction</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if company.forced_induction.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There is no forced induction produced by this company in the database</strong></td>
+              </tr>
+              {% else %}
+                {% include "_forced_induction_top.html" %}
+                {% for forced_induction in company.forced_induction %}
+                    {% with forced_induction=forced_induction %}
+                        {% include "_forced_induction_row.html" %}
+                    {% endwith %}
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!--  Forced induction  -->
+    {% if company.is_car_part_manufacturer == True %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Transmission</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if company.transmissions.all() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no transmissions produced by this company in the database</strong></td>
+              </tr>
+              {% else %}
+                {% include "_transmissions_top.html" %}
+                {% for transmission in company.transmissions %}
+                    {% with transmission=transmission %}
+                        {% include "_transmissions_row.html" %}
+                    {% endwith %}
                 {% endfor %}
               {% endif %}
           </table>
