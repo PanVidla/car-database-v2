@@ -12,7 +12,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * User login for security purposes.
 
 ### Crazy Taxi
-* The ability to add, edit, delete and view instances for Crazy Taxi.
+* ~~The ability to add, edit, delete and view instances for Crazy Taxi.~~
 
 ## v1.0.0.1.0
 ### General
