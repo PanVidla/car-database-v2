@@ -29,3 +29,4 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * FIX: Create a get method for the official name of an engine.
 * FIX: Remove the unit from the forced induction boost pressure column.
 * FIX: Make the dropdown menus appear above the nav, not under.
+* FIX: Engines are displaying incorrectly in the Company view.
