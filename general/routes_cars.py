@@ -1039,7 +1039,6 @@ def delete_car(id):
     car.is_deleted = True
 
     try:
-        database.session.delete(car)
         database.session.commit()
 
     except RuntimeError:

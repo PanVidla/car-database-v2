@@ -7,7 +7,8 @@ from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form
 from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
-from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game
+from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game, \
+    get_game_specific_instance
 from general.models.car import Car
 from general.models.game import Game
 from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist, \
@@ -667,10 +668,10 @@ def edit_instance_assists(id):
 def delete_instance(id):
 
     instance = Instance.query.get(id)
-    instance.is_deleted = True
+    game_specific_instance = get_game_specific_instance(instance)
+    game_specific_instance.is_deleted = True
 
     try:
-        database.session.delete(instance)
         database.session.commit()
 
     except RuntimeError:

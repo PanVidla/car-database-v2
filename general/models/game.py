@@ -64,7 +64,7 @@ class Game(database.Model):
                 return -1
 
         # If the game is in a series, but order in series is not filled out
-        if (form.game_series_id.data != -1) and (form.order_in_series.data == -1):
+        if (form.game_series_id.data != -1) and (form.order_in_series.data is None):
             flash("If the game is a part of a series, the order in the series needs to be filled out!", "warning")
             return -1
 
@@ -232,12 +232,12 @@ def create_game_from_form(form):
         # If the game in the same series with the same order exists
         if Game.query.filter(
                 Game.game_series_id == form.game_series_id.data,
-                Game.order_in_series == form.game_series_id.data).first() is not None:
+                Game.order_in_series == form.order_in_series.data).first() is not None:
             flash("There is already a game in the same series with the same order in the series!", "warning")
             return -1
 
     # If the game is in a series, but order in series is not filled out
-    if (form.game_series_id.data != -1) and (form.order_in_series.data == -1):
+    if (form.game_series_id.data != -1) and (form.order_in_series.data is None):
         flash("If the game is a part of a series, the order in the series needs to be filled out!", "warning")
         return -1
 

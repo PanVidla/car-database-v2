@@ -11,6 +11,17 @@ def create_instance_based_on_game(game):
     return new_instance
 
 
+def get_game_specific_instance(instance):
+
+    if instance.game.name_full == "Crazy Taxi":
+        instance = InstanceCT.query.get(instance.id)
+        return instance
+
+    else:
+        flash("There was and error returning a game-specific instance. Maybe the game isn't mapped?")
+        return redirect("overview_instances")
+
+
 def return_redirect_to_details_based_on_game(game, instance_id):
 
     if game.name_full == "Crazy Taxi":

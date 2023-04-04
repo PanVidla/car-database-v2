@@ -18,7 +18,9 @@ from general.models.game import Game, Platform, GameSeries, GameGenre, create_ga
 @cardb.route("/games/all", methods=['GET'])
 def overview_games():
 
-    games = Game.query.order_by(Game.name_display.asc()).all()
+    games = Game.query\
+        .filter(Game.is_deleted != True)\
+        .order_by(Game.name_display.asc()).all()
 
     return render_template("games_overview.html",
                            title="Games",
@@ -586,8 +588,6 @@ def delete_game(id):
 
     game = Game.query.get(id)
     game.is_deleted = True
-
-    # TODO: This method should also delete everything related to the game (instances, event records...)
 
     try:
         database.session.commit()
