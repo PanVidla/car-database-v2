@@ -21,5 +21,9 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add a list of actively played games to the top menu, so one can get to their overview.
 * CHANGE: Make the general information about a Car display in only two columns.
 * CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.
+* CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.
+* CHANGE: Visually separate the Part details with headings to make it less cluttered.
+* CHANGE: Replace the text block with an insertable HTML snippet.
 * FIX: Create a get method for the official name of an engine.
 * FIX: Remove the unit from the forced induction boost pressure column.
+* FIX: Make the dropdown menus appear above the nav, not under.

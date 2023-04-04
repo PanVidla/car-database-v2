@@ -2,8 +2,9 @@
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
+from general.forms_info import TextForm
 from general.forms_misc import CountryAddForm, CountryEditForm, CompetitionAddForm, CompetitionEditForm
-from general.models.misc import Country, Competition
+from general.models.misc import Country, Competition, CompetitionText, CountryText
 
 
 @cardb.route("/misc/competitions", methods=['GET'])
@@ -188,16 +189,72 @@ def delete_country(id):
     return redirect(url_for("overview_countries"))
 
 
+# Delete competition text
+@cardb.route("/misc/competitions/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_competition_text(id):
+
+    text = CompetitionText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_competition", id=text.competition_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_competition", id=text.competition_id))
+
+
+# Delete country text
+@cardb.route("/misc/countries/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_country_text(id):
+
+    text = CountryText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_country", id=text.country_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_country", id=text.country_id))
+
+
 # Competition detail
 @cardb.route("/misc/competitions/detail/<id>", methods=['GET', 'POST'])
 def detail_competition(id):
 
     competition = Competition.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = CompetitionText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(competition.texts.all()) + 1
+        new_text.competition_id = competition.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(competition.name_display), "danger")
+            return redirect(url_for("detail_competition", id=competition.id))
+
+        flash("The text has been successfully added to {}.".format(competition.name_display), "success")
+        return redirect(url_for("detail_competition", id=competition.id))
 
     return render_template("misc_competitions_detail.html",
                            title="{}".format(competition.name_display),
                            heading="{}".format(competition.name_full),
-                           competition=competition)
+                           competition=competition,
+                           add_text_form=add_text_form)
 
 
 # Country detail
@@ -207,10 +264,30 @@ def detail_country(id):
     country = Country.query.get(id)
     cars = country.cars.all()
     locations = country.locations.all()
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = CountryText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(country.texts.all()) + 1
+        new_text.country_id = country.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(country.name_display), "danger")
+            return redirect(url_for("detail_country", id=country.id))
+
+        flash("The text has been successfully added to {}.".format(country.name_display), "success")
+        return redirect(url_for("detail_country", id=country.id))
 
     return render_template("misc_countries_detail.html",
                            title="{}".format(country.name_display),
                            heading="{}".format(country.name_full),
                            country=country,
                            cars=cars,
-                           locations=locations)
+                           locations=locations,
+                           add_text_form=add_text_form)

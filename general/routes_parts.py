@@ -1,13 +1,15 @@
 from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
+from general.forms_info import TextForm
 from general.forms_parts import EngineCombustionAddForm, EngineElectricAddForm, EngineCombustionEditForm, \
     EngineElectricEditForm, EngineTypeAddForm, EngineTypeEditForm, ForcedInductionAddForm, ForcedInductionEditForm, \
     SuspensionAddForm, TransmissionAddForm, TransmissionTypeAddForm, SuspensionEditForm, TransmissionEditForm, \
     TransmissionTypeEditForm
 from general.models.part import Engine, create_combustion_engine_from_form, create_electric_engine_from_form, \
     EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType, ForcedInduction, \
-    create_forced_induction_from_form, Transmission, TransmissionType, Suspension, create_transmission_from_form
+    create_forced_induction_from_form, Transmission, TransmissionType, Suspension, create_transmission_from_form, \
+    EngineText, ForcedInductionText, SuspensionText, TransmissionText
 
 
 # Engines overview
@@ -668,16 +670,108 @@ def delete_transmission_type(id):
     return redirect(url_for("overview_transmission_types"))
 
 
+# Delete engine text
+@cardb.route("/parts/engines/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_engine_text(id):
+
+    text = EngineText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("overview_engines"))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("overview_engines"))
+
+
+# Delete forced induction text
+@cardb.route("/parts/forced_induction/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_forced_induction_text(id):
+
+    text = ForcedInductionText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_forced_induction", id=text.forced_induction_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_forced_induction", id=text.forced_induction_id))
+
+
+# Delete suspension text
+@cardb.route("/parts/suspension/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_suspension_text(id):
+
+    text = SuspensionText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_suspension", id=text.suspension_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_suspension", id=text.suspension_id))
+
+
+# Delete transmission text
+@cardb.route("/parts/transmission/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_transmission_text(id):
+
+    text = TransmissionText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_transmission", id=text.transmission_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_transmission", id=text.transmission_id))
+
+
 # Engine detail (combustion)
 @cardb.route("/parts/engines/detail/combustion/<id>", methods=['GET', 'POST'])
 def detail_engine_combustion(id):
 
     engine = EngineCombustion.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = EngineText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(engine.texts.all()) + 1
+        new_text.engine_id = engine.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
+            return redirect(url_for("detail_engine_combustion", id=engine.id))
+
+        flash("The text has been successfully added to {}.".format(engine.name_display), "success")
+        return redirect(url_for("detail_engine_combustion", id=engine.id))
 
     return render_template("parts_detail_engine_combustion.html",
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           add_text_form=add_text_form,
                            viewing="engines")
 
 
@@ -686,11 +780,31 @@ def detail_engine_combustion(id):
 def detail_engine_electric(id):
 
     engine = EngineElectric.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = EngineText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(engine.texts.all()) + 1
+        new_text.engine_id = engine.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
+            return redirect(url_for("detail_engine_electric", id=engine.id))
+
+        flash("The text has been successfully added to {}.".format(engine.name_display), "success")
+        return redirect(url_for("detail_engine_electric", id=engine.id))
 
     return render_template("parts_detail_engine_electric.html",
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           add_text_form=add_text_form,
                            viewing="engines")
 
 
@@ -725,11 +839,31 @@ def detail_engine_type_electric(id):
 def detail_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = ForcedInductionText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(forced_induction.texts.all()) + 1
+        new_text.forced_induction_id = forced_induction.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(forced_induction.name_display), "danger")
+            return redirect(url_for("detail_forced_induction", id=forced_induction.id))
+
+        flash("The text has been successfully added to {}.".format(forced_induction.name_display), "success")
+        return redirect(url_for("detail_forced_induction", id=forced_induction.id))
 
     return render_template("parts_detail_forced_induction.html",
                            title="{}".format(forced_induction.name_display),
                            heading="{}".format(forced_induction.name_display),
                            forced_induction=forced_induction,
+                           add_text_form=add_text_form,
                            viewing="forced_induction")
 
 
@@ -738,11 +872,31 @@ def detail_forced_induction(id):
 def detail_suspension(id):
 
     suspension = Suspension.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = SuspensionText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(suspension.texts.all()) + 1
+        new_text.suspension_id = suspension.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(suspension.name_full), "danger")
+            return redirect(url_for("detail_suspension", id=suspension.id))
+
+        flash("The text has been successfully added to {}.".format(suspension.name_full), "success")
+        return redirect(url_for("detail_suspension", id=suspension.id))
 
     return render_template("parts_detail_suspension.html",
                            title="{}".format(suspension.name_full),
                            heading="{}".format(suspension.name_full),
                            suspension=suspension,
+                           add_text_form=add_text_form,
                            viewing="suspensions")
 
 
@@ -751,11 +905,31 @@ def detail_suspension(id):
 def detail_transmission(id):
 
     transmission = Transmission.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = TransmissionText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(transmission.texts.all()) + 1
+        new_text.transmission_id = transmission.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(transmission.name_display), "danger")
+            return redirect(url_for("detail_transmission", id=transmission.id))
+
+        flash("The text has been successfully added to {}.".format(transmission.name_display), "success")
+        return redirect(url_for("detail_transmission", id=transmission.id))
 
     return render_template("parts_detail_transmission.html",
                            title="{}".format(transmission.name_display),
                            heading="{}".format(transmission.name_display),
                            transmission=transmission,
+                           add_text_form=add_text_form,
                            viewing="transmissions")
 
 

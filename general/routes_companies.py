@@ -2,7 +2,8 @@ from flask import render_template, flash, redirect, url_for
 
 from general import cardb, database
 from general.forms_companies import CompanyAddForm, CompanyEditForm
-from general.models.misc import Company, create_company_from_form
+from general.forms_info import TextForm
+from general.models.misc import Company, create_company_from_form, CompanyText
 from general.strings import *
 
 
@@ -129,13 +130,51 @@ def delete_company(id):
     return redirect(url_for("overview_companies"))
 
 
+# Delete company text
+@cardb.route("/misc/companies/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_company_text(id):
+
+    text = CompanyText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_company", id=text.company_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_company", id=text.company_id))
+
+
 # Company detail
 @cardb.route("/companies/detail/<id>", methods=['GET', 'POST'])
 def detail_company(id):
 
     company = Company.query.get(id)
+    add_text_form = TextForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        new_text = CompanyText()
+        add_text_form.populate_obj(new_text)
+        new_text.order = len(company.texts.all()) + 1
+        new_text.company_id = company.id
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding text to {}.".format(company.name_display), "danger")
+            return redirect(url_for("detail_company", id=company.id))
+
+        flash("The text has been successfully added to {}.".format(company.name_display), "success")
+        return redirect(url_for("detail_company", id=company.id))
 
     return render_template("companies_detail.html",
                            title="{}".format(company.name_display),
                            heading="{}".format(company.name_full),
-                           company=company)
+                           company=company,
+                           add_text_form=add_text_form)

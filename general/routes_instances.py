@@ -4,12 +4,14 @@ from flask import render_template, redirect, url_for, flash
 
 from general import cardb, database
 from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
+from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
 from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game
 from general.models.car import Car
 from general.models.game import Game
-from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist
+from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist, \
+    InstanceText
 
 
 # Overview instances
@@ -767,6 +769,24 @@ def delete_specialization(id):
 
     flash("The specialization \"{}\" has been successfully deleted.".format(specialization.name_full), "success")
     return redirect(url_for("overview_instance_specialization"))
+
+
+# Delete instance text
+@cardb.route("/instances/text/delete-text/<id>", methods=['GET', 'POST'])
+def delete_instance_text(id):
+
+    text = InstanceText.query.get(id)
+
+    try:
+        database.session.delete(text)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the text.", "danger")
+        return redirect(url_for("detail_instance", id=text.instance_id))
+
+    flash("The text has been successfully deleted.", "success")
+    return redirect(url_for("detail_instance", id=text.instance_id))
 
 
 # Instance type detail
