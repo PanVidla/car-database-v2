@@ -357,7 +357,7 @@ class GameState(database.Model):
 
     # General
     order = database.Column(database.Integer, index=True, nullable=False, unique=True)
-    name = database.Column(database.Integer, index=True, nullable=False, unique=True)
+    name = database.Column(database.Unicode, index=True, nullable=False, unique=True)
 
     # Relationships
     games = database.relationship('Game', backref='state', lazy='dynamic')
