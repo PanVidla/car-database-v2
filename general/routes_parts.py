@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_info import TextForm
@@ -110,6 +111,7 @@ def overview_suspensions():
 
 # Add engine (combustion)
 @cardb.route("/parts/engines/add-engine/combustion", methods=['GET', 'POST'])
+@login_required
 def add_engine_combustion():
 
     form = EngineCombustionAddForm()
@@ -137,6 +139,7 @@ def add_engine_combustion():
 
 # Add engine (electric)
 @cardb.route("/parts/engines/add-engine/electric", methods=['GET', 'POST'])
+@login_required
 def add_engine_electric():
 
     form = EngineElectricAddForm()
@@ -164,6 +167,7 @@ def add_engine_electric():
 
 # Add engine type (combustion)
 @cardb.route("/parts/engines/add-engine-type/combustion", methods=['GET', 'POST'])
+@login_required
 def add_engine_type_combustion():
 
     form = EngineTypeAddForm()
@@ -192,6 +196,7 @@ def add_engine_type_combustion():
 
 # Add engine type (electric)
 @cardb.route("/parts/engines/add-engine-type/electric", methods=['GET', 'POST'])
+@login_required
 def add_engine_type_electric():
 
     form = EngineTypeAddForm()
@@ -220,6 +225,7 @@ def add_engine_type_electric():
 
 # Add forced induction
 @cardb.route("/parts/forced-induction/add-forced-induction", methods=['GET', 'POST'])
+@login_required
 def add_forced_induction():
 
     form = ForcedInductionAddForm()
@@ -247,6 +253,7 @@ def add_forced_induction():
 
 # Add suspension
 @cardb.route("/parts/suspension/add-suspension", methods=['GET', 'POST'])
+@login_required
 def add_suspension():
 
     form = SuspensionAddForm()
@@ -275,6 +282,7 @@ def add_suspension():
 
 # Add transmission
 @cardb.route("/parts/transmission/add-transmission", methods=['GET', 'POST'])
+@login_required
 def add_transmission():
 
     form = TransmissionAddForm()
@@ -302,6 +310,7 @@ def add_transmission():
 
 # Add transmission type
 @cardb.route("/parts/transmission/add-transmission-type", methods=['GET', 'POST'])
+@login_required
 def add_transmission_type():
 
     form = TransmissionTypeAddForm()
@@ -330,6 +339,7 @@ def add_transmission_type():
 
 # Edit engine (combustion)
 @cardb.route("/parts/engines/edit-engine/combustion/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_engine_combustion(id):
 
     engine = EngineCombustion.query.get(id)
@@ -357,6 +367,7 @@ def edit_engine_combustion(id):
 
 # Edit engine (electric)
 @cardb.route("/parts/engines/edit-engine/electric/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_engine_electric(id):
 
     engine = EngineElectric.query.get(id)
@@ -384,6 +395,7 @@ def edit_engine_electric(id):
 
 # Edit engine type (combustion)
 @cardb.route("/parts/engines/edit-engine-type/combustion/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_engine_type_combustion(id):
 
     engine_type = CombustionEngineType.query.get(id)
@@ -411,6 +423,7 @@ def edit_engine_type_combustion(id):
 
 # Edit engine type (electric)
 @cardb.route("/parts/engines/edit-engine-type/electric/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_engine_type_electric(id):
 
     engine_type = ElectricEngineType.query.get(id)
@@ -438,6 +451,7 @@ def edit_engine_type_electric(id):
 
 # Edit forced induction
 @cardb.route("/parts/forced-induction/edit-forced-induction/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
@@ -465,6 +479,7 @@ def edit_forced_induction(id):
 
 # Edit suspension
 @cardb.route("/parts/suspension/edit-suspension/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_suspension(id):
 
     suspension = Suspension.query.get(id)
@@ -492,6 +507,7 @@ def edit_suspension(id):
 
 # Edit transmission
 @cardb.route("/parts/transmission/edit-transmission/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_transmission(id):
 
     transmission = Transmission.query.get(id)
@@ -519,6 +535,7 @@ def edit_transmission(id):
 
 # Edit transmission type
 @cardb.route("/parts/transmission/edit-transmission-type/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_transmission_type(id):
 
     transmission_type = TransmissionType.query.get(id)
@@ -546,6 +563,7 @@ def edit_transmission_type(id):
 
 # Delete engine
 @cardb.route("/parts/engines/delete-engine/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_engine(id):
 
     engine = Engine.query.get(id)
@@ -564,6 +582,7 @@ def delete_engine(id):
 
 # Delete engine type (combustion)
 @cardb.route("/parts/engines/delete-engine-type/combustion/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_engine_type_combustion(id):
 
     engine_type = CombustionEngineType.query.get(id)
@@ -582,6 +601,7 @@ def delete_engine_type_combustion(id):
 
 # Delete engine type (electric)
 @cardb.route("/parts/engines/delete-engine-type/electric/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_engine_type_electric(id):
 
     engine_type = ElectricEngineType.query.get(id)
@@ -600,6 +620,7 @@ def delete_engine_type_electric(id):
 
 # Delete forced induction
 @cardb.route("/parts/forced-induction/delete-forced-induction/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
@@ -618,6 +639,7 @@ def delete_forced_induction(id):
 
 # Delete suspension
 @cardb.route("/parts/suspension/delete-suspension/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_suspension(id):
 
     suspension = Suspension.query.get(id)
@@ -636,6 +658,7 @@ def delete_suspension(id):
 
 # Delete transmission
 @cardb.route("/parts/transmission/delete-transmission/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_transmission(id):
 
     transmission = Transmission.query.get(id)
@@ -654,6 +677,7 @@ def delete_transmission(id):
 
 # Delete transmission type
 @cardb.route("/parts/transmission/delete-transmission-type/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_transmission_type(id):
 
     transmission_type = TransmissionType.query.get(id)
@@ -672,6 +696,7 @@ def delete_transmission_type(id):
 
 # Delete engine text
 @cardb.route("/parts/engines/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_engine_text(id):
 
     text = EngineText.query.get(id)
@@ -690,6 +715,7 @@ def delete_engine_text(id):
 
 # Delete forced induction text
 @cardb.route("/parts/forced_induction/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_forced_induction_text(id):
 
     text = ForcedInductionText.query.get(id)
@@ -708,6 +734,7 @@ def delete_forced_induction_text(id):
 
 # Delete suspension text
 @cardb.route("/parts/suspension/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_suspension_text(id):
 
     text = SuspensionText.query.get(id)
@@ -726,6 +753,7 @@ def delete_suspension_text(id):
 
 # Delete transmission text
 @cardb.route("/parts/transmission/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_transmission_text(id):
 
     text = TransmissionText.query.get(id)
@@ -744,6 +772,7 @@ def delete_transmission_text(id):
 
 # Engine detail (combustion)
 @cardb.route("/parts/engines/detail/combustion/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_engine_combustion(id):
 
     engine = EngineCombustion.query.get(id)
@@ -777,6 +806,7 @@ def detail_engine_combustion(id):
 
 # Engine detail (electric)
 @cardb.route("/parts/engines/detail/electric/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_engine_electric(id):
 
     engine = EngineElectric.query.get(id)
@@ -836,6 +866,7 @@ def detail_engine_type_electric(id):
 
 # Forced induction detail
 @cardb.route("/parts/forced-induction/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
@@ -869,6 +900,7 @@ def detail_forced_induction(id):
 
 # Suspension detail
 @cardb.route("/parts/suspension/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_suspension(id):
 
     suspension = Suspension.query.get(id)
@@ -902,6 +934,7 @@ def detail_suspension(id):
 
 # Transmission detail
 @cardb.route("/parts/transmission/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_transmission(id):
 
     transmission = Transmission.query.get(id)

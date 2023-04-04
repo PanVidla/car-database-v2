@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
@@ -79,6 +80,7 @@ def overview_states():
 
 # Add game (general information)
 @cardb.route("/games/add-game/general", methods=['GET', 'POST'])
+@login_required
 def add_game_general():
 
     form = GameGeneralAddForm()
@@ -111,6 +113,7 @@ def add_game_general():
 
 # Add game (platform information)
 @cardb.route("/games/add-game/platforms/<id>", methods=['GET', 'POST'])
+@login_required
 def add_game_platforms(id):
 
     game = Game.query.get(id)
@@ -140,6 +143,7 @@ def add_game_platforms(id):
 
 # Add game (initial activity)
 @cardb.route("/games/add-game/activities/<id>", methods=['GET', 'POST'])
+@login_required
 def add_game_activity(id):
 
     game = Game.query.get(id)
@@ -168,6 +172,7 @@ def add_game_activity(id):
 
 # Add activity (not to be confused with add_game_activity, which only adds the initial activity)
 @cardb.route("/games/activities/add-activity/<game_id>", methods=['GET', 'POST'])
+@login_required
 def add_activity(game_id):
 
     game = Game.query.get(game_id)
@@ -200,6 +205,7 @@ def add_activity(game_id):
 
 # Next activity
 @cardb.route("/games/activities/next-activity/<game_id>", methods=['GET', 'POST'])
+@login_required
 def next_activity(game_id):
 
     game = Game.query.get(game_id)
@@ -221,6 +227,7 @@ def next_activity(game_id):
 
 
 @cardb.route("/games/activities/previous-activity/<game_id>", methods=['GET', 'POST'])
+@login_required
 def previous_activity(game_id):
 
     game = Game.query.get(game_id)
@@ -244,6 +251,7 @@ def previous_activity(game_id):
 
 # Add game series
 @cardb.route("/games/game-series/add-game-series", methods=['GET', 'POST'])
+@login_required
 def add_game_series():
 
     form = GameSeriesAddForm()
@@ -272,6 +280,7 @@ def add_game_series():
 
 # Add genre
 @cardb.route("/games/genres/add-genre", methods=['GET', 'POST'])
+@login_required
 def add_genre():
 
     form = GameGenreAddForm()
@@ -300,6 +309,7 @@ def add_genre():
 
 # Add platform
 @cardb.route("/games/platforms/add-platform", methods=['GET', 'POST'])
+@login_required
 def add_platform():
 
     form = PlatformAddForm()
@@ -331,6 +341,7 @@ def add_platform():
 
 # Add state
 @cardb.route("/games/states/add-state", methods=['GET', 'POST'])
+@login_required
 def add_state():
 
     form = GameStateAddForm()
@@ -359,6 +370,7 @@ def add_state():
 
 # Edit game (general information)
 @cardb.route("/games/edit-game/<id>/general", methods=['GET', 'POST'])
+@login_required
 def edit_game_general(id):
 
     game = Game.query.get(id)
@@ -393,6 +405,7 @@ def edit_game_general(id):
 
 # Edit game (platforms)
 @cardb.route("/games/edit-game/<id>/platforms", methods=['GET', 'POST'])
+@login_required
 def edit_game_platforms(id):
 
     game = Game.query.get(id)
@@ -429,6 +442,7 @@ def edit_game_platforms(id):
 
 # Edit activity
 @cardb.route("/games/activities/edit-activity/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_activity(id):
 
     activity = GameActivity.query.get(id)
@@ -457,6 +471,7 @@ def edit_activity(id):
 
 # Edit game series
 @cardb.route("/games/game-series/edit-game-series/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_game_series(id):
 
     game_series = GameSeries.query.get(id)
@@ -484,6 +499,7 @@ def edit_game_series(id):
 
 # Edit genre
 @cardb.route("/games/genres/edit-genre/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_genre(id):
 
     genre = GameGenre.query.get(id)
@@ -511,6 +527,7 @@ def edit_genre(id):
 
 # Edit platform
 @cardb.route("/games/platforms/edit-platform/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_platform(id):
 
     platform = Platform.query.get(id)
@@ -540,6 +557,7 @@ def edit_platform(id):
 
 # Edit state
 @cardb.route("/games/state/edit-state/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_state(id):
 
     state = GameState.query.get(id)
@@ -567,6 +585,7 @@ def edit_state(id):
 
 # Change state
 @cardb.route("/games/state/change-state/<game_id>/<state_id>", methods=['GET', 'POST'])
+@login_required
 def change_state(game_id, state_id):
 
     game = Game.query.get(id)
@@ -584,6 +603,7 @@ def change_state(game_id, state_id):
 
 # Delete game
 @cardb.route("/games/delete-game/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_game(id):
 
     game = Game.query.get(id)
@@ -606,6 +626,7 @@ def delete_game(id):
 
 # Delete activity
 @cardb.route("/games/activities/delete-activity/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_activity(id):
 
     activity = GameActivity.query.get(id)
@@ -625,6 +646,7 @@ def delete_activity(id):
 
 # Delete game series
 @cardb.route("/games/game-series/delete-game-series/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_game_series(id):
 
     game_series = GameSeries.query.get(id)
@@ -643,6 +665,7 @@ def delete_game_series(id):
 
 # Delete genre
 @cardb.route("/games/genres/delete-genre/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_genre(id):
 
     genre = GameGenre.query.get(id)
@@ -661,6 +684,7 @@ def delete_genre(id):
 
 # Delete platform
 @cardb.route("/games/platforms/delete-platform/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_platform(id):
 
     platform = Platform.query.get(id)
@@ -681,6 +705,7 @@ def delete_platform(id):
 
 # Delete state
 @cardb.route("/games/states/delete-state/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_state(id):
 
     state = GameState.query.get(id)
@@ -699,6 +724,7 @@ def delete_state(id):
 
 # Delete game text
 @cardb.route("/games/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_game_text(id):
 
     text = GameText.query.get(id)
@@ -717,6 +743,7 @@ def delete_game_text(id):
 
 # Delete game series text
 @cardb.route("/games/game-series/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_game_series_text(id):
 
     text = GameSeriesText.query.get(id)
@@ -735,6 +762,7 @@ def delete_game_series_text(id):
 
 # Delete platform text
 @cardb.route("/games/platforms/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_platform_text(id):
 
     text = PlatformText.query.get(id)
@@ -753,6 +781,7 @@ def delete_platform_text(id):
 
 # Game detail
 @cardb.route("/games/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_game(id):
 
     game = Game.query.get(id)
@@ -807,6 +836,7 @@ def detail_game(id):
 
 # Game series detail
 @cardb.route("/games/game-series/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_game_series(id):
 
     game_series = GameSeries.query.get(id)
@@ -853,6 +883,7 @@ def detail_genre(id):
 
 # Platform detail
 @cardb.route("/games/platforms/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_platform(id):
 
     platform = Platform.query.get(id)

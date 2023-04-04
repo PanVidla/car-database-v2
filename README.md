@@ -6,11 +6,11 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~The ability to add, edit, delete and view all instances of objects defined in the general model.~~
   * ~~All views should have relevant tables of objects that they are in relationship with.~~
   * ~~All add methods with multiple steps should have their progress bars set correctly.~~
-  * All attributes of all objects should be protected from invalid data.
+  * ~~All attributes of all objects should be protected from invalid data.~~
   * ~~All delete methods should delete relevant entries of related type and should be safe to use.~~
   * ~~Make the number of instances display correctly.~~
-* The ability to add, delete and view text and images for the objects which their definition allows it for.
-* User login for security purposes.
+* ~~The ability to add, delete and view text and images for the objects which their definition allows it for.~~
+* ~~User login for security purposes.~~
 
 ### Crazy Taxi
 * ~~The ability to add, edit, delete and view instances for Crazy Taxi.~~
@@ -25,6 +25,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Visually separate the Part details with headings to make it less cluttered.
 * CHANGE: Replace the text block with an insertable HTML snippet.
 * FIX: Entities that can be deleted using the is_deleted attribute shouldn't be visible anywhere.
+* FIX: Entities that can be deleted using the is_deleted should not be included in counts.
 * FIX: Create a get method for the official name of an engine.
 * FIX: Remove the unit from the forced induction boost pressure column.
 * FIX: Make the dropdown menus appear above the nav, not under.

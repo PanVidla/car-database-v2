@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for, flash
+from flask_login import login_required
 
 from games.crazy_taxi.crazy_taxi import crazy_taxi_1
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
@@ -30,6 +31,7 @@ def add_instance():
 
 # Instance detail
 @crazy_taxi_1.route("/instances/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_instance(id):
 
     instance = Instance.query.get(id)

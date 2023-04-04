@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import render_template, redirect, url_for, flash
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
@@ -62,6 +63,7 @@ def overview_specialization():
 
 # Add instance (game & car)
 @cardb.route("/instances/add-instance", methods=['GET', 'POST'])
+@login_required
 def add_instance_game_car():
 
     form = SelectGameForm()
@@ -82,6 +84,7 @@ def add_instance_game_car():
 
 # Add instance (general)
 @cardb.route("/instances/add-instance/<car_id>/<game_id>/general", methods=['GET', 'POST'])
+@login_required
 def add_instance_general(car_id, game_id):
 
     car = Car.query.get(car_id)
@@ -122,6 +125,7 @@ def add_instance_general(car_id, game_id):
 
 # Add instance (general)
 @cardb.route("/instances/add-instance/<instance_id>/engine", methods=['GET', 'POST'])
+@login_required
 def add_instance_engine(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -157,6 +161,7 @@ def add_instance_engine(instance_id):
 
 # Add instance (forced induction)
 @cardb.route("/instances/add-instance/<instance_id>/forced-induction", methods=['GET', 'POST'])
+@login_required
 def add_instance_forced_induction(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -187,6 +192,7 @@ def add_instance_forced_induction(instance_id):
 
 # Add instance (power values)
 @cardb.route("/instances/add-instance/<instance_id>/power-values", methods=['GET', 'POST'])
+@login_required
 def add_instance_power_values(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -218,6 +224,7 @@ def add_instance_power_values(instance_id):
 
 # Add instance (transmission)
 @cardb.route("/instances/add-instance/<instance_id>/transmission", methods=['GET', 'POST'])
+@login_required
 def add_instance_transmission(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -249,6 +256,7 @@ def add_instance_transmission(instance_id):
 
 # Add instance (platform)
 @cardb.route("/instances/add-instance/<instance_id>/platform", methods=['GET', 'POST'])
+@login_required
 def add_instance_platform(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -280,6 +288,7 @@ def add_instance_platform(instance_id):
 
 # Add instance (performance)
 @cardb.route("/instances/add-instance/<instance_id>/performance", methods=['GET', 'POST'])
+@login_required
 def add_instance_performance(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -311,6 +320,7 @@ def add_instance_performance(instance_id):
 
 # Add instance (assists)
 @cardb.route("/instances/add-instance/<instance_id>/assists", methods=['GET', 'POST'])
+@login_required
 def add_instance_assists(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -344,6 +354,7 @@ def add_instance_assists(instance_id):
 
 # Add instance (game-specific)
 @cardb.route("/instances/add-instance/<instance_id>/game-specific", methods=['GET', 'POST'])
+@login_required
 def add_instance_game_specific(instance_id):
 
     instance = Instance.query.get(instance_id)
@@ -354,6 +365,7 @@ def add_instance_game_specific(instance_id):
 
 # Add instance type
 @cardb.route("/instances/types/add-type", methods=['GET', 'POST'])
+@login_required
 def add_instance_type():
 
     form = InstanceTypeAddForm()
@@ -383,6 +395,7 @@ def add_instance_type():
 
 # Add specialization
 @cardb.route("/instances/specialization/add-specialization", methods=['GET', 'POST'])
+@login_required
 def add_specialization():
 
     form = SpecializationAddForm()
@@ -412,6 +425,7 @@ def add_specialization():
 
 # Edit instance (general)
 @cardb.route("/instances/edit-instance/<id>/general", methods=['GET', 'POST'])
+@login_required
 def edit_instance_general(id):
 
     instance = Instance.query.get(id)
@@ -443,6 +457,7 @@ def edit_instance_general(id):
 
 # Edit instance (engine)
 @cardb.route("/instances/edit-instance/<id>/engine", methods=['GET', 'POST'])
+@login_required
 def edit_instance_engine(id):
 
     instance = Instance.query.get(id)
@@ -479,6 +494,7 @@ def edit_instance_engine(id):
 
 # Edit instance (forced induction)
 @cardb.route("/instances/edit-instance/<id>/forced-induction", methods=['GET', 'POST'])
+@login_required
 def edit_instance_forced_induction(id):
 
     instance = Instance.query.get(id)
@@ -508,6 +524,7 @@ def edit_instance_forced_induction(id):
 
 # Edit instance (power values)
 @cardb.route("/instances/edit-instance/<id>/power-values", methods=['GET', 'POST'])
+@login_required
 def edit_instance_power_values(id):
 
     instance = Instance.query.get(id)
@@ -538,6 +555,7 @@ def edit_instance_power_values(id):
 
 # Edit instance (transmission)
 @cardb.route("/instances/edit-instance/<id>/transmission", methods=['GET', 'POST'])
+@login_required
 def edit_instance_transmission(id):
 
     instance = Instance.query.get(id)
@@ -568,6 +586,7 @@ def edit_instance_transmission(id):
 
 # Edit instance (platform)
 @cardb.route("/cars/edit-instance/<id>/platform", methods=['GET', 'POST'])
+@login_required
 def edit_instance_platform(id):
 
     instance = Instance.query.get(id)
@@ -599,6 +618,7 @@ def edit_instance_platform(id):
 
 # Edit instance (performance)
 @cardb.route("/instances/edit-instance/<id>/performance", methods=['GET', 'POST'])
+@login_required
 def edit_instance_performance(id):
 
     instance = Instance.query.get(id)
@@ -629,6 +649,7 @@ def edit_instance_performance(id):
 
 # Edit instance (assists)
 @cardb.route("/cars/edit-instance/<id>/assists", methods=['GET', 'POST'])
+@login_required
 def edit_instance_assists(id):
 
     instance = Instance.query.get(id)
@@ -665,6 +686,7 @@ def edit_instance_assists(id):
 
 # Delete instance
 @cardb.route("/cars/delete-instance/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_instance(id):
 
     instance = Instance.query.get(id)
@@ -684,6 +706,7 @@ def delete_instance(id):
 
 # Edit instance type
 @cardb.route("/instances/types/edit-type/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_instance_type(id):
 
     instance_type = InstanceType.query.get(id)
@@ -711,6 +734,7 @@ def edit_instance_type(id):
 
 # Edit specialization
 @cardb.route("/instances/specialization/edit-specialization/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_specialization(id):
 
     specialization = InstanceSpecialization.query.get(id)
@@ -738,6 +762,7 @@ def edit_specialization(id):
 
 # Delete instance type
 @cardb.route("/instances/types/delete-type/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_instance_type(id):
 
     instance_type = InstanceType.query.get(id)
@@ -756,6 +781,7 @@ def delete_instance_type(id):
 
 # Delete specialization
 @cardb.route("/instances/specialization/delete-specialization/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_specialization(id):
 
     specialization = InstanceSpecialization.query.get(id)
@@ -774,6 +800,7 @@ def delete_specialization(id):
 
 # Delete instance text
 @cardb.route("/instances/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_instance_text(id):
 
     text = InstanceText.query.get(id)

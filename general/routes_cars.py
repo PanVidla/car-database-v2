@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
@@ -130,6 +131,7 @@ def overview_fuels():
 # Add car
 # General information
 @cardb.route("/cars/add-car/1", methods=['GET', 'POST'])
+@login_required
 def add_car_1():
 
     form = CarAdd1Form()
@@ -161,6 +163,7 @@ def add_car_1():
 
 # Engine
 @cardb.route("/cars/add-car/2/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_2(id):
 
     car = Car.query.get(id)
@@ -195,6 +198,7 @@ def add_car_2(id):
 
 # Forced induction
 @cardb.route("/cars/add-car/3/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_3(id):
 
     car = Car.query.get(id)
@@ -222,6 +226,7 @@ def add_car_3(id):
 
 # Actual power and torque output
 @cardb.route("/cars/add-car/4/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_4(id):
 
     car = Car.query.get(id)
@@ -260,6 +265,7 @@ def add_car_4(id):
 
 # Transmission and drivetrain
 @cardb.route("/cars/add-car/5/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_5(id):
 
     car = Car.query.get(id)
@@ -288,6 +294,7 @@ def add_car_5(id):
 
 # Platform
 @cardb.route("/cars/add-car/6/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_6(id):
 
     car = Car.query.get(id)
@@ -316,6 +323,7 @@ def add_car_6(id):
 
 # Performance
 @cardb.route("/cars/add-car/7/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_7(id):
 
     car = Car.query.get(id)
@@ -344,6 +352,7 @@ def add_car_7(id):
 
 # Assists
 @cardb.route("/cars/add-car/8/<id>", methods=['GET', 'POST'])
+@login_required
 def add_car_8(id):
 
     car = Car.query.get(id)
@@ -371,6 +380,7 @@ def add_car_8(id):
 
 # Add aspiration
 @cardb.route("/cars/aspiration/add-aspiration", methods=['GET', 'POST'])
+@login_required
 def add_aspiration():
 
     form = AspirationAddForm()
@@ -399,6 +409,7 @@ def add_aspiration():
 
 # Add assist
 @cardb.route("/cars/assists/add-assist", methods=['GET', 'POST'])
+@login_required
 def add_assist():
 
     form = AssistAddForm()
@@ -428,6 +439,7 @@ def add_assist():
 
 # Add body style
 @cardb.route("/cars/body-styles/add-body-style", methods=['GET', 'POST'])
+@login_required
 def add_body_style():
 
     form = BodyStyleAddForm()
@@ -456,6 +468,7 @@ def add_body_style():
 
 # Add car class
 @cardb.route("/cars/car-classes/add-car-class", methods=['GET', 'POST'])
+@login_required
 def add_car_class():
 
     form = CarClassAddForm()
@@ -484,6 +497,7 @@ def add_car_class():
 
 # Add drivetrain
 @cardb.route("/cars/drivetrains/add-drivetrain", methods=['GET', 'POST'])
+@login_required
 def add_drivetrain():
 
     form = DrivetrainAddForm()
@@ -512,6 +526,7 @@ def add_drivetrain():
 
 # Add engine layout
 @cardb.route("/cars/engine-layouts/add-engine-layout", methods=['GET', 'POST'])
+@login_required
 def add_engine_layout():
 
     form = EngineLayoutAddForm()
@@ -540,6 +555,7 @@ def add_engine_layout():
 
 # Add fuel type
 @cardb.route("/cars/fuels/add-fuel", methods=['GET', 'POST'])
+@login_required
 def add_fuel():
 
     form = FuelAddForm()
@@ -568,6 +584,7 @@ def add_fuel():
 
 # Edit car (general)
 @cardb.route("/cars/edit-car/<id>/general", methods=['GET', 'POST'])
+@login_required
 def edit_car_general(id):
 
     car = Car.query.get(id)
@@ -620,6 +637,7 @@ def edit_car_general(id):
 
 # Edit car (engine)
 @cardb.route("/cars/edit-car/<id>/engine", methods=['GET', 'POST'])
+@login_required
 def edit_car_engine(id):
 
     car = Car.query.get(id)
@@ -656,6 +674,7 @@ def edit_car_engine(id):
 
 # Edit car (forced induction)
 @cardb.route("/cars/edit-car/<id>/forced-induction", methods=['GET', 'POST'])
+@login_required
 def edit_car_forced_induction(id):
 
     car = Car.query.get(id)
@@ -685,6 +704,7 @@ def edit_car_forced_induction(id):
 
 # Edit car (power values)
 @cardb.route("/cars/edit-car/<id>/power-values", methods=['GET', 'POST'])
+@login_required
 def edit_car_power_values(id):
 
     car = Car.query.get(id)
@@ -715,6 +735,7 @@ def edit_car_power_values(id):
 
 # Edit car (transmission)
 @cardb.route("/cars/edit-car/<id>/transmission", methods=['GET', 'POST'])
+@login_required
 def edit_car_transmission(id):
 
     car = Car.query.get(id)
@@ -745,6 +766,7 @@ def edit_car_transmission(id):
 
 # Edit car (platform)
 @cardb.route("/cars/edit-car/<id>/platform", methods=['GET', 'POST'])
+@login_required
 def edit_car_platform(id):
 
     car = Car.query.get(id)
@@ -776,6 +798,7 @@ def edit_car_platform(id):
 
 # Edit car (performance)
 @cardb.route("/cars/edit-car/<id>/performance", methods=['GET', 'POST'])
+@login_required
 def edit_car_performance(id):
 
     car = Car.query.get(id)
@@ -806,6 +829,7 @@ def edit_car_performance(id):
 
 # Edit car (assists)
 @cardb.route("/cars/edit-car/<id>/assists", methods=['GET', 'POST'])
+@login_required
 def edit_car_assists(id):
 
     car = Car.query.get(id)
@@ -842,6 +866,7 @@ def edit_car_assists(id):
 
 # Edit aspiration
 @cardb.route("/cars/aspiration/edit-aspiration/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_aspiration(id):
 
     aspiration = Aspiration.query.get(id)
@@ -869,6 +894,7 @@ def edit_aspiration(id):
 
 # Edit assist
 @cardb.route("/cars/assists/edit-assist/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_assist(id):
 
     assist = Assist.query.get(id)
@@ -898,6 +924,7 @@ def edit_assist(id):
 
 # Edit body style
 @cardb.route("/cars/body-styles/edit-body-style/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_body_style(id):
 
     body_style = BodyStyle.query.get(id)
@@ -925,6 +952,7 @@ def edit_body_style(id):
 
 # Edit car class
 @cardb.route("/cars/car-classes/edit-car-class/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_car_class(id):
 
     car_class = CarClass.query.get(id)
@@ -952,6 +980,7 @@ def edit_car_class(id):
 
 # Edit drivetrain
 @cardb.route("/cars/drivetrains/edit-drivetrain/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_drivetrain(id):
 
     drivetrain = Drivetrain.query.get(id)
@@ -979,6 +1008,7 @@ def edit_drivetrain(id):
 
 # Edit engine layout
 @cardb.route("/cars/engine-layouts/edit-engine-layout/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_engine_layout(id):
 
     engine_layout = EngineLayout.query.get(id)
@@ -1006,6 +1036,7 @@ def edit_engine_layout(id):
 
 # Edit fuel type
 @cardb.route("/cars/fuels/edit-fuel/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_fuel(id):
 
     fuel = FuelType.query.get(id)
@@ -1033,6 +1064,7 @@ def edit_fuel(id):
 
 # Delete car
 @cardb.route("/cars/delete-car/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_car(id):
 
     car = Car.query.get(id)
@@ -1051,6 +1083,7 @@ def delete_car(id):
 
 # Delete aspiration
 @cardb.route("/cars/aspiration/delete-aspiration/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_aspiration(id):
 
     aspiration = Aspiration.query.get(id)
@@ -1069,6 +1102,7 @@ def delete_aspiration(id):
 
 # Delete assist
 @cardb.route("/cars/assists/delete-assist/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_assist(id):
 
     assist = Assist.query.get(id)
@@ -1089,6 +1123,7 @@ def delete_assist(id):
 
 # Delete body_style
 @cardb.route("/cars/body-styles/delete-body-style/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_body_style(id):
 
     body_style = BodyStyle.query.get(id)
@@ -1107,6 +1142,7 @@ def delete_body_style(id):
 
 # Delete car class
 @cardb.route("/cars/car-classes/delete-car-class/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_car_class(id):
 
     car_class = CarClass.query.get(id)
@@ -1125,6 +1161,7 @@ def delete_car_class(id):
 
 # Delete drivetrain
 @cardb.route("/cars/drivetrains/delete-drivetrain/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_drivetrain(id):
 
     drivetrain = Drivetrain.query.get(id)
@@ -1143,6 +1180,7 @@ def delete_drivetrain(id):
 
 # Delete engine layout
 @cardb.route("/cars/engine-layouts/delete-engine-layout/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_engine_layout(id):
 
     engine_layout = EngineLayout.query.get(id)
@@ -1161,6 +1199,7 @@ def delete_engine_layout(id):
 
 # Delete fuel
 @cardb.route("/cars/fuels/delete-fuel/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_fuel(id):
 
     fuel = FuelType.query.get(id)
@@ -1179,6 +1218,7 @@ def delete_fuel(id):
 
 # Delete car text
 @cardb.route("/cars/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_car_text(id):
 
     text = CarText.query.get(id)
@@ -1197,6 +1237,7 @@ def delete_car_text(id):
 
 # Car detail
 @cardb.route("/cars/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_car(id):
 
     car = Car.query.get(id)

@@ -1,5 +1,6 @@
 # Overviews
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_info import TextForm
@@ -33,6 +34,7 @@ def overview_countries():
 
 # Add competition
 @cardb.route("/misc/competitions/add-competition", methods=['GET', 'POST'])
+@login_required
 def add_competition():
 
     form = CompetitionAddForm()
@@ -62,6 +64,7 @@ def add_competition():
 
 # Add country
 @cardb.route("/misc/countries/add-country", methods=['GET', 'POST'])
+@login_required
 def add_country():
 
     form = CountryAddForm()
@@ -91,6 +94,7 @@ def add_country():
 
 # Edit competition
 @cardb.route("/misc/competition/edit-competition/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_competition(id):
 
     competition = Competition.query.get(id)
@@ -121,6 +125,7 @@ def edit_competition(id):
 
 # Edit country
 @cardb.route("/misc/countries/edit-country/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_country(id):
 
     country = Country.query.get(id)
@@ -149,6 +154,7 @@ def edit_country(id):
 
 # Delete competition
 @cardb.route("/misc/competition/delete-competition/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_competition(id):
 
     competition = Competition.query.get(id)
@@ -171,6 +177,7 @@ def delete_competition(id):
 
 # Delete country
 @cardb.route("/misc/countries/delete-country/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_country(id):
 
     country = Country.query.get(id)
@@ -191,6 +198,7 @@ def delete_country(id):
 
 # Delete competition text
 @cardb.route("/misc/competitions/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_competition_text(id):
 
     text = CompetitionText.query.get(id)
@@ -209,6 +217,7 @@ def delete_competition_text(id):
 
 # Delete country text
 @cardb.route("/misc/countries/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_country_text(id):
 
     text = CountryText.query.get(id)
@@ -227,6 +236,7 @@ def delete_country_text(id):
 
 # Competition detail
 @cardb.route("/misc/competitions/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_competition(id):
 
     competition = Competition.query.get(id)
@@ -259,6 +269,7 @@ def detail_competition(id):
 
 # Country detail
 @cardb.route("/misc/countries/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_country(id):
 
     country = Country.query.get(id)

@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from general import cardb, database
 from general.forms_companies import CompanyAddForm, CompanyEditForm
@@ -55,6 +56,7 @@ def overview_companies_car_part_manufacturers():
 
 # Add company
 @cardb.route("/companies/add-company", methods=['GET', 'POST'])
+@login_required
 def add_company():
 
     form = CompanyAddForm()
@@ -84,6 +86,7 @@ def add_company():
 
 # Edit company
 @cardb.route("/companies/edit-company/<id>", methods=['GET', 'POST'])
+@login_required
 def edit_company(id):
 
     company = Company.query.get(id)
@@ -112,6 +115,7 @@ def edit_company(id):
 
 # Delete company
 @cardb.route("/misc/companies/delete-company/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_company(id):
 
     company = Company.query.get(id)
@@ -132,6 +136,7 @@ def delete_company(id):
 
 # Delete company text
 @cardb.route("/misc/companies/text/delete-text/<id>", methods=['GET', 'POST'])
+@login_required
 def delete_company_text(id):
 
     text = CompanyText.query.get(id)
@@ -150,6 +155,7 @@ def delete_company_text(id):
 
 # Company detail
 @cardb.route("/companies/detail/<id>", methods=['GET', 'POST'])
+@login_required
 def detail_company(id):
 
     company = Company.query.get(id)
