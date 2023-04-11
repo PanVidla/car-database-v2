@@ -1,10 +1,8 @@
 <tr>
     <td class="col-sm-1">{{ car.id }}</td>
     <td class="col-sm-1">{{ car.year }}</td>
-    <td class="col-sm-2">{{ car.manufacturers_display }}</td>
-    <td class="col-sm-3"><a href="{{ url_for('detail_car', id=car.id) }}">{{ car.model }}</a></td>
+    <td class="col-sm-3">{{ car.manufacturers_display }}</td>
+    <td class="col-sm-4"><a href="{{ url_for('detail_car', id=car.id) }}">{{ car.model }}</a></td>
     <td class="col-sm-2">{% if car.get_country() != "n/a" %}<a href="{{ url_for('detail_country', id=car.country.id) }}">{{ car.get_country() }}</a>{% else %}{{ car.get_country() }}{% endif %}</td>
     <td class="col-sm-1 text-center">{{ car.no_of_instances }}</td>
-    <td class="col-sm-1 text-center">{{ car.body_style.name }}</td>
-    <td class="col-sm-1 text-center {% if car.is_fictional == True %}true-neutral{% else %}false-neutral{% endif %}">{{ car.get_is_fictional() }}</td>
 </tr>

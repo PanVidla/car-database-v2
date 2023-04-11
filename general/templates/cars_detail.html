@@ -36,37 +36,39 @@
             <div class="panel-body">
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Display name</b></div>
-                  <div class="col-sm-6">{{ car.name_display }}</div>
+                  <div class="col-sm-4">{{ car.name_display }}</div>
                   <div class="col-sm-2 text-right"><b>Short name</b></div>
-                  <div class="col-sm-2">{{ car.get_name_short() }}</div>
+                  <div class="col-sm-4">{{ car.get_name_short() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Manufacturer(s)</b></div>
+                  <div class="col-sm-4">{{ car.manufacturers_display }}</div>
+                  <div class="col-sm-2 text-right"><b>Country</b></div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_country', id=car.country.id) }}">{{ car.get_country() }}</a></div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Year</b></div>
-                  <div class="col-sm-2">{{ car.get_year() }}</div>
-                  <div class="col-sm-2 text-right"><b>Manufacturer(s)</b></div>
-                  <div class="col-sm-2">{{ car.manufacturers_display }}</div>
+                  <div class="col-sm-4">{{ car.get_year() }}</div>
                   <div class="col-sm-2 text-right"><b>Model</b></div>
-                  <div class="col-sm-2">{{ car.model }}</div>
+                  <div class="col-sm-4">{{ car.model }}</div>
               </div>
               <div class="row">
-                  <div class="col-sm-2 text-right"><b>Country</b></div>
-                  <div class="col-sm-2"><a href="{{ url_for('detail_country', id=car.country.id) }}">{{ car.get_country() }}</a></div>
                   <div class="col-sm-2 text-right"><b>Prototype</b></div>
-                  <div class="col-sm-2">{{ car.get_is_prototype() }}</div>
+                  <div class="col-sm-4">{{ car.get_is_prototype() }}</div>
                   <div class="col-sm-2 text-right"><b>Fictional</b></div>
-                  <div class="col-sm-2">{{ car.get_is_fictional() }}</div>
+                  <div class="col-sm-4">{{ car.get_is_fictional() }}</div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Car class</b></div>
-                  <div class="col-sm-2">{{ car.get_car_class() }}</div>
+                  <div class="col-sm-4">{{ car.get_car_class() }}</div>
                   <div class="col-sm-2 text-right"><b>Body style</b></div>
-                  <div class="col-sm-6">{{ car.body_style.name }}</div>
+                  <div class="col-sm-4">{{ car.body_style.name }}</div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Drivetrain</b></div>
-                  <div class="col-sm-2">{{ car.get_drivetrain() }}</div>
+                  <div class="col-sm-4">{{ car.get_drivetrain() }}</div>
                   <div class="col-sm-2 text-right"><b>Engine layout</b></div>
-                  <div class="col-sm-6">{{ car.get_engine_layout() }}</div>
+                  <div class="col-sm-4">{{ car.get_engine_layout() }}</div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Competitions</b></div>
