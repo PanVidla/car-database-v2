@@ -10,6 +10,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Unify the format of datetime display in overviews and detail views.
 * CHANGE: Move the Instance dropdown generation to a separate HTML snippet.
 * CHANGE: Refactor the names of Car forms to make more sense.
+* CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.
 * FIX: The GameSeries of a game cannot seem to be changed additionally.
 * FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.
 
@@ -23,7 +24,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~ADD: Add a list of actively played games to the top menu, so one can get to their overview.~~
 * ~~CHANGE: Make the general information about a Car display in only two columns.~~
 * ~~CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.~~
-* CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.
+* ~~CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.~~
 * CHANGE: Visually separate the Part details with headings to make it less cluttered.
 * CHANGE: Replace the text block with an insertable HTML snippet.
 * ~~CHANGE: Remove unnecessary columns from the Car overview.~~

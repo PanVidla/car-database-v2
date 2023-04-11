@@ -707,10 +707,10 @@ def delete_engine_text(id):
 
     except RuntimeError:
         flash("There was a problem with deleting the text.", "danger")
-        return redirect(url_for("overview_engines"))
+        return redirect(url_for("detail_engine", id=text.engine_id))
 
     flash("The text has been successfully deleted.", "success")
-    return redirect(url_for("overview_engines"))
+    return redirect(url_for("detail_engine", id=text.engine_id))
 
 
 # Delete forced induction text
@@ -768,6 +768,28 @@ def delete_transmission_text(id):
 
     flash("The text has been successfully deleted.", "success")
     return redirect(url_for("detail_transmission", id=text.transmission_id))
+
+
+# Engine detail
+@cardb.route("/parts/engines/detail/<id>", methods=['GET', 'POST'])
+def detail_engine(id):
+
+    # Try to get a combustion engine
+    combustion_engine = EngineCombustion.query.filter(EngineCombustion.id == id).first()
+
+    if combustion_engine is not None:
+        return redirect(url_for("detail_engine_combustion", id=combustion_engine.id))
+
+    # Try to get an electric engine
+    electric_engine = EngineElectric.query.filter(EngineElectric.id == id).first()
+
+    if electric_engine is not None:
+        return redirect(url_for("detail_engine_electric", id=electric_engine.id))
+
+    # Redirect back to the overview, if neither type is found
+    else:
+        flash("No engine with that ID was found.", "warning")
+        return redirect(url_for("overview_engines"))
 
 
 # Engine detail (combustion)
