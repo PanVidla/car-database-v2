@@ -26,7 +26,24 @@
                           <li><a href="{{ url_for('overview_transmissions') }}">Transmission</a></li>
                         </ul>
                     </li>
+                    {% if get_games_in_progress() == [] %}
                     <li><a class="hover-underline-animation" href="{{ url_for('overview_instances') }}">Instances</a></li>
+                    {% else %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Instances <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{{ url_for('overview_instances') }}">All instances</a></li>
+                          <li role="presentation" class="divider"></li>
+                          {% for game in get_games_in_progress() %}
+                            {% if game.name_full == "Crazy Taxi" %}
+                            <li><a href="{{ url_for('crazy_taxi.crazy_taxi_1.overview_instances') }}">{{ game.name_display }}</a></li>
+                            {% else %}
+                            <li><a href="#">{{ game.name_display }}</a></li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
                     <li><a class="hover-underline-animation" href="{{ url_for('overview_companies') }}">Companies</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Miscellaneous <b class="caret"></b></a>

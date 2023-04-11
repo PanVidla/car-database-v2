@@ -17,8 +17,8 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ## v1.0.0.1.0
 ### General
-* ADD: Add display of metadata to all the objects that support it.
-* ADD: Add a list of actively played games to the top menu, so one can get to their overview.
+* ~~ADD: Add display of metadata to all the objects that support it.~~
+* ~~ADD: Add a list of actively played games to the top menu, so one can get to their overview.~~
 * ~~CHANGE: Make the general information about a Car display in only two columns.~~
 * CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.
 * CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.
@@ -44,3 +44,5 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.
 * CHANGE: If a Car is fictional, make its row in the overview colored to signify that.
 * CHANGE: Unify the format of datetime display in overviews and detail views.
+* CHANGE: Move the Instance dropdown generation to a separate HTML snippet.
+* FIX: The GameSeries of a game cannot seem to be changed additionally.

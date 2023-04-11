@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import flash, redirect, url_for
 from sqlalchemy.orm import backref
 
-from general import database
+from general import database, cardb
 from general.models.info import Text, Image
 
 
@@ -211,6 +211,19 @@ def create_game_from_form(form):
         return -1
 
     return new_game
+
+
+def get_games_in_progress():
+
+    games_in_progress = Game.query\
+        .filter(Game.game_state_id == 2)\
+        .order_by(Game.name_display.asc())\
+        .all()
+
+    return games_in_progress
+
+
+cardb.jinja_env.globals.update(get_games_in_progress=get_games_in_progress)
 
 
 # Serves to keep track of what should be played next in the game (e.g. multiplayer (co-op), tournament...)

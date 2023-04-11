@@ -1,6 +1,7 @@
 from flask import redirect, url_for, flash
 
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
+from general import cardb
 
 
 def create_instance_based_on_game(game):
