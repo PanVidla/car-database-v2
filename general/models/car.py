@@ -534,8 +534,8 @@ def create_car_from_form(form):
         new_car.country_id = None
 
     # Temporarily set values to zero, because they cannot be nulled
-    new_car.engine_layout_id = 0
-    new_car.drivetrain_id = 0
+    new_car.engine_layout_id = 1
+    new_car.drivetrain_id = 1
 
     return new_car
 
