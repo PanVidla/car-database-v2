@@ -161,6 +161,12 @@ class Car(database.Model):
     def get_curb_weight_kg(self):
         return "{} kg".format(self.curb_weight_kg) if self.curb_weight_kg is not None else "n/a"
 
+    def get_datetime_added(self):
+        return "{}".format(self.datetime_added.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_added is not None else "n/a"
+
+    def get_datetime_edited(self):
+        return "{}".format(self.datetime_edited.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_edited is not None else "n/a"
+
     def get_drivetrain(self):
         return self.drivetrain.name_short if self.drivetrain_id != 0 else "n/a"
 

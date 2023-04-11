@@ -56,16 +56,19 @@
                   <div class="col-sm-2 text-right"><b>Platform(s)</b></div>
                   <div class="col-sm-4">{{ game.get_platforms() }}</div>
               </div>
+
+              <hr>
+
               <div class="row">
-                  <div class="col-sm-2 text-right"><b>Added</b></div>
+                  <div class="col-sm-2 text-right"><b>Date & time added</b></div>
                   <div class="col-sm-4">{{ game.get_datetime_added() }}</div>
-                  <div class="col-sm-2 text-right"><b>Last edited</b></div>
+                  <div class="col-sm-2 text-right"><b>Date & time last edited</b></div>
                   <div class="col-sm-4">{{ game.get_datetime_edited() }}</div>
               </div>
               <div class="row">
-                  <div class="col-sm-2 text-right"><b>Last played</b></div>
-                  <div class="col-sm-4">{{ game.get_last_played() }}</div>
-                  <div class="col-sm-2 text-right"><b>Status</b></div>
+                  <div class="col-sm-2 text-right"><b>Date & time last played</b></div>
+                  <div class="col-sm-4">{{ game.get_datetime_played() }}</div>
+                  <div class="col-sm-2 text-right"><b>State</b></div>
                   <div class="col-sm-4">{{ game.state.name }}</div>
               </div>
           </div>

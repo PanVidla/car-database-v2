@@ -73,28 +73,16 @@ class Game(database.Model):
         return 0
 
     def get_datetime_added(self):
-        datetime_string = "" if self.datetime_added is not None else "n/a"
-        datetime_string += "{}".format(self.datetime_added.day)
-        datetime_string += "/{}".format(self.datetime_added.month)
-        datetime_string += "/{}".format(self.datetime_added.year)
-        datetime_string += " {}".format(self.datetime_added.hour)
-        if self.datetime_added.minute < 10:
-            datetime_string += ":0{}".format(self.datetime_added.minute)
-        else:
-            datetime_string += ":{}".format(self.datetime_added.minute)
-        return datetime_string
+        return "{}".format(
+            self.datetime_added.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_added is not None else "n/a"
 
     def get_datetime_edited(self):
-        datetime_string = "" if self.datetime_edited is not None else "n/a"
-        datetime_string += "{}".format(self.datetime_edited.day)
-        datetime_string += "/{}".format(self.datetime_edited.month)
-        datetime_string += "/{}".format(self.datetime_edited.year)
-        datetime_string += " {}".format(self.datetime_edited.hour)
-        if self.datetime_edited.minute < 10:
-            datetime_string += ":0{}".format(self.datetime_edited.minute)
-        else:
-            datetime_string += ":{}".format(self.datetime_edited.minute)
-        return datetime_string
+        return "{}".format(
+            self.datetime_edited.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_edited is not None else "n/a"
+
+    def get_datetime_played(self):
+        return "{}".format(
+            self.datetime_played.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_played is not None else "n/a"
 
     def get_description(self):
 
@@ -112,25 +100,6 @@ class Game(database.Model):
                                                                                self.get_platforms())
 
         return description_string
-
-    def get_last_played(self):
-        if self.datetime_played is not None:
-            datetime_string = ""
-            datetime_string += "{}".format(self.datetime_played.day)
-            datetime_string += "/{}".format(self.datetime_played.month)
-            datetime_string += "/{}".format(self.datetime_played.year)
-            datetime_string += " {}".format(self.datetime_played.hour)
-            if self.datetime_played.minute < 10:
-                datetime_string += ":0{}".format(self.datetime_played.minute)
-            else:
-                datetime_string += ":{}".format(self.datetime_played.minute)
-
-            datetime_string += " ({}x played)".format(self.no_of_times_played)
-
-        else:
-            datetime_string = "never"
-
-        return datetime_string
 
     def get_last_played_date(self):
 

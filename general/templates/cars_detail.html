@@ -74,6 +74,15 @@
                   <div class="col-sm-2 text-right"><b>Competitions</b></div>
                   <div class="col-sm-10">{{ car.get_competitions() }}</div>
               </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Date & time added</b></div>
+                  <div class="col-sm-4">{{ car.get_datetime_added() }}</div>
+                  <div class="col-sm-2 text-right"><b>Date & time last edited</b></div>
+                  <div class="col-sm-4">{{ car.get_datetime_edited() }}</div>
+              </div>
           </div>
         </div>
     </div>

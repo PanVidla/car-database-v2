@@ -70,6 +70,19 @@
                   <div class="col-sm-2 text-right"><b>Theme</b></div>
                   <div class="col-sm-4">{{ instance.get_theme() }}</div>
               </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Date & time added</b></div>
+                  <div class="col-sm-4">{{ instance.get_datetime_added() }}</div>
+                  <div class="col-sm-2 text-right"><b>Date & time last edited</b></div>
+                  <div class="col-sm-4">{{ instance.get_datetime_edited() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Date & time last played</b></div>
+                  <div class="col-sm-10">{{ instance.get_datetime_played() }}</div>
+              </div>
           </div>
         </div>
     </div>

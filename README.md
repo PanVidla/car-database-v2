@@ -35,6 +35,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * FIX: It should be possible to add an instance with no specialization.
 * FIX: Assists should be pre-selected when creating an instance.
 * ~~FIX: Drivetrain and engine layout are not being assigned correctly.~~
+* FIX: Date and time of editing Cars should be updating correctly.
 
 ## v1.1.0.0.0
 * ADD: Add the ability to upload images to all the entities that support it.
@@ -42,3 +43,4 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Color the background of an instance view with the color provided in the Instance detail.
 * CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.
 * CHANGE: If a Car is fictional, make its row in the overview colored to signify that.
+* CHANGE: Unify the format of datetime display in overviews and detail views.
