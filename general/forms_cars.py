@@ -72,7 +72,7 @@ class CarEdit1Form(Car1Form):
     submit = SubmitField("Edit general info")
 
 
-class Car21Form(FlaskForm):
+class Car2Form(FlaskForm):
 
     # Technical
     # Engine
@@ -82,17 +82,12 @@ class Car21Form(FlaskForm):
 
     # Initialization
     def __init__(self, *args, **kwargs):
-        super(Car21Form, self).__init__(*args, **kwargs)
+        super(Car2Form, self).__init__(*args, **kwargs)
 
         self.engines.choices = [(engine.id, "{} ({})".format(engine.name_display, engine.fuel_type.name))
                                 for engine
                                 in Engine.query
                                 .order_by(Engine.fuel_type_id.asc(), Engine.name_display.asc()).all()]
-
-
-class Car22Form(FlaskForm):
-
-    submit_skip_engine = SubmitField("Skip")
 
 
 class Car3Form(FlaskForm):

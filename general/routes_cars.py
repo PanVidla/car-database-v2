@@ -6,7 +6,7 @@ from flask_login import login_required
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car21Form, Car22Form, Car3Form, \
+    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car2Form, Car22Form, Car3Form, \
     Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form
 from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
@@ -167,12 +167,11 @@ def add_car_1():
 def add_car_2(id):
 
     car = Car.query.get(id)
-    form_1_engine = Car21Form()
-    form_2_skip = Car22Form()
+    form = Car2Form()
 
-    if form_1_engine.submit_existing_engine.data and form_1_engine.validate():
+    if form.submit_existing_engine.data and form.validate():
 
-        car.set_engines(form_1_engine.engines.data)
+        car.set_engines(form.engines.data)
 
         try:
             database.session.commit()
@@ -183,16 +182,10 @@ def add_car_2(id):
         flash("The selected engine(s) has been successfully assigned to the car.", "success")
         return redirect(url_for("add_car_3", id=car.id))
 
-    if form_2_skip.submit_skip_engine.data:
-
-        flash("Engine selection for this car has been skipped.", "info")
-        return redirect(url_for("add_car_3", id=car.id))
-
     return render_template("cars_form_2_engine.html",
                            title="Add car",
                            heading="Add car",
-                           form_1_engine=form_1_engine,
-                           form_2_skip=form_2_skip,
+                           form=form,
                            viewing="cars")
 
 
@@ -649,7 +642,7 @@ def edit_car_engine(id):
     for engine in engines:
         engine_ids += str(engine.engine_id)
 
-    form = Car21Form(engines=engine_ids)
+    form = Car2Form(engines=engine_ids)
 
     if form.validate_on_submit():
 
@@ -667,7 +660,7 @@ def edit_car_engine(id):
     return render_template("cars_form_2_engine.html",
                            title="Edit car",
                            heading="Edit engine(s)",
-                           form_1_engine=form,
+                           form=form,
                            viewing="car",
                            editing=True)
 

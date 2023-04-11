@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 
 from general import cardb, database
-from general.forms_cars import Car21Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
+from general.forms_cars import Car2Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
 from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
@@ -136,7 +136,7 @@ def add_instance_engine(instance_id):
     for engine in car.get_engines():
         engines_ids.append(engine.id)
 
-    form = Car21Form(engines=engines_ids)
+    form = Car2Form(engines=engines_ids)
 
     if form.validate_on_submit():
 
@@ -469,7 +469,7 @@ def edit_instance_engine(id):
     for engine in engines:
         engine_ids += str(engine.engine_id)
 
-    form = Car21Form(engines=engine_ids)
+    form = Car2Form(engines=engine_ids)
 
     if form.validate_on_submit():
 
