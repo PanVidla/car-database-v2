@@ -11,6 +11,8 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Move the Instance dropdown generation to a separate HTML snippet.
 * CHANGE: Refactor the names of Car forms to make more sense.
 * CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.
+* CHANGE: Make everything possible in detail views clickable.
+* CHANGE: Remove unnecessary decimal points where not needed.
 * FIX: The GameSeries of a game cannot seem to be changed additionally.
 * FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.
 
@@ -25,7 +27,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: Make the general information about a Car display in only two columns.~~
 * ~~CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.~~
 * ~~CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.~~
-* CHANGE: Visually separate the Part details with headings to make it less cluttered.
+* ~~CHANGE: Visually separate the Part details with headings to make it less cluttered.~~
 * CHANGE: Replace the text block with an insertable HTML snippet.
 * ~~CHANGE: Remove unnecessary columns from the Car overview.~~
 * FIX: Entities that can be deleted using the is_deleted attribute shouldn't be visible anywhere.
