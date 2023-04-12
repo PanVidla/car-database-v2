@@ -11,6 +11,7 @@ from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, 
 from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
     CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText
+from general.models.instance import Instance
 from general.models.part import FuelType, Aspiration
 
 
@@ -19,9 +20,10 @@ from general.models.part import FuelType, Aspiration
 @cardb.route("/cars/all", methods=['GET'])
 def overview_cars():
 
-    cars = Car.query.\
-        filter(Car.is_deleted != True)\
-        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()).all()
+    cars = Car.query\
+        .filter(Car.is_deleted != True)\
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc())\
+        .all()
 
     return render_template("cars_overview.html",
                            title="All cars",
@@ -1234,6 +1236,11 @@ def delete_car_text(id):
 def detail_car(id):
 
     car = Car.query.get(id)
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.car_id == car.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -1260,6 +1267,7 @@ def detail_car(id):
                            title="{}".format(car.name_display),
                            heading="{}".format(car.name_display),
                            car=car,
+                           instances=instances,
                            add_text_form=add_text_form,
                            viewing="cars")
 
@@ -1282,11 +1290,23 @@ def detail_aspiration(id):
 def detail_assist(id):
 
     assist = Assist.query.get(id)
+    cars = Car.query\
+        .filter(Car.is_deleted != True)\
+        .filter(Car.assists.any(id=assist.id))\
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc())\
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.assists.any(id=assist.id))\
+        .order_by(Instance.name_full)\
+        .all()
 
     return render_template("cars_detail_assists.html",
                            title="{}".format(assist.name_short),
                            heading="{}".format(assist.name_full),
                            assist=assist,
+                           cars=cars,
+                           instances=instances,
                            viewing="assists")
 
 
@@ -1295,11 +1315,17 @@ def detail_assist(id):
 def detail_body_style(id):
 
     body_style = BodyStyle.query.get(id)
+    cars = Car.query\
+        .filter(Car.is_deleted !=True)\
+        .filter(Car.body_style_id == body_style.id)\
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc())\
+        .all()
 
     return render_template("cars_detail_body_style.html",
                            title="{}".format(body_style.name),
                            heading="{}".format(body_style.name),
                            body_style=body_style,
+                           cars=cars,
                            viewing="body_styles")
 
 
@@ -1308,11 +1334,17 @@ def detail_body_style(id):
 def detail_car_class(id):
 
     car_class = CarClass.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.car_class_id == car_class.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
 
     return render_template("cars_detail_car_class.html",
                            title="{}".format(car_class.name_custom),
                            heading="{}".format(car_class.name_custom),
                            car_class=car_class,
+                           cars=cars,
                            viewing="car_classes")
 
 
@@ -1321,11 +1353,23 @@ def detail_car_class(id):
 def detail_drivetrain(id):
 
     drivetrain = Drivetrain.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.drivetrain_id == drivetrain.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.drivetrain_id == drivetrain.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
 
     return render_template("cars_detail_drivetrain.html",
                            title="{}".format(drivetrain.name_short),
                            heading="{}".format(drivetrain.name_full),
                            drivetrain=drivetrain,
+                           cars=cars,
+                           instances=instances,
                            viewing="drivetrains")
 
 
@@ -1334,11 +1378,23 @@ def detail_drivetrain(id):
 def detail_engine_layout(id):
 
     engine_layout = EngineLayout.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.engine_layout_id == engine_layout.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.engine_layout_id == engine_layout.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
 
     return render_template("cars_detail_engine_layout.html",
                            title="{}".format(engine_layout.name),
                            heading="{}".format(engine_layout.name),
                            engine_layout=engine_layout,
+                           cars=cars,
+                           instances=instances,
                            viewing="engine_layouts")
 
 
@@ -1347,9 +1403,21 @@ def detail_engine_layout(id):
 def detail_fuel(id):
 
     fuel = FuelType.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.fuel_type_actual_id == fuel.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.fuel_type_actual_id == fuel.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
 
     return render_template("cars_detail_fuel.html",
                            title="{}".format(fuel.name),
                            heading="{}".format(fuel.name),
                            fuel=fuel,
+                           cars=cars,
+                           instances=instances,
                            viewing="fuels")

@@ -832,11 +832,17 @@ def detail_instance(id):
 def detail_instance_type(id):
 
     instance_type = InstanceType.query.get(id)
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.instance_type_id == instance_type.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
 
     return render_template("instances_detail_instance_type.html",
                            title="{}".format(instance_type.name_short),
                            heading="{}".format(instance_type.name_full),
                            instance_type=instance_type,
+                           instances=instances,
                            viewing="instance_types")
 
 
@@ -845,9 +851,15 @@ def detail_instance_type(id):
 def detail_specialization(id):
 
     specialization = InstanceSpecialization.query.get(id)
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.specialization_id == specialization.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
 
     return render_template("instances_detail_specialization.html",
                            title="{}".format(specialization.name_short),
                            heading="{}".format(specialization.name_full),
                            specialization=specialization,
+                           instances=instances,
                            viewing="specialization")

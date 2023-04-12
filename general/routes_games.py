@@ -21,7 +21,8 @@ def overview_games():
 
     games = Game.query\
         .filter(Game.is_deleted != True)\
-        .order_by(Game.name_display.asc()).all()
+        .order_by(Game.name_display.asc())\
+        .all()
 
     return render_template("games_overview.html",
                            title="Games",
@@ -840,6 +841,11 @@ def detail_game(id):
 def detail_game_series(id):
 
     game_series = GameSeries.query.get(id)
+    games = Game.query \
+        .filter(Game.is_deleted != True) \
+        .filter(Game.game_series_id == game_series.id) \
+        .order_by(Game.name_display.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -864,6 +870,7 @@ def detail_game_series(id):
                            title="{}".format(game_series.name),
                            heading="{}".format(game_series.name),
                            game_series=game_series,
+                           games=games,
                            add_text_form=add_text_form,
                            viewing="game_series")
 
@@ -873,11 +880,17 @@ def detail_game_series(id):
 def detail_genre(id):
 
     genre = GameGenre.query.get(id)
+    games = Game.query \
+        .filter(Game.is_deleted != True) \
+        .filter(Game.genre_id == genre.id) \
+        .order_by(Game.name_display.asc()) \
+        .all()
 
     return render_template("games_detail_genre.html",
                            title="{}".format(genre.name),
                            heading="{}".format(genre.name),
                            genre=genre,
+                           games=games,
                            viewing="genres")
 
 
@@ -887,6 +900,11 @@ def detail_genre(id):
 def detail_platform(id):
 
     platform = Platform.query.get(id)
+    games = Game.query \
+        .filter(Game.is_deleted != True) \
+        .filter(Game.platforms.any(id=platform.id)) \
+        .order_by(Game.name_display.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -911,6 +929,7 @@ def detail_platform(id):
                            title="{}".format(platform.name_display),
                            heading="{}".format(platform.name_full),
                            platform=platform,
+                           games=games,
                            add_text_form=add_text_form,
                            viewing="platforms")
 
@@ -920,9 +939,15 @@ def detail_platform(id):
 def detail_state(id):
 
     state = GameState.query.get(id)
+    games = Game.query \
+        .filter(Game.is_deleted != True) \
+        .filter(Game.game_state_id == state.id) \
+        .order_by(Game.name_display.asc()) \
+        .all()
 
     return render_template("games_detail_state.html",
                            title="{}".format(state.name),
                            heading="{}".format(state.name),
                            state=state,
+                           games=games,
                            viewing="states")

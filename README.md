@@ -5,6 +5,8 @@ This is a database serving to collect and keep track of cars I've owned and driv
 ### General
 * ADD: Add the ability to upload images to all the entities that support it.
 * ADD: Color the background of an instance view with the color provided in the Instance detail.
+* ADD: Add the ability to copy selected instances.
+* ADD: Make sure no duplicit entries can be added.
 * CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.
 * CHANGE: If a Car is fictional, make its row in the overview colored to signify that.
 * CHANGE: Unify the format of datetime display in overviews and detail views.
@@ -13,8 +15,12 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.
 * CHANGE: Make everything possible in detail views clickable.
 * CHANGE: Remove unnecessary decimal points where not needed.
+* CHANGE: Break up the detail view of Company with headings so it feels less cluttered.
 * FIX: The GameSeries of a game cannot seem to be changed additionally.
 * FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.
+
+### Crazy Taxi
+* FIX: The formatting and buttons in the Crazy Taxi overview are broken.
 
 ### Need for Speed III: Hot Pursuit
 * ADD: The ability to add, edit, delete and view NFS3 instances.
@@ -28,9 +34,9 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.~~
 * ~~CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.~~
 * ~~CHANGE: Visually separate the Part details with headings to make it less cluttered.~~
-* CHANGE: Replace the text block with an insertable HTML snippet.
+* ~~CHANGE: Replace the text block with an insertable HTML snippet.~~
 * ~~CHANGE: Remove unnecessary columns from the Car overview.~~
-* FIX: Entities that can be deleted using the is_deleted attribute shouldn't be visible anywhere.
+* ~~FIX: Entities that can be deleted using the is_deleted attribute shouldn't be visible anywhere.~~
 * FIX: Entities that can be deleted using the is_deleted should not be included in counts.
 * FIX: Create a get method for the official name of an engine.
 * FIX: Remove the unit from the forced induction boost pressure column.

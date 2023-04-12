@@ -162,13 +162,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if company.cars == [] %}
+              {% if cars == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars produced by this company in the database</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in company.cars %}
+                {% for car in cars %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}
@@ -229,7 +229,7 @@
     </div>
     {% endif %}
 
-    <!--  Forced induction  -->
+    <!--  Transmissions  -->
     {% if company.is_car_part_manufacturer == True %}
     <div class="panel panel-default">
       <div class="panel-heading">

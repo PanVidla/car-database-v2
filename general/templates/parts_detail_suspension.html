@@ -64,13 +64,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if suspension.cars_front.all() == [] %}
+              {% if cars_front == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars in the database that use this kind of suspension in the front.</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in suspension.cars_front %}
+                {% for car in cars_front %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}
@@ -85,13 +85,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if suspension.cars_rear.all() == [] %}
+              {% if cars_rear == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars in the database that use this kind of suspension in the rear.</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in suspension.cars_rear %}
+                {% for car in cars_rear %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}
@@ -108,13 +108,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if suspension.instances_front.all() == [] %}
+              {% if instances_front == [] %}
               <tr>
                   <td class="text-center"><strong>There are no instances in the database that use this kind of suspension in the front.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in suspension.instances_front %}
+                {% for instance in instances_front %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}
@@ -129,13 +129,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if suspension.instances_rear.all() == [] %}
+              {% if instances_rear == [] %}
               <tr>
                   <td class="text-center"><strong>There are no instances in the database that use this kind of suspension in the rear.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in suspension.instances_rear %}
+                {% for instance in instances_rear %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}

@@ -74,13 +74,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if competition.cars == [] %}
+              {% if cars == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars that took part in this competition in the database</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in competition.cars %}
+                {% for car in cars %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}

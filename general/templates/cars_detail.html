@@ -387,13 +387,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if car.instances.all() == [] %}
+              {% if instances == [] %}
               <tr>
                   <td class="text-center"><strong>This car doesn't have any instances.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in car.instances %}
+                {% for instance in instances %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}

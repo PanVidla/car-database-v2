@@ -65,13 +65,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if platform.games == [] %}
+              {% if games == [] %}
               <tr>
                   <td class="text-center"><strong>There are no games for this platform in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_games_top.html" %}
-                {% for game in platform.games %}
+                {% for game in games %}
                     {% with game=game %}
                         {% include "_games_row.html" %}
                     {% endwith %}

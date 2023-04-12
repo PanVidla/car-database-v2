@@ -7,6 +7,8 @@ from general.forms_parts import EngineCombustionAddForm, EngineElectricAddForm, 
     EngineElectricEditForm, EngineTypeAddForm, EngineTypeEditForm, ForcedInductionAddForm, ForcedInductionEditForm, \
     SuspensionAddForm, TransmissionAddForm, TransmissionTypeAddForm, SuspensionEditForm, TransmissionEditForm, \
     TransmissionTypeEditForm
+from general.models.car import Car
+from general.models.instance import Instance
 from general.models.part import Engine, create_combustion_engine_from_form, create_electric_engine_from_form, \
     EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType, ForcedInduction, \
     create_forced_induction_from_form, Transmission, TransmissionType, Suspension, create_transmission_from_form, \
@@ -798,6 +800,16 @@ def detail_engine(id):
 def detail_engine_combustion(id):
 
     engine = EngineCombustion.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.engines.any(id=engine.id)) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.assists.any(id=engine.id)) \
+        .order_by(Instance.name_full) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -822,6 +834,8 @@ def detail_engine_combustion(id):
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           cars=cars,
+                           instances=instances,
                            add_text_form=add_text_form,
                            viewing="engines")
 
@@ -832,6 +846,16 @@ def detail_engine_combustion(id):
 def detail_engine_electric(id):
 
     engine = EngineElectric.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.engines.any(id=engine.id)) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.assists.any(id=engine.id)) \
+        .order_by(Instance.name_full) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -856,6 +880,8 @@ def detail_engine_electric(id):
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           cars=cars,
+                           instances=instances,
                            add_text_form=add_text_form,
                            viewing="engines")
 
@@ -892,6 +918,16 @@ def detail_engine_type_electric(id):
 def detail_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.additional_forced_induction_id == forced_induction.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.additional_forced_induction_id == forced_induction.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -916,6 +952,8 @@ def detail_forced_induction(id):
                            title="{}".format(forced_induction.name_display),
                            heading="{}".format(forced_induction.name_display),
                            forced_induction=forced_induction,
+                           cars=cars,
+                           instances=instances,
                            add_text_form=add_text_form,
                            viewing="forced_induction")
 
@@ -926,6 +964,26 @@ def detail_forced_induction(id):
 def detail_suspension(id):
 
     suspension = Suspension.query.get(id)
+    cars_front = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.suspension_front_id == suspension.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    cars_rear = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.suspension_rear_id == suspension.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances_front = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.suspension_front_id == suspension.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
+    instances_rear = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.suspension_rear_id == suspension.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -950,6 +1008,10 @@ def detail_suspension(id):
                            title="{}".format(suspension.name_full),
                            heading="{}".format(suspension.name_full),
                            suspension=suspension,
+                           cars_front=cars_front,
+                           cars_rear=cars_rear,
+                           instances_front=instances_front,
+                           instances_rear=instances_rear,
                            add_text_form=add_text_form,
                            viewing="suspensions")
 
@@ -960,6 +1022,16 @@ def detail_suspension(id):
 def detail_transmission(id):
 
     transmission = Transmission.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.transmission_id == transmission.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    instances = Instance.query \
+        .filter(Instance.is_deleted != True) \
+        .filter(Instance.transmission_id == transmission.id) \
+        .order_by(Instance.name_full.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -984,6 +1056,8 @@ def detail_transmission(id):
                            title="{}".format(transmission.name_display),
                            heading="{}".format(transmission.name_display),
                            transmission=transmission,
+                           cars=cars,
+                           instances=instances,
                            add_text_form=add_text_form,
                            viewing="transmissions")
 

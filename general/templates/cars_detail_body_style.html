@@ -45,13 +45,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if body_style.cars.all() == [] %}
+              {% if cars == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars with this body style in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in body_style.cars %}
+                {% for car in cars %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}

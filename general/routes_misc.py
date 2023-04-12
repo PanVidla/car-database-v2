@@ -5,6 +5,7 @@ from flask_login import login_required
 from general import cardb, database
 from general.forms_info import TextForm
 from general.forms_misc import CountryAddForm, CountryEditForm, CompetitionAddForm, CompetitionEditForm
+from general.models.car import Car
 from general.models.misc import Country, Competition, CompetitionText, CountryText
 
 
@@ -240,6 +241,11 @@ def delete_country_text(id):
 def detail_competition(id):
 
     competition = Competition.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.competitions.any(id=competition.id)) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -264,6 +270,7 @@ def detail_competition(id):
                            title="{}".format(competition.name_display),
                            heading="{}".format(competition.name_full),
                            competition=competition,
+                           cars=cars,
                            add_text_form=add_text_form)
 
 
@@ -273,7 +280,11 @@ def detail_competition(id):
 def detail_country(id):
 
     country = Country.query.get(id)
-    cars = country.cars.all()
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.country_id == country.id) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
     locations = country.locations.all()
     add_text_form = TextForm()
 

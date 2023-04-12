@@ -78,13 +78,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if transmission.cars.all() == [] %}
+              {% if cars == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars in the database that use this transmission.</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in transmission.cars %}
+                {% for car in cars %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}
@@ -99,13 +99,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if transmission.instances.all() == [] %}
+              {% if instances == [] %}
               <tr>
                   <td class="text-center"><strong>There are no instances in the database that use this transmission.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in transmission.instances %}
+                {% for instance in instances %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}

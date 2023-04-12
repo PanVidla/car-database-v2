@@ -66,13 +66,13 @@
           </div>
           <div class="table-responsive">
               <table class="table table-bordered table-condensed">
-                  {% if country.cars.all() == [] %}
+                  {% if cars == [] %}
                   <tr>
                       <td class="text-center"><strong>There are no cars from this country in the database.</strong></td>
                   </tr>
                   {% else %}
                     {% include "_cars_top.html" %}
-                    {% for car in country.cars %}
+                    {% for car in cars %}
                         {% with car=car %}
                             {% include "_cars_row.html" %}
                         {% endwith %}

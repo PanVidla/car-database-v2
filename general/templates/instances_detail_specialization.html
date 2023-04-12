@@ -43,13 +43,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if specialization.instances.all() == [] %}
+              {% if instances == [] %}
               <tr>
                   <td class="text-center"><strong>There are no instances with this specialization in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in specialization.instances %}
+                {% for instance in instances %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}

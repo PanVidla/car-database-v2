@@ -4,6 +4,7 @@ from flask_login import login_required
 from general import cardb, database
 from general.forms_companies import CompanyAddForm, CompanyEditForm
 from general.forms_info import TextForm
+from general.models.car import Car
 from general.models.misc import Company, create_company_from_form, CompanyText
 from general.strings import *
 
@@ -159,6 +160,11 @@ def delete_company_text(id):
 def detail_company(id):
 
     company = Company.query.get(id)
+    cars = Car.query \
+        .filter(Car.is_deleted != True) \
+        .filter(Car.manufacturers.any(id=company.id)) \
+        .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -183,4 +189,5 @@ def detail_company(id):
                            title="{}".format(company.name_display),
                            heading="{}".format(company.name_full),
                            company=company,
+                           cars=cars,
                            add_text_form=add_text_form)

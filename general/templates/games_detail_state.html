@@ -43,13 +43,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if state.games.all == [] %}
+              {% if games == [] %}
               <tr>
                   <td class="text-center"><strong>There are no games with this status in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_games_top.html" %}
-                {% for game in state.games %}
+                {% for game in games %}
                     {% with game=game %}
                         {% include "_games_row.html" %}
                     {% endwith %}

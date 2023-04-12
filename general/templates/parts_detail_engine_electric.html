@@ -92,13 +92,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if engine.cars.all() == [] %}
+              {% if cars == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars with this engine in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_cars_top.html" %}
-                {% for car in engine.cars %}
+                {% for car in cars %}
                     {% with car=car %}
                         {% include "_cars_row.html" %}
                     {% endwith %}
@@ -115,13 +115,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if engine.instances.all() == [] %}
+              {% if instances == [] %}
               <tr>
                   <td class="text-center"><strong>There are no cars with this engine in the database.</strong></td>
               </tr>
               {% else %}
                 {% include "_instances_top.html" %}
-                {% for instance in engine.instances %}
+                {% for instance in instances %}
                     {% with instance=instance %}
                         {% include "_instances_row.html" %}
                     {% endwith %}

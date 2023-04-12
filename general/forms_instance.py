@@ -21,11 +21,13 @@ class SelectGameForm(FlaskForm):
         self.game_name_full.choices = [(game.id, "{}".format(game.name_full))
                                        for game
                                        in Game.query
+                                       .filter(Game.is_deleted != True)
                                        .order_by(Game.name_display.asc()).all()]
 
         self.car_id.choices = [(car.id, "{}".format(car.name_display))
                                for car
                                in Car.query
+                               .filter(Car.is_deleted != True)
                                .order_by(Car.name_display.asc()).all()]
 
 
