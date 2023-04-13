@@ -9,7 +9,7 @@ from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
 from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game, \
-    get_game_specific_instance
+    get_game_specific_instance, get_no_of_instances_of_car, get_no_of_instances_in_game
 from general.models.car import Car
 from general.models.game import Game
 from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist, \
@@ -110,8 +110,8 @@ def add_instance_general(car_id, game_id):
 
         flash("The {} has been successfully added to the database.".format(new_instance.name_full), "success")
 
-        car.refresh_no_of_instances()
-        game.refresh_no_of_instances()
+        car.no_of_instances = get_no_of_instances_of_car(car_id)
+        game.no_of_instances = get_no_of_instances_in_game(game_id)
         database.session.commit()
 
         return redirect(url_for("add_instance_engine", instance_id=new_instance.id))
@@ -699,6 +699,10 @@ def delete_instance(id):
     except RuntimeError:
         flash("There was a problem with deleting the {}.".format(instance.name_full), "danger")
         return redirect(url_for("detail_instance", id=instance.id))
+
+    instance.car.no_of_instances = get_no_of_instances_of_car(instance.car_id)
+    instance.game.no_of_instances = get_no_of_instances_in_game(instance.game_id)
+    database.session.commit()
 
     flash("The {} has been successfully deleted.".format(instance.name_full), "success")
     return redirect(url_for("overview_instances"))

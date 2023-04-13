@@ -149,9 +149,6 @@ class Game(database.Model):
     def get_year_released(self):
         return self.date_released.year if self.date_released is not None else "n/a"
 
-    def refresh_no_of_instances(self):
-        self.no_of_instances = len(self.instances.all())
-
     def set_platforms(self, platform_ids):
 
         # Delete the old game-platform associations
