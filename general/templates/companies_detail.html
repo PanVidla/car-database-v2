@@ -187,13 +187,13 @@
       </div>
       <div class="table-responsive">
           <table class="table table-bordered table-condensed">
-              {% if company.engines == [] %}
+              {% if company.engines.all() == [] %}
               <tr>
                   <td class="text-center"><strong>There are no engines produced by this company in the database</strong></td>
               </tr>
               {% else %}
                 {% include "_engines_top.html" %}
-                {% for engine in company.engines %}
+                {% for engine in company.engines.all() %}
                     {% with engine=engine %}
                         {% include "_engines_row.html" %}
                     {% endwith %}
