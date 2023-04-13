@@ -97,7 +97,7 @@ class Engine(database.Model):
         return self.max_torque_rpm if self.max_torque_rpm is not None else "n/a"
 
     def get_name_official(self):
-        return self.name_official if self.name_official is not None else "n/a"
+        return self.name_official if self.name_official != "" else "n/a"
 
 
 class EngineCombustion(Engine):

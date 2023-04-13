@@ -27,7 +27,7 @@
           <div class="panel-body">
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Official name</b></div>
-                  <div class="col-sm-4">{{ engine.name_official }}</div>
+                  <div class="col-sm-4">{{ engine.get_name_official() }}</div>
                   <div class="col-sm-2 text-right"><b>Manufacturer</b></div>
                   <div class="col-sm-4">{% if engine.get_manufacturer_name_display() != "n/a" %}<a href="{{ url_for('detail_company', id=engine.manufacturer_id) }}">{{ engine.get_manufacturer_name_display() }}</a>{% else %}{{ engine.get_manufacturer_name_display() }}{% endif %}</div>
               </div>
