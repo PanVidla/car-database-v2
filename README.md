@@ -39,7 +39,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~FIX: Entities that can be deleted using the is_deleted attribute shouldn't be visible anywhere.~~
 * ~~FIX: Entities that can be deleted using the is_deleted should not be included in counts.~~
 * ~~FIX: Create a get method for the official name of an engine.~~
-* FIX: Remove the unit from the forced induction boost pressure column.
+* ~~FIX: Remove the unit from the forced induction boost pressure column.~~
 * FIX: Make the dropdown menus appear above the nav, not under.
 * FIX: Engines are displaying incorrectly in the Company view.
 * FIX: Make text in views appear in order.

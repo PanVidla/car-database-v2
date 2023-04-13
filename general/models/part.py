@@ -287,7 +287,19 @@ class ForcedInduction(database.Model):
         return self.name_official if self.name_official is not None else "n/a"
 
     def get_boost_pressure_bar(self):
-        return "{} bar".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"
+        return "{}".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"
+
+    def get_boost_pressure_string_bar(self):
+
+        string = ""
+
+        if self.boost_pressure_bar is not None:
+            string += "{} bar".format(self.boost_pressure_bar)
+
+        else:
+            string = "n/a"
+
+        return string
 
 
 def create_forced_induction_from_form(form):
