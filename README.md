@@ -45,7 +45,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~FIX: Make the dropdown menus appear above the nav, not under. (x)~~
 * ~~FIX: Engines are displaying incorrectly in the Company view.~~
 * ~~FIX: Make text in views appear in order.~~
-* FIX: It should be possible to add an instance with no specialization.
+* ~~FIX: It should be possible to add an instance with no specialization.~~
 * FIX: Assists should be pre-selected when creating an instance.
 * ~~FIX: Drivetrain and engine layout are not being assigned correctly.~~
 

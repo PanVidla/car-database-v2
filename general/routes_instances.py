@@ -95,8 +95,8 @@ def add_instance_general(car_id, game_id):
     if form.validate_on_submit():
 
         new_instance = create_instance_based_on_game(game)
-        new_instance.set_type_and_specialization(form)
         form.populate_obj(new_instance)
+        new_instance.set_type_and_specialization(form)
 
         new_instance.car_id = car.id
         new_instance.game_id = game.id
