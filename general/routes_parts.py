@@ -800,6 +800,10 @@ def detail_engine(id):
 def detail_engine_combustion(id):
 
     engine = EngineCombustion.query.get(id)
+    texts = EngineText.query \
+        .filter(EngineText.engine_id == engine.id) \
+        .order_by(EngineText.order.asc()) \
+        .all()
     cars = Car.query \
         .filter(Car.is_deleted != True) \
         .filter(Car.engines.any(id=engine.id)) \
@@ -834,6 +838,7 @@ def detail_engine_combustion(id):
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           texts=texts,
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
@@ -846,6 +851,10 @@ def detail_engine_combustion(id):
 def detail_engine_electric(id):
 
     engine = EngineElectric.query.get(id)
+    texts = EngineText.query \
+        .filter(EngineText.engine_id == engine.id) \
+        .order_by(EngineText.order.asc()) \
+        .all()
     cars = Car.query \
         .filter(Car.is_deleted != True) \
         .filter(Car.engines.any(id=engine.id)) \
@@ -880,6 +889,7 @@ def detail_engine_electric(id):
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
                            engine=engine,
+                           texts=texts,
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
@@ -918,6 +928,10 @@ def detail_engine_type_electric(id):
 def detail_forced_induction(id):
 
     forced_induction = ForcedInduction.query.get(id)
+    texts = ForcedInductionText.query \
+        .filter(ForcedInductionText.forced_induction_id == forced_induction.id) \
+        .order_by(ForcedInductionText.order.asc()) \
+        .all()
     cars = Car.query \
         .filter(Car.is_deleted != True) \
         .filter(Car.additional_forced_induction_id == forced_induction.id) \
@@ -952,6 +966,7 @@ def detail_forced_induction(id):
                            title="{}".format(forced_induction.name_display),
                            heading="{}".format(forced_induction.name_display),
                            forced_induction=forced_induction,
+                           texts=texts,
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
@@ -964,6 +979,10 @@ def detail_forced_induction(id):
 def detail_suspension(id):
 
     suspension = Suspension.query.get(id)
+    texts = SuspensionText.query \
+        .filter(SuspensionText.suspension_id == suspension.id) \
+        .order_by(SuspensionText.order.asc()) \
+        .all()
     cars_front = Car.query \
         .filter(Car.is_deleted != True) \
         .filter(Car.suspension_front_id == suspension.id) \
@@ -1008,6 +1027,7 @@ def detail_suspension(id):
                            title="{}".format(suspension.name_full),
                            heading="{}".format(suspension.name_full),
                            suspension=suspension,
+                           texts=texts,
                            cars_front=cars_front,
                            cars_rear=cars_rear,
                            instances_front=instances_front,
@@ -1022,6 +1042,10 @@ def detail_suspension(id):
 def detail_transmission(id):
 
     transmission = Transmission.query.get(id)
+    texts = TransmissionText.query \
+        .filter(TransmissionText.transmission_id == transmission.id) \
+        .order_by(TransmissionText.order.asc()) \
+        .all()
     cars = Car.query \
         .filter(Car.is_deleted != True) \
         .filter(Car.transmission_id == transmission.id) \
@@ -1056,6 +1080,7 @@ def detail_transmission(id):
                            title="{}".format(transmission.name_display),
                            heading="{}".format(transmission.name_display),
                            transmission=transmission,
+                           texts=texts,
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,

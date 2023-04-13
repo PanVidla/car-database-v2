@@ -165,6 +165,10 @@ def detail_company(id):
         .filter(Car.manufacturers.any(id=company.id)) \
         .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
         .all()
+    texts = CompanyText.query \
+        .filter(CompanyText.company_id == company.id) \
+        .order_by(CompanyText.order.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -189,5 +193,6 @@ def detail_company(id):
                            title="{}".format(company.name_display),
                            heading="{}".format(company.name_full),
                            company=company,
+                           texts=texts,
                            cars=cars,
                            add_text_form=add_text_form)

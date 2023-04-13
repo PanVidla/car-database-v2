@@ -1241,6 +1241,10 @@ def detail_car(id):
         .filter(Instance.car_id == car.id) \
         .order_by(Instance.name_full.asc()) \
         .all()
+    texts = CarText.query\
+        .filter(CarText.car_id == car.id)\
+        .order_by(CarText.order.asc())\
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -1267,6 +1271,7 @@ def detail_car(id):
                            title="{}".format(car.name_display),
                            heading="{}".format(car.name_display),
                            car=car,
+                           texts=texts,
                            instances=instances,
                            add_text_form=add_text_form,
                            viewing="cars")

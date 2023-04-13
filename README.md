@@ -7,6 +7,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Color the background of an instance view with the color provided in the Instance detail.
 * ADD: Add the ability to copy selected instances.
 * ADD: Make sure no duplicit entries can be added.
+* ADD: Make the parsing of added text such that it's possible to add several paragraphs at a time.
 * CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.
 * CHANGE: If a Car is fictional, make its row in the overview colored to signify that.
 * CHANGE: Unify the format of datetime display in overviews and detail views.
@@ -40,9 +41,9 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~FIX: Entities that can be deleted using the is_deleted should not be included in counts.~~
 * ~~FIX: Create a get method for the official name of an engine.~~
 * ~~FIX: Remove the unit from the forced induction boost pressure column.~~
-* FIX: Make the dropdown menus appear above the nav, not under.
+* ~~FIX: Make the dropdown menus appear above the nav, not under. (x)~~
 * ~~FIX: Engines are displaying incorrectly in the Company view.~~
-* FIX: Make text in views appear in order.
+* ~~FIX: Make text in views appear in order.~~
 * FIX: It should be possible to add an instance with no specialization.
 * FIX: Assists should be pre-selected when creating an instance.
 * ~~FIX: Drivetrain and engine layout are not being assigned correctly.~~

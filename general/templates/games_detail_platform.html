@@ -40,9 +40,9 @@
     </div>
 
     <!--  Text  -->
-    {% if platform.texts.all() != [] %}
+    {% if texts != [] %}
     <div class="well">
-        {% for text in platform.texts %}
+        {% for text in texts %}
             {% if text.text_type == 0 %}
                 <p>{{ text.content }} <small><a href="{{ url_for('delete_platform_text', id=text.id) }}">[x]</a></small></p>
             {% endif %}

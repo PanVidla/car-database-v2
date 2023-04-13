@@ -35,6 +35,11 @@ def add_instance():
 def detail_instance(id):
 
     instance = Instance.query.get(id)
+    texts = InstanceText.query \
+        .filter(InstanceText.instance_id == instance.id) \
+        .order_by(InstanceText.order.asc()) \
+        .all()
+
     add_text_form = TextForm()
 
     # Add text
@@ -59,5 +64,6 @@ def detail_instance(id):
                            title="{}".format(instance.name_nickname),
                            heading="{}".format(instance.name_full),
                            instance=instance,
+                           texts=texts,
                            add_text_form=add_text_form,
                            viewing="instances")

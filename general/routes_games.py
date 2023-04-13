@@ -786,7 +786,12 @@ def delete_platform_text(id):
 def detail_game(id):
 
     game = Game.query.get(id)
+    texts = GameText.query \
+        .filter(GameText.game_id == game.id) \
+        .order_by(GameText.order.asc()) \
+        .all()
     activities = GameActivity.query.filter(GameActivity.game_id == game.id).order_by(GameActivity.order.asc()).all()
+
     change_state_form = GameStateChangeForm()
     add_text_form = TextForm()
 
@@ -829,6 +834,7 @@ def detail_game(id):
                            title="{}".format(game.name_display),
                            heading="{}".format(game.name_full),
                            game=game,
+                           texts=texts,
                            viewing="games",
                            add_text_form=add_text_form,
                            change_state_form=change_state_form,
@@ -841,6 +847,10 @@ def detail_game(id):
 def detail_game_series(id):
 
     game_series = GameSeries.query.get(id)
+    texts = GameSeriesText.query \
+        .filter(GameSeriesText.game_series_id == game_series.id) \
+        .order_by(GameSeriesText.order.asc()) \
+        .all()
     games = Game.query \
         .filter(Game.is_deleted != True) \
         .filter(Game.game_series_id == game_series.id) \
@@ -870,6 +880,7 @@ def detail_game_series(id):
                            title="{}".format(game_series.name),
                            heading="{}".format(game_series.name),
                            game_series=game_series,
+                           texts=texts,
                            games=games,
                            add_text_form=add_text_form,
                            viewing="game_series")
@@ -900,6 +911,10 @@ def detail_genre(id):
 def detail_platform(id):
 
     platform = Platform.query.get(id)
+    texts = PlatformText.query \
+        .filter(PlatformText.platform_id == platform.id) \
+        .order_by(PlatformText.order.asc()) \
+        .all()
     games = Game.query \
         .filter(Game.is_deleted != True) \
         .filter(Game.platforms.any(id=platform.id)) \
@@ -929,6 +944,7 @@ def detail_platform(id):
                            title="{}".format(platform.name_display),
                            heading="{}".format(platform.name_full),
                            platform=platform,
+                           texts=texts,
                            games=games,
                            add_text_form=add_text_form,
                            viewing="platforms")

@@ -246,6 +246,10 @@ def detail_competition(id):
         .filter(Car.competitions.any(id=competition.id)) \
         .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
         .all()
+    texts = CompetitionText.query \
+        .filter(CompetitionText.competition_id == competition.id) \
+        .order_by(CompetitionText.order.asc()) \
+        .all()
     add_text_form = TextForm()
 
     # Add text
@@ -271,6 +275,7 @@ def detail_competition(id):
                            heading="{}".format(competition.name_full),
                            competition=competition,
                            cars=cars,
+                           texts=texts,
                            add_text_form=add_text_form)
 
 
@@ -284,6 +289,10 @@ def detail_country(id):
         .filter(Car.is_deleted != True) \
         .filter(Car.country_id == country.id) \
         .order_by(Car.manufacturers_display.asc(), Car.year.asc(), Car.model.asc()) \
+        .all()
+    texts = CountryText.query \
+        .filter(CountryText.country_id == country.id) \
+        .order_by(CountryText.order.asc()) \
         .all()
     locations = country.locations.all()
     add_text_form = TextForm()
@@ -310,6 +319,7 @@ def detail_country(id):
                            title="{}".format(country.name_display),
                            heading="{}".format(country.name_full),
                            country=country,
+                           texts=texts,
                            cars=cars,
                            locations=locations,
                            add_text_form=add_text_form)
