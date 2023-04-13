@@ -31,6 +31,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 ### General
 * ~~ADD: Add display of metadata to all the objects that support it.~~
 * ~~ADD: Add a list of actively played games to the top menu, so one can get to their overview.~~
+* ~~ADD: Display flashed messages with categories.~~
 * ~~CHANGE: Make the general information about a Car display in only two columns.~~
 * ~~CHANGE: Re-make the engine selection when adding a Car to not have the redundant Skip button.~~
 * ~~CHANGE: Make the redirect towards the specific kind of engine after deleting a text, not to the overview.~~
