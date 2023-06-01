@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, SelectField, SelectMultipleField, BooleanField, DecimalField
 from wtforms.validators import DataRequired, Optional
 
+from general.forms_info import ImageForm
 from general.models.car import CarClass, BodyStyle, EngineLayout, Drivetrain, Assist
 from general.models.misc import Company, Country, Competition
 from general.models.part import Engine, ForcedInduction, Transmission, TransmissionType, Suspension, FuelType
@@ -352,3 +353,9 @@ class FuelAddForm(FuelForm):
 class FuelEditForm(FuelForm):
 
     submit = SubmitField("Edit fuel type")
+
+
+# Images
+class CarImageForm(ImageForm):
+
+    is_thumbnail = BooleanField("Thumbnail")

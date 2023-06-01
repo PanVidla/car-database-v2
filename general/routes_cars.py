@@ -7,10 +7,10 @@ from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
     FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car2Form, Car3Form, \
-    Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form
+    Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form, CarImageForm
 from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
-    CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText
+    CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText, CarImage
 from general.models.instance import Instance
 from general.models.part import FuelType, Aspiration
 
@@ -1246,6 +1246,7 @@ def detail_car(id):
         .order_by(CarText.order.asc())\
         .all()
     add_text_form = TextForm()
+    add_image_form = CarImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -1267,6 +1268,24 @@ def detail_car(id):
         flash("The text has been successfully added to {}.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = CarImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(car.images.all()) + 1
+        new_image.car_id = car.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(car.name_display), "danger")
+            return redirect(url_for("detail_car", id=car.id))
+
+        flash("The image has been successfully added to {}.".format(car.name_display), "success")
+        return redirect(url_for("detail_car", id=car.id))
+
     return render_template("cars_detail.html",
                            title="{}".format(car.name_display),
                            heading="{}".format(car.name_display),
@@ -1274,6 +1293,7 @@ def detail_car(id):
                            texts=texts,
                            instances=instances,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="cars")
 
 

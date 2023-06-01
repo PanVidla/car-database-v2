@@ -224,6 +224,13 @@ class Car(database.Model):
             else:
                 return "n/a"
 
+    def get_images(self):
+
+        images = CarImage.query.filter(CarImage.car_id == self.id, CarImage.is_thumbnail == False)
+        images = images.order_by(CarImage.order.asc()).all()
+
+        return images
+
     def get_is_fictional(self):
         return "✓" if self.is_fictional else "x"
 
@@ -301,6 +308,13 @@ class Car(database.Model):
 
     def get_suspension_rear(self):
         return self.rear_suspension.name_full if self.suspension_rear_id is not None else "n/a"
+
+    def get_thumbnails(self):
+
+        thumbnails = CarImage.query.filter(Car.car_id == self.id, CarImage.is_thumbnail == True)
+        thumbnails = thumbnails.order_by(CarImage.order.asc()).all()
+
+        return thumbnails
 
     def get_tires_front(self):
         return self.tires_front if self.tires_front != "" else "n/a"
