@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, SelectField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import TextAreaField, SelectField, SubmitField, StringField
+from wtforms.validators import DataRequired, Optional
 
 
 # Text
@@ -19,3 +19,12 @@ class TextForm(FlaskForm):
                                   (1, "Heading 1"),
                                   (2, "Heading 2"),
                                   (3, "Heading 3")]
+
+
+# Image
+class ImageForm(FlaskForm):
+
+    # General
+    path = StringField("URL path", validators=[DataRequired()])
+    description = StringField("Description", validators=[Optional()])
+    submit_add_image = SubmitField("Add image")

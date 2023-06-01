@@ -8,11 +8,11 @@ from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
     GameGenreAddForm, GameGenreEditForm, GameGeneralAddForm, GamePlatformsAddForm, GameStateAddForm, GameStateEditForm, \
     GameActivityInitialAddForm, GameGeneralEditForm, GamePlatformsEditForm, GameActivityNonInitialAddForm, \
-    GameStateChangeForm, GameActivityEditForm
+    GameStateChangeForm, GameActivityEditForm, GameImageForm
 from general.forms_info import TextForm
 from general.models.game import Game, Platform, GameSeries, GameGenre, create_game_from_form, GameState, GameActivity, \
     create_initial_activity_from_form, GamePlatform, create_non_initial_activity_from_form, GameText, GameSeriesText, \
-    PlatformText
+    PlatformText, GameImage, GameSeriesImage, PlatformImage
 
 
 @cardb.route("/games/", methods=['GET'])
@@ -794,6 +794,7 @@ def detail_game(id):
 
     change_state_form = GameStateChangeForm()
     add_text_form = TextForm()
+    add_image_form = GameImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -813,6 +814,26 @@ def detail_game(id):
             return redirect(url_for("detail_game", id=game.id))
 
         flash("The text has been successfully added to {}.".format(game.name_display), "success")
+        return redirect(url_for("detail_game", id=game.id))
+
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = GameImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(game.images.all()) + 1
+        new_image.game_id = game.id
+
+        game.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(game.name_display), "danger")
+            return redirect(url_for("detail_game", id=game.id))
+
+        flash("The image has been successfully added to {}.".format(game.name_display), "success")
         return redirect(url_for("detail_game", id=game.id))
 
     # Change state
@@ -837,6 +858,7 @@ def detail_game(id):
                            texts=texts,
                            viewing="games",
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            change_state_form=change_state_form,
                            activities=activities)
 
@@ -857,6 +879,7 @@ def detail_game_series(id):
         .order_by(Game.name_display.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = GameImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -876,6 +899,24 @@ def detail_game_series(id):
         flash("The text has been successfully added to {}.".format(game_series.name), "success")
         return redirect(url_for("detail_game_series", id=game_series.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = GameSeriesImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(game_series.images.all()) + 1
+        new_image.game_series_id = game_series.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(game_series.name), "danger")
+            return redirect(url_for("detail_game_series", id=game_series.id))
+
+        flash("The image has been successfully added to {}.".format(game_series.name), "success")
+        return redirect(url_for("detail_game_series", id=game_series.id))
+
     return render_template("games_detail_game_series.html",
                            title="{}".format(game_series.name),
                            heading="{}".format(game_series.name),
@@ -883,6 +924,7 @@ def detail_game_series(id):
                            texts=texts,
                            games=games,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="game_series")
 
 
@@ -921,6 +963,7 @@ def detail_platform(id):
         .order_by(Game.name_display.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = GameImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -940,6 +983,24 @@ def detail_platform(id):
         flash("The text has been successfully added to {}.".format(platform.name_display), "success")
         return redirect(url_for("detail_platform", id=platform.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = PlatformImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(platform.images.all()) + 1
+        new_image.platform_id = platform.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(platform.name_display), "danger")
+            return redirect(url_for("detail_platform", id=platform.id))
+
+        flash("The image has been successfully added to {}.".format(platform.name_display), "success")
+        return redirect(url_for("detail_platform", id=platform.id))
+
     return render_template("games_detail_platform.html",
                            title="{}".format(platform.name_display),
                            heading="{}".format(platform.name_full),
@@ -947,6 +1008,7 @@ def detail_platform(id):
                            texts=texts,
                            games=games,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="platforms")
 
 

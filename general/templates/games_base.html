@@ -4,7 +4,17 @@
 
     <!--  Heading  -->
     <div class="page-header">
-        <h1>{{ heading }}</h1>
+        <h1>{% if game and game.get_logos() != [] %}
+        {% for logo in game.get_logos() %}<img src="{{ logo.path }}" alt="{{ logo.description }}" height="36 px">{% endfor %}
+        {% endif %}
+        <!--    This is to make sure that we are viewing the game series detail view, not the game series overview.    -->
+        {% if game_series and add_text_form and game_series.get_logos() != [] %}
+        {% for logo in game_series.get_logos() %}<img src="{{ logo.path }}" alt="{{ logo.description }}" height="36 px">{% endfor %}
+        {% endif %}
+        {% if platform and platform.get_logos() != [] %}
+        {% for logo in platform.get_logos() %}<img src="{{ logo.path }}" alt="{{ logo.description }}" height="36 px">{% endfor %}
+        {% endif %}
+        {{ heading }}</h1>
         {% if game %}<span class="help-block">{{ game.get_description() }}</span>{% endif %}
     </div>
 

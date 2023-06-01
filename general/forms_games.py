@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, DateField, SubmitField, IntegerField, SelectMultipleField
+from wtforms import StringField, SelectField, DateField, SubmitField, IntegerField, SelectMultipleField, BooleanField
 from wtforms.validators import DataRequired, Optional, NumberRange
 
+from general.forms_info import ImageForm
 from general.models.game import GameSeries, GameGenre, Platform, GameState
 from general.models.misc import Company
 
@@ -173,3 +174,9 @@ class PlatformAddForm(PlatformForm):
 class PlatformEditForm(PlatformForm):
 
     submit = SubmitField("Edit platform")
+
+
+# Images
+class GameImageForm(ImageForm):
+
+    is_logo = BooleanField("Logo")

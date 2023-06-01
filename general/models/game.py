@@ -101,6 +101,13 @@ class Game(database.Model):
 
         return description_string
 
+    def get_images(self):
+
+        images = GameImage.query.filter(GameImage.game_id == self.id, GameImage.is_logo == False)
+        images = images.order_by(GameImage.order.asc()).all()
+
+        return images
+
     def get_last_played_date(self):
 
         if self.datetime_played is not None:
@@ -111,6 +118,13 @@ class Game(database.Model):
 
         else:
             return "never"
+
+    def get_logos(self):
+
+        logos = GameImage.query.filter(GameImage.game_id == self.id, GameImage.is_logo == True)
+        logos = logos.order_by(GameImage.order.asc()).all()
+
+        return logos
 
     def get_date_released(self):
         if self.date_released is not None:
@@ -325,6 +339,20 @@ class GameSeries(database.Model):
     texts = database.relationship('GameSeriesText', backref='game_series', lazy='dynamic')
     images = database.relationship('GameSeriesImage', backref='game_series', lazy='dynamic')
 
+    def get_images(self):
+
+        images = GameSeriesImage.query.filter(GameSeriesImage.game_series_id == self.id, GameSeriesImage.is_logo == False)
+        images = images.order_by(GameSeriesImage.order.asc()).all()
+
+        return images
+
+    def get_logos(self):
+
+        logos = GameSeriesImage.query.filter(GameSeriesImage.game_series_id == self.id, GameSeriesImage.is_logo == True)
+        logos = logos.order_by(GameSeriesImage.order.asc()).all()
+
+        return logos
+
 
 # Represents the state of the game (e.g. not started, in-progressed, finished...)
 class GameState(database.Model):
@@ -382,6 +410,20 @@ class Platform(database.Model):
     games = database.relationship('Game', secondary="game_platform")
     texts = database.relationship('PlatformText', backref='platform', lazy='dynamic')
     images = database.relationship('PlatformImage', backref='platform', lazy='dynamic')
+
+    def get_images(self):
+
+        images = PlatformImage.query.filter(PlatformImage.platform_id == self.id, PlatformImage.is_logo == False)
+        images = images.order_by(PlatformImage.order.asc()).all()
+
+        return images
+
+    def get_logos(self):
+
+        logos = PlatformImage.query.filter(PlatformImage.platform_id == self.id, PlatformImage.is_logo == True)
+        logos = logos.order_by(PlatformImage.order.asc()).all()
+
+        return logos
 
 
 # Info
