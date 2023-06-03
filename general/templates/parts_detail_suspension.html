@@ -3,6 +3,40 @@
 
 {% block parts_content %}
 
+    <!--  Images  -->
+    {% if suspension.get_images() != [] %}
+    <div id="images" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        {% for image in suspension.get_images() %}
+        <li data-target="#images" data-slide-to="{{ image.order - 1 }}" {% if image.order == 1 %}class="active"{% endif %}></li>
+        {% endfor %}
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+        {% for image in suspension.get_images() %}
+        <div class="item {% if image.order == 1%}active{% endif %}">
+          <img src="{{ image.path }}" alt="{{ image.description }}" height="auto" width="100%">
+          <div class="carousel-caption">
+            <h4>{{ image.description }}</h4>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Left and right controls -->
+      <a class="left carousel-control" href="#images" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#images" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+    {% endif %}
+
     <!-- Sub-sub-menu -->
     {% block subsubmenu %}
         <nav class="navbar navbar-inverse navbar-static-top">
@@ -12,6 +46,7 @@
                         {% if suspension %}
                         <li><a href="{{ url_for('edit_suspension', id=suspension.id) }}"><button type="button" class="btn btn-info">Edit suspension</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">Add image</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete suspension</button></a></li>
                         {% endif %}
                     </ul>
@@ -155,6 +190,20 @@
           </div>
           <div class="modal-body">
               {{ wtf.quick_form(add_text_form, button_map={"submit_add_text": "info"}) }}
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="imageLabel">Add image</h4>
+          </div>
+          <div class="modal-body">
+              {{ wtf.quick_form(add_image_form, button_map={"submit_add_image": "info"}) }}
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

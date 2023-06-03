@@ -48,6 +48,13 @@ class Engine(database.Model):
     def get_fuel(self):
         return self.fuel_type.name
 
+    def get_images(self):
+
+        images = EngineImage.query.filter(EngineImage.engine_id == self.id)
+        images = images.order_by(EngineImage.order.asc()).all()
+
+        return images
+
     def get_manufacturer_name_display(self):
         return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
 
@@ -301,6 +308,13 @@ class ForcedInduction(database.Model):
 
         return string
 
+    def get_images(self):
+
+        images = ForcedInductionImage.query.filter(ForcedInductionImage.forced_induction_id == self.id)
+        images = images.order_by(ForcedInductionImage.order.asc()).all()
+
+        return images
+
 
 def create_forced_induction_from_form(form):
 
@@ -349,6 +363,13 @@ class Suspension(database.Model):
     texts = database.relationship('SuspensionText', backref='suspension', lazy='dynamic')
     images = database.relationship('SuspensionImage', backref='suspension', lazy='dynamic')
 
+    def get_images(self):
+
+        images = SuspensionImage.query.filter(SuspensionImage.suspension_id == self.id)
+        images = images.order_by(SuspensionImage.order.asc()).all()
+
+        return images
+
 
 class Transmission(database.Model):
 
@@ -377,6 +398,13 @@ class Transmission(database.Model):
         # No manufacturer is selected
         if form.manufacturer_id.data == 0:
             self.manufacturer_id = None
+
+    def get_images(self):
+
+        images = TransmissionImage.query.filter(TransmissionImage.transmission_id == self.id)
+        images = images.order_by(TransmissionImage.order.asc()).all()
+
+        return images
 
     def get_manufacturer_name_display(self):
         return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"

@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from general import cardb, database
-from general.forms_info import TextForm
+from general.forms_info import TextForm, ImageForm
 from general.forms_parts import EngineCombustionAddForm, EngineElectricAddForm, EngineCombustionEditForm, \
     EngineElectricEditForm, EngineTypeAddForm, EngineTypeEditForm, ForcedInductionAddForm, ForcedInductionEditForm, \
     SuspensionAddForm, TransmissionAddForm, TransmissionTypeAddForm, SuspensionEditForm, TransmissionEditForm, \
@@ -12,7 +12,8 @@ from general.models.instance import Instance
 from general.models.part import Engine, create_combustion_engine_from_form, create_electric_engine_from_form, \
     EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType, ForcedInduction, \
     create_forced_induction_from_form, Transmission, TransmissionType, Suspension, create_transmission_from_form, \
-    EngineText, ForcedInductionText, SuspensionText, TransmissionText
+    EngineText, ForcedInductionText, SuspensionText, TransmissionText, EngineImage, ForcedInductionImage, \
+    SuspensionImage, TransmissionImage
 
 
 # Engines overview
@@ -815,6 +816,7 @@ def detail_engine_combustion(id):
         .order_by(Instance.name_full) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -834,6 +836,24 @@ def detail_engine_combustion(id):
         flash("The text has been successfully added to {}.".format(engine.name_display), "success")
         return redirect(url_for("detail_engine_combustion", id=engine.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = EngineImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(engine.images.all()) + 1
+        new_image.engine_id = engine.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(engine.name_display), "danger")
+            return redirect(url_for("detail_engine_combustion", id=engine.id))
+
+        flash("The image has been successfully added to {}.".format(engine.name_display), "success")
+        return redirect(url_for("detail_engine_combustion", id=engine.id))
+
     return render_template("parts_detail_engine_combustion.html",
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
@@ -842,6 +862,7 @@ def detail_engine_combustion(id):
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="engines")
 
 
@@ -866,6 +887,7 @@ def detail_engine_electric(id):
         .order_by(Instance.name_full) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -885,6 +907,24 @@ def detail_engine_electric(id):
         flash("The text has been successfully added to {}.".format(engine.name_display), "success")
         return redirect(url_for("detail_engine_electric", id=engine.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = EngineImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(engine.images.all()) + 1
+        new_image.engine_id = engine.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(engine.name_display), "danger")
+            return redirect(url_for("detail_engine_electric", id=engine.id))
+
+        flash("The image has been successfully added to {}.".format(engine.name_display), "success")
+        return redirect(url_for("detail_engine_electric", id=engine.id))
+
     return render_template("parts_detail_engine_electric.html",
                            title="{}".format(engine.name_display),
                            heading="{}".format(engine.name_display),
@@ -893,6 +933,7 @@ def detail_engine_electric(id):
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="engines")
 
 
@@ -943,6 +984,7 @@ def detail_forced_induction(id):
         .order_by(Instance.name_full.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -962,6 +1004,24 @@ def detail_forced_induction(id):
         flash("The text has been successfully added to {}.".format(forced_induction.name_display), "success")
         return redirect(url_for("detail_forced_induction", id=forced_induction.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = ForcedInductionImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(forced_induction.images.all()) + 1
+        new_image.forced_induction_id = forced_induction.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(forced_induction.name_display), "danger")
+            return redirect(url_for("detail_forced_induction", id=forced_induction.id))
+
+        flash("The image has been successfully added to {}.".format(forced_induction.name_display), "success")
+        return redirect(url_for("detail_forced_induction", id=forced_induction.id))
+
     return render_template("parts_detail_forced_induction.html",
                            title="{}".format(forced_induction.name_display),
                            heading="{}".format(forced_induction.name_display),
@@ -970,6 +1030,7 @@ def detail_forced_induction(id):
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="forced_induction")
 
 
@@ -1004,6 +1065,7 @@ def detail_suspension(id):
         .order_by(Instance.name_full.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -1023,6 +1085,24 @@ def detail_suspension(id):
         flash("The text has been successfully added to {}.".format(suspension.name_full), "success")
         return redirect(url_for("detail_suspension", id=suspension.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = SuspensionImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(suspension.images.all()) + 1
+        new_image.suspension_id = suspension.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(suspension.name_full), "danger")
+            return redirect(url_for("detail_suspension", id=suspension.id))
+
+        flash("The image has been successfully added to {}.".format(suspension.name_full), "success")
+        return redirect(url_for("detail_suspension", id=suspension.id))
+
     return render_template("parts_detail_suspension.html",
                            title="{}".format(suspension.name_full),
                            heading="{}".format(suspension.name_full),
@@ -1033,6 +1113,7 @@ def detail_suspension(id):
                            instances_front=instances_front,
                            instances_rear=instances_rear,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="suspensions")
 
 
@@ -1057,6 +1138,7 @@ def detail_transmission(id):
         .order_by(Instance.name_full.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -1076,6 +1158,24 @@ def detail_transmission(id):
         flash("The text has been successfully added to {}.".format(transmission.name_display), "success")
         return redirect(url_for("detail_transmission", id=transmission.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = TransmissionImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(transmission.images.all()) + 1
+        new_image.transmission_id = transmission.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(transmission.name_display), "danger")
+            return redirect(url_for("detail_transmission", id=transmission.id))
+
+        flash("The image has been successfully added to {}.".format(transmission.name_display), "success")
+        return redirect(url_for("detail_transmission", id=transmission.id))
+
     return render_template("parts_detail_transmission.html",
                            title="{}".format(transmission.name_display),
                            heading="{}".format(transmission.name_display),
@@ -1084,6 +1184,7 @@ def detail_transmission(id):
                            cars=cars,
                            instances=instances,
                            add_text_form=add_text_form,
+                           add_image_form=add_image_form,
                            viewing="transmissions")
 
 
