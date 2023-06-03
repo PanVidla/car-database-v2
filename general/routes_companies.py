@@ -3,9 +3,9 @@ from flask_login import login_required
 
 from general import cardb, database
 from general.forms_companies import CompanyAddForm, CompanyEditForm
-from general.forms_info import TextForm
+from general.forms_info import TextForm, ImageForm
 from general.models.car import Car
-from general.models.misc import Company, create_company_from_form, CompanyText
+from general.models.misc import Company, create_company_from_form, CompanyText, CompanyImage
 from general.strings import *
 
 
@@ -170,6 +170,7 @@ def detail_company(id):
         .order_by(CompanyText.order.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -189,10 +190,29 @@ def detail_company(id):
         flash("The text has been successfully added to {}.".format(company.name_display), "success")
         return redirect(url_for("detail_company", id=company.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = CompanyImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(company.images.all()) + 1
+        new_image.company_id = company.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(company.name_display), "danger")
+            return redirect(url_for("detail_company", id=company.id))
+
+        flash("The image has been successfully added to {}.".format(company.name_display), "success")
+        return redirect(url_for("detail_company", id=company.id))
+
     return render_template("companies_detail.html",
                            title="{}".format(company.name_display),
                            heading="{}".format(company.name_full),
                            company=company,
                            texts=texts,
                            cars=cars,
-                           add_text_form=add_text_form)
+                           add_text_form=add_text_form,
+                           add_image_form=add_image_form)

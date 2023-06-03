@@ -12,6 +12,7 @@
                         {% if company %}
                         <li><a href="{{ url_for('edit_company', id=company.id) }}"><button type="button" class="btn btn-info">Edit company</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">Add logo</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete company</button></a></li>
                         {% endif %}
                     </ul>
@@ -264,6 +265,20 @@
           </div>
           <div class="modal-body">
               {{ wtf.quick_form(add_text_form, button_map={"submit_add_text": "info"}) }}
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="imageLabel">Add logo</h4>
+          </div>
+          <div class="modal-body">
+              {{ wtf.quick_form(add_image_form, button_map={"submit_add_image": "info"}) }}
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

@@ -4,7 +4,10 @@
 
     <!--  Heading  -->
     <div class="page-header">
-        <h1>{{ heading }}</h1>
+        <h1>{% if company and company.get_logos() != [] %}
+        {% for logo in company.get_logos() %}<img src="{{ logo.path }}" alt="{{ logo.description }}" height="36 px">{% endfor %}
+        {% endif %}
+        {{ heading }}</h1>
         {% if company %}<span class="help-block">{{ company.description }}</span>{% endif %}
     </div>
 

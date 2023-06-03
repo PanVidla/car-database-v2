@@ -1,6 +1,11 @@
 # PanVidla's Definitive Car Database
 This is a database serving to collect and keep track of cars I've owned and driven in video games.
 
+## v1.1.0.1.0
+### General
+* ADD: Add the option to add and delete thumbnails for Cars and Instances.
+* ADD: Add the option to add regular pictures to Company, Country and Competition objects.
+
 ## v1.1.0.0.0
 ### General
 * ADD: Add the ability to upload images to all the entities that support it.

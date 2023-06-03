@@ -207,6 +207,13 @@ class Instance(database.Model):
     def get_instance_type(self):
         return self.type.name_full if self.instance_type_id is not None else "n/a"
 
+    def get_images(self):
+
+        images = InstanceImage.query.filter(InstanceImage.instance_id == self.id, InstanceImage.is_thumbnail == False)
+        images = images.order_by(InstanceImage.order.asc()).all()
+
+        return images
+
     def get_maximum_power_kw(self):
 
         maximum_power_string = ""

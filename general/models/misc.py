@@ -52,6 +52,13 @@ class Company(database.Model):
     def get_established(self):
         return self.date_established if self.date_established != None else "n/a"
 
+    def get_logos(self):
+
+        logos = CompanyImage.query.filter(CompanyImage.company_id == self.id)
+        logos = logos.order_by(CompanyImage.order.asc()).all()
+
+        return logos
+
     def get_name_short(self):
         return self.name_short if self.name_short is not (None or "") else "n/a"
 
