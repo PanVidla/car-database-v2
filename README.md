@@ -8,8 +8,8 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ## v1.1.0.0.0
 ### General
-* ADD: Add the ability to upload images to all the entities that support it.
-* ADD: Color the background of an instance view with the color provided in the Instance detail.
+* ADD: Add the ability to upload and delete images to all the entities that support it.
+* ~~ADD: Color the background of an instance view with the color provided in the Instance detail.~~
 * ADD: Add the ability to copy selected instances.
 * ADD: Make sure no duplicit entries can be added.
 * ADD: Make the parsing of added text such that it's possible to add several paragraphs at a time.

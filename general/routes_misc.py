@@ -3,10 +3,10 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from general import cardb, database
-from general.forms_info import TextForm
+from general.forms_info import TextForm, ImageForm
 from general.forms_misc import CountryAddForm, CountryEditForm, CompetitionAddForm, CompetitionEditForm
 from general.models.car import Car
-from general.models.misc import Country, Competition, CompetitionText, CountryText
+from general.models.misc import Country, Competition, CompetitionText, CountryText, CompetitionImage, CountryImage
 
 
 @cardb.route("/misc/competitions", methods=['GET'])
@@ -251,6 +251,7 @@ def detail_competition(id):
         .order_by(CompetitionText.order.asc()) \
         .all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -270,13 +271,32 @@ def detail_competition(id):
         flash("The text has been successfully added to {}.".format(competition.name_display), "success")
         return redirect(url_for("detail_competition", id=competition.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = CompetitionImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(competition.images.all()) + 1
+        new_image.competition_id = competition.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(competition.name_display), "danger")
+            return redirect(url_for("detail_competition", id=competition.id))
+
+        flash("The image has been successfully added to {}.".format(competition.name_display), "success")
+        return redirect(url_for("detail_competition", id=competition.id))
+
     return render_template("misc_competitions_detail.html",
                            title="{}".format(competition.name_display),
                            heading="{}".format(competition.name_full),
                            competition=competition,
                            cars=cars,
                            texts=texts,
-                           add_text_form=add_text_form)
+                           add_text_form=add_text_form,
+                           add_image_form=add_image_form)
 
 
 # Country detail
@@ -296,6 +316,7 @@ def detail_country(id):
         .all()
     locations = country.locations.all()
     add_text_form = TextForm()
+    add_image_form = ImageForm()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -315,6 +336,24 @@ def detail_country(id):
         flash("The text has been successfully added to {}.".format(country.name_display), "success")
         return redirect(url_for("detail_country", id=country.id))
 
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = CountryImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(country.images.all()) + 1
+        new_image.country_id = country.id
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(country.name_display), "danger")
+            return redirect(url_for("detail_country", id=country.id))
+
+        flash("The image has been successfully added to {}.".format(country.name_display), "success")
+        return redirect(url_for("detail_country", id=country.id))
+
     return render_template("misc_countries_detail.html",
                            title="{}".format(country.name_display),
                            heading="{}".format(country.name_full),
@@ -322,4 +361,5 @@ def detail_country(id):
                            texts=texts,
                            cars=cars,
                            locations=locations,
-                           add_text_form=add_text_form)
+                           add_text_form=add_text_form,
+                           add_image_form=add_image_form)

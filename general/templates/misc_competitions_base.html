@@ -4,7 +4,10 @@
 
     <!--  Heading  -->
     <div class="page-header">
-        <h1>{{ heading }}</h1>
+        <h1>{% if competition and competition.get_logos() != [] %}
+        {% for logo in competition.get_logos() %}<img src="{{ logo.path }}" alt="{{ logo.description }}" height="36 px">{% endfor %}
+        {% endif %}
+        {{ heading }}</h1>
     </div>
 
     <!-- Submenu -->

@@ -131,6 +131,13 @@ class Competition(database.Model):
     def get_is_virtual(self):
         return "✓" if self.is_virtual else "x"
 
+    def get_logos(self):
+
+        logos = CompetitionImage.query.filter(CompetitionImage.competition_id == self.id)
+        logos = logos.order_by(CompetitionImage.order.asc()).all()
+
+        return logos
+
 
 # Represents a country (e.g. Italy, Germany, United States of America...)
 class Country(database.Model):
@@ -160,6 +167,13 @@ class Country(database.Model):
     texts = database.relationship('CountryText', backref='country', lazy='dynamic')
     images = database.relationship('CountryImage', backref='country', lazy='dynamic')
     locations = database.relationship('Location', backref='country', lazy='dynamic')
+
+    def get_images(self):
+
+        images = CountryImage.query.filter(CountryImage.country_id == self.id)
+        images = images.order_by(CountryImage.order.asc()).all()
+
+        return images
 
     def get_name_short(self):
 
