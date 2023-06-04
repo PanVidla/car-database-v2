@@ -4,13 +4,14 @@ This is a database serving to collect and keep track of cars I've owned and driv
 ## v1.1.0.1.0
 ### General
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
-* ADD: Add the option to add regular pictures to Company, Country and Competition objects.
+* ADD: Add the option to add and delete regular pictures to Company and Competition objects.
+* CHANGE: Add the option to delete logos easily.
 
 ## v1.1.0.0.0
 ### General
-* ADD: Add the ability to upload and delete images to all the entities that support it.
+* ~~ADD: Add the ability to upload and delete images to all the entities that support it.~~
 * ~~ADD: Color the background of an instance view with the color provided in the Instance detail.~~
-* ADD: Add the ability to copy selected instances.
+* ADD: Add the ability to copy selected instances (Car, Engine).
 * ADD: Make sure no duplicit entries can be added.
 * ADD: Make the parsing of added text such that it's possible to add several paragraphs at a time.
 * CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.

@@ -1230,6 +1230,45 @@ def delete_car_text(id):
     return redirect(url_for("detail_car", id=text.car_id))
 
 
+# Delete car image
+@cardb.route("/cars/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_car_image(id):
+
+    image = CarImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_car", id=image.car_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    car = Car.query.get(image.car_id)
+    remaining_images = car.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_car", id=image.car_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_car", id=image.car_id))
+
+
 # Car detail
 @cardb.route("/cars/detail/<id>", methods=['GET', 'POST'])
 @login_required

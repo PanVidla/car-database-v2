@@ -716,6 +716,45 @@ def delete_engine_text(id):
     return redirect(url_for("detail_engine", id=text.engine_id))
 
 
+# Delete engine image
+@cardb.route("/parts/engines/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_engine_image(id):
+
+    image = EngineImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("overview_engines", id=image.engine_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    engine = Engine.query.get(image.engine_id)
+    remaining_images = engine.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("overview_engines", id=image.engine_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("overview_engines", id=image.engine_id))
+
+
 # Delete forced induction text
 @cardb.route("/parts/forced_induction/text/delete-text/<id>", methods=['GET', 'POST'])
 @login_required
@@ -733,6 +772,45 @@ def delete_forced_induction_text(id):
 
     flash("The text has been successfully deleted.", "success")
     return redirect(url_for("detail_forced_induction", id=text.forced_induction_id))
+
+
+# Delete forced induction image
+@cardb.route("/parts/forced_induction/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_forced_induction_image(id):
+
+    image = ForcedInductionImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_forced_induction", id=image.forced_induction_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    forced_induction = ForcedInduction.query.get(image.forced_induction_id)
+    remaining_images = forced_induction.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_forced_induction", id=image.forced_induction_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_forced_induction", id=image.forced_induction_id))
 
 
 # Delete suspension text
@@ -754,6 +832,45 @@ def delete_suspension_text(id):
     return redirect(url_for("detail_suspension", id=text.suspension_id))
 
 
+# Delete suspension image
+@cardb.route("/parts/suspension/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_suspension_image(id):
+
+    image = SuspensionImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_suspension", id=image.suspension_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    suspension = Suspension.query.get(image.suspension_id)
+    remaining_images = suspension.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_suspension", id=image.suspension_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_suspension", id=image.suspension_id))
+
+
 # Delete transmission text
 @cardb.route("/parts/transmission/text/delete-text/<id>", methods=['GET', 'POST'])
 @login_required
@@ -771,6 +888,45 @@ def delete_transmission_text(id):
 
     flash("The text has been successfully deleted.", "success")
     return redirect(url_for("detail_transmission", id=text.transmission_id))
+
+
+# Delete transmission image
+@cardb.route("/parts/transmission/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_transmission_image(id):
+
+    image = TransmissionImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_transmission", id=image.transmission_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    transmission = Transmission.query.get(image.transmission_id)
+    remaining_images = transmission.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_transmission", id=image.transmission_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_transmission", id=image.transmission_id))
 
 
 # Engine detail

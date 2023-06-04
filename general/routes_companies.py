@@ -154,6 +154,45 @@ def delete_company_text(id):
     return redirect(url_for("detail_company", id=text.company_id))
 
 
+# Delete company image
+@cardb.route("/misc/companies/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_company_image(id):
+
+    image = CompanyImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_company", id=image.company_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    company = Company.query.get(image.company_id)
+    remaining_images = company.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_company", id=image.company_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_company", id=image.company_id))
+
+
 # Company detail
 @cardb.route("/companies/detail/<id>", methods=['GET', 'POST'])
 @login_required

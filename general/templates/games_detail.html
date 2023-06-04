@@ -19,7 +19,7 @@
         <div class="item {% if image.order == 1%}active{% endif %}">
           <img src="{{ image.path }}" alt="{{ image.description }}" height="auto" width="100%">
           <div class="carousel-caption">
-            <h4>{{ image.description }}</h4>
+              <h4>{{ image.description }} <small><a href="{{ url_for('delete_game_image', id=image.id) }}">[x]</a></small></h4>
           </div>
         </div>
         {% endfor %}

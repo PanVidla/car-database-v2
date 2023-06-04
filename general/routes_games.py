@@ -742,6 +742,45 @@ def delete_game_text(id):
     return redirect(url_for("detail_game", id=text.game_id))
 
 
+# Delete game image
+@cardb.route("/games/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_game_image(id):
+
+    image = GameImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_game", id=image.game_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    game = Game.query.get(image.game_id)
+    remaining_images = game.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_game", id=image.game_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_game", id=image.game_id))
+
+
 # Delete game series text
 @cardb.route("/games/game-series/text/delete-text/<id>", methods=['GET', 'POST'])
 @login_required
@@ -761,6 +800,45 @@ def delete_game_series_text(id):
     return redirect(url_for("detail_game_series", id=text.game_series_id))
 
 
+# Delete game series image
+@cardb.route("/games-series/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_game_series_image(id):
+
+    image = GameSeriesImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_game_series", id=image.game_series_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    game_series = GameSeries.query.get(image.game_series_id)
+    remaining_images = game_series.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_game_series", id=image.game_series_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_game_series", id=image.game_series_id))
+
+
 # Delete platform text
 @cardb.route("/games/platforms/text/delete-text/<id>", methods=['GET', 'POST'])
 @login_required
@@ -778,6 +856,45 @@ def delete_platform_text(id):
 
     flash("The text has been successfully deleted.", "success")
     return redirect(url_for("detail_platform", id=text.platform_id))
+
+
+# Delete platform image
+@cardb.route("/platforms/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_platform_image(id):
+
+    image = PlatformImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_platform", id=image.platform_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    platform = Platform.query.get(image.platform_id)
+    remaining_images = platform.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_platform", id=image.platform_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_platform", id=image.platform_id))
 
 
 # Game detail

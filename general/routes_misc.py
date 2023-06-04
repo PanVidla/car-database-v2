@@ -216,6 +216,45 @@ def delete_competition_text(id):
     return redirect(url_for("detail_competition", id=text.competition_id))
 
 
+# Delete competition image
+@cardb.route("/misc/competitions/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_competition_image(id):
+
+    image = CompetitionImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_competition", id=image.competition_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    competition = Competition.query.get(image.competition_id)
+    remaining_images = competition.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_competition", id=image.competition_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_competition", id=image.competition_id))
+
+
 # Delete country text
 @cardb.route("/misc/countries/text/delete-text/<id>", methods=['GET', 'POST'])
 @login_required
@@ -233,6 +272,45 @@ def delete_country_text(id):
 
     flash("The text has been successfully deleted.", "success")
     return redirect(url_for("detail_country", id=text.country_id))
+
+
+# Delete country image
+@cardb.route("/misc/countries/image/delete-image/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_country_image(id):
+
+    image = CountryImage.query.get(id)
+
+    try:
+        database.session.delete(image)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the image.", "danger")
+        return redirect(url_for("detail_country", id=image.country_id))
+
+    flash("The image has been successfully deleted.", "success")
+
+    # Re-align the order of images so that there is an image with order no. 1
+    country = Country.query.get(image.country_id)
+    remaining_images = country.get_images()
+
+    counter = 1
+
+    try:
+        for image in remaining_images:
+
+            image.order = counter
+            counter += 1
+
+            database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with resetting the order of the remaining images.", "danger")
+        return redirect(url_for("detail_country", id=image.country_id))
+
+    flash("The remaining images had their order successfully reset.", "success")
+    return redirect(url_for("detail_country", id=image.country_id))
 
 
 # Competition detail
