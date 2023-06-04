@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 
@@ -5,7 +7,6 @@ from games.crazy_taxi.crazy_taxi import crazy_taxi_1
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
 from general import database
 from general.forms_info import TextForm, ImageForm
-from general.models.car import Car
 from general.models.instance import Instance, InstanceText, InstanceImage
 
 
@@ -51,6 +52,8 @@ def detail_instance(id):
         new_text.order = len(instance.texts.all()) + 1
         new_text.instance_id = instance.id
 
+        instance.datetime_edited = datetime.utcnow()
+
         try:
             database.session.add(new_text)
             database.session.commit()
@@ -69,6 +72,8 @@ def detail_instance(id):
         new_image.order = len(instance.images.all()) + 1
         new_image.instance_id = instance.id
         new_image.is_thumbnail = False
+
+        instance.datetime_edited = datetime.utcnow()
 
         try:
             database.session.add(new_image)

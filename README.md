@@ -6,6 +6,8 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * CHANGE: Add the option to delete logos easily.
+* CHANGE: Make sure related entities (text, images...) get deleted on deletion of objects.
+* CHANGE: Make sure datetime_edited changes when deleting related objects on entites that have it.
 
 ## v1.1.0.0.0
 ### General

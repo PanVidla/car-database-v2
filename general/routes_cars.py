@@ -1315,6 +1315,8 @@ def detail_car(id):
         new_image.order = len(car.images.all()) + 1
         new_image.car_id = car.id
 
+        car.datetime_edited = datetime.utcnow()
+
         try:
             database.session.add(new_image)
             database.session.commit()
