@@ -19,7 +19,7 @@
         <div class="item {% if image.order == 1%}active{% endif %}">
           <img src="{{ image.path }}" alt="{{ image.description }}" height="auto" width="100%">
           <div class="carousel-caption">
-            <h4>{{ image.description }}</h4>
+            <h4>{{ image.description }} <small><a href="{{ url_for('delete_car_image', id=image.id) }}">[x]</a></small></h4>
           </div>
         </div>
         {% endfor %}
@@ -47,6 +47,7 @@
                         <li><a href="{{ url_for('edit_car_general', id=car.id) }}"><button type="button" class="btn btn-primary">Edit general info</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">Add image</button></a></li>
+                        <li><a href="{{ url_for('copy_car', id=car.id) }}"><button type="button" class="btn btn-primary">Copy car</button></a></li>
                         <li><a href="{{ url_for('edit_car_engine', id=car.id) }}"><button type="button" class="btn btn-info">Edit engine(s)</button></a></li>
                         <li><a href="{{ url_for('edit_car_forced_induction', id=car.id) }}"><button type="button" class="btn btn-info">Edit forced induction</button></a></li>
                         <li><a href="{{ url_for('edit_car_power_values', id=car.id) }}"><button type="button" class="btn btn-info">Edit power values</button></a></li>

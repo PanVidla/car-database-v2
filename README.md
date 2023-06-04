@@ -8,6 +8,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Add the option to delete logos easily.
 * CHANGE: Make sure related entities (text, images...) get deleted on deletion of objects.
 * CHANGE: Make sure datetime_edited changes when deleting related objects on entites that have it.
+* FIX: Prevent cars from copying text and images twice when making a second copy of one car.
 
 ## v1.1.0.0.0
 ### General

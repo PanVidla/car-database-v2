@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import flash
+from flask import flash, redirect, url_for
 from sqlalchemy.orm import backref
 
 from general import database
@@ -555,6 +555,198 @@ def create_car_from_form(form):
     new_car.drivetrain_id = 1
 
     return new_car
+
+
+def create_copy_from_car(original_car_id):
+
+    original_car = Car.query.get(original_car_id)
+    copy_car = Car()
+
+    # Set general information
+    copy_car.year = original_car.year
+    copy_car.model = "{} (copy)".format(original_car.model)
+    copy_car.name_display = "{} (copy)".format(original_car.name_display)
+    copy_car.name_short = original_car.name_short
+    copy_car.country_id = original_car.country_id
+    copy_car.is_prototype = original_car.is_prototype
+    copy_car.is_fictional = original_car.is_fictional
+    copy_car.car_class_id = original_car.car_class_id
+    copy_car.body_style_id = original_car.body_style_id
+    # These two need to be set before the car is put in the database or it will trip a data consistency protection
+    copy_car.engine_layout_id = original_car.engine_layout_id
+    copy_car.drivetrain_id = original_car.drivetrain_id
+
+    copy_car.manufacturers_display = original_car.manufacturers_display
+
+    try:
+        database.session.add(copy_car)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem creating a new car.", "danger")
+        return redirect(url_for("detail_car", id=original_car.id))
+
+    # Get original car's manufacturers
+    original_car_primary_manufacturer_association = CarManufacturer.query.filter(
+                                                                         CarManufacturer.car_id == original_car.id,
+                                                                         CarManufacturer.is_primary == True).first()
+    original_car_primary_manufacturer_id = original_car_primary_manufacturer_association.company_id
+
+    original_car_secondary_manufacturers_associations = CarManufacturer.query.filter(
+                                                                         CarManufacturer.car_id == original_car.id,
+                                                                         CarManufacturer.is_primary == False).all()
+
+    secondary_manufacturers_ids = []
+
+    for association in original_car_secondary_manufacturers_associations:
+        secondary_manufacturers_ids.append(association.company_id)
+
+    # Set copy car's manufacturers
+    copy_car.set_manufacturers(original_car_primary_manufacturer_id, secondary_manufacturers_ids)
+
+    # Get original car's competitions
+    original_car_competition_associations = CarCompetition.query.filter(CarCompetition.car_id == original_car.id).all()
+
+    competition_ids = []
+
+    for association in original_car_competition_associations:
+        competition_ids.append(association.competition_id)
+
+    # Set copy car's competitions
+    copy_car.set_competitions(competition_ids)
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's competition data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Get original car's engine(s)
+    original_car_engine_associations = CarEngine.query.filter(CarEngine.car_id == original_car.id).all()
+
+    engine_ids = []
+
+    for association in original_car_engine_associations:
+        engine_ids.append(association.engine_id)
+
+    # Set copy car's engine(s)
+    copy_car.set_engines(engine_ids)
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's engine data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Set technical data
+    # Engine
+    copy_car.fuel_type_actual_id = original_car.fuel_type_actual_id
+    copy_car.max_power_output_kw_actual = original_car.max_power_output_kw_actual
+    copy_car.max_power_output_rpm_actual = original_car.max_power_output_rpm_actual
+    copy_car.max_torque_nm_actual = original_car.max_torque_nm_actual
+    copy_car.max_torque_rpm_actual = original_car.max_torque_rpm_actual
+    copy_car.additional_forced_induction_id = original_car.additional_forced_induction_id
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's engine data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Drivetrain
+    copy_car.transmission_id = original_car.transmission_id
+    copy_car.transmission_type_actual_id = original_car.transmission_type_actual_id
+    copy_car.no_of_gears_actual = original_car.no_of_gears_actual
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's drivetrain data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Platform
+    copy_car.suspension_front_id = original_car.suspension_front_id
+    copy_car.suspension_rear_id = original_car.suspension_rear_id
+    copy_car.curb_weight_kg = original_car.curb_weight_kg
+    copy_car.weight_distribution = original_car.weight_distribution
+    copy_car.tires_front = original_car.tires_front
+    copy_car.tires_rear = original_car.tires_rear
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's platform data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Performance
+    copy_car.acceleration_0_to_100_kmh_sec = original_car.acceleration_0_to_100_kmh_sec
+    copy_car.maximum_speed_kmh = original_car.maximum_speed_kmh
+    copy_car.power_to_weight_ratio = original_car.power_to_weight_ratio
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's performance data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Get original car's assists
+    original_car_assist_associations = CarAssist.query.filter(CarAssist.car_id == original_car.id).all()
+
+    assist_ids = []
+
+    for association in original_car_assist_associations:
+        assist_ids.append(association.assist_id)
+
+    # Set copy car's assists
+    copy_car.set_assists(assist_ids)
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem setting the copy's assist data.", "danger")
+        return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Copy text
+    for text in original_car.texts:
+
+        new_text = CarText(order=text.order,
+                           content=text.content,
+                           text_type=text.text_type,
+                           car_id=copy_car.id)
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the texts from the original car.", "danger")
+            return redirect(url_for("detail_car", id=copy_car.id))
+
+    # Copy images
+    for image in original_car.images:
+
+        new_image = CarImage(order=image.order,
+                             path=image.path,
+                             description=image.description,
+                             is_thumbnail=image.is_thumbnail,
+                             car_id=copy_car.id)
+
+        flash("")
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the images from the original car.", "danger")
+            return redirect(url_for("detail_car", id=copy_car.id))
 
 
 class Assist(database.Model):

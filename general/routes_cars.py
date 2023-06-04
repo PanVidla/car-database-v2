@@ -10,7 +10,7 @@ from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, 
     Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form, CarImageForm
 from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
-    CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText, CarImage
+    CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText, CarImage, create_copy_from_car
 from general.models.instance import Instance
 from general.models.part import FuelType, Aspiration
 
@@ -1487,3 +1487,15 @@ def detail_fuel(id):
                            cars=cars,
                            instances=instances,
                            viewing="fuels")
+
+
+# Car copy
+@cardb.route("/cars/copy-car/<id>", methods=['GET', 'POST'])
+@login_required
+def copy_car(id):
+
+    create_copy_from_car(id)
+
+    flash("A copy of the car has been successfully created.", "success")
+    return redirect(url_for("overview_cars"))
+
