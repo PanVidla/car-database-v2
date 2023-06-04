@@ -13,7 +13,7 @@ from general.models.part import Engine, create_combustion_engine_from_form, crea
     EngineCombustion, EngineElectric, CombustionEngineType, ElectricEngineType, ForcedInduction, \
     create_forced_induction_from_form, Transmission, TransmissionType, Suspension, create_transmission_from_form, \
     EngineText, ForcedInductionText, SuspensionText, TransmissionText, EngineImage, ForcedInductionImage, \
-    SuspensionImage, TransmissionImage
+    SuspensionImage, TransmissionImage, create_copy_from_combustion_engine, create_copy_from_electric_engine
 
 
 # Engines overview
@@ -1355,3 +1355,25 @@ def detail_transmission_type(id):
                            heading="{}".format(transmission_type.name),
                            transmission_type=transmission_type,
                            viewing="transmission_types")
+
+
+# Combustion engine copy
+@cardb.route("/parts/engines/copy-engine-combustion/<id>", methods=['GET', 'POST'])
+@login_required
+def copy_engine_combustion(id):
+
+    create_copy_from_combustion_engine(id)
+
+    flash("A copy of the combustion engine has been successfully created.", "success")
+    return redirect(url_for("overview_engines"))
+
+
+# Electric engine copy
+@cardb.route("/parts/engines/copy-engine-electric/<id>", methods=['GET', 'POST'])
+@login_required
+def copy_engine_electric(id):
+
+    create_copy_from_electric_engine(id)
+
+    flash("A copy of the electric engine has been successfully created.", "success")
+    return redirect(url_for("overview_engines"))

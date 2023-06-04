@@ -1,3 +1,5 @@
+from flask import flash, redirect, url_for
+
 from general import database
 from general.models.info import Text, Image
 
@@ -176,6 +178,73 @@ def create_combustion_engine_from_form(form):
     return new_engine
 
 
+def create_copy_from_combustion_engine(original_combustion_engine_id):
+
+    original_engine = EngineCombustion.query.get(original_combustion_engine_id)
+    copy_engine = EngineCombustion()
+
+    # General engine information
+    copy_engine.manufacturer_id = original_engine.manufacturer_id
+    copy_engine.name_official = original_engine.name_official
+    copy_engine.name_display = "{} (copy)".format(original_engine.name_display)
+
+    # Technical engine information
+    copy_engine.fuel_type_id = original_engine.fuel_type_id
+
+    # Performance engine information
+    copy_engine.max_power_output_kw = original_engine.max_power_output_kw
+    copy_engine.max_power_output_rpm = original_engine.max_power_output_rpm
+    copy_engine.max_torque_nm = original_engine.max_torque_nm
+    copy_engine.max_torque_rpm = original_engine.max_torque_rpm
+
+    # Assign combustion engine specific information
+    copy_engine.combustion_engine_type_id = original_engine.combustion_engine_type_id
+    copy_engine.displacement = original_engine.displacement
+    copy_engine.aspiration_id = original_engine.aspiration_id
+    copy_engine.valves_per_cylinder = original_engine.valves_per_cylinder
+    copy_engine.cylinder_alignment = original_engine.cylinder_alignment
+
+    try:
+        database.session.add(copy_engine)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem creating a new engine.", "danger")
+        return redirect(url_for("overviews_engines"))
+
+    # Copy text
+    for text in original_engine.texts:
+
+        new_text = EngineText(order=text.order,
+                              content=text.content,
+                              text_type=text.text_type,
+                              engine_id=copy_engine.id)
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the texts from the original engine.", "danger")
+            return redirect(url_for("detail_engine", id=copy_engine.id))
+
+    # Copy images
+    for image in original_engine.images:
+
+        new_image = EngineImage(order=image.order,
+                                path=image.path,
+                                description=image.description,
+                                engine_id=copy_engine.id)
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the images from the original engine.", "danger")
+            return redirect(url_for("detail_engine", id=copy_engine.id))
+
+
 class EngineElectric(Engine):
 
     __tablename__ = "electric_engines"
@@ -226,6 +295,71 @@ def create_electric_engine_from_form(form):
         new_engine.electric_engine_type_id = None
 
     return new_engine
+
+
+def create_copy_from_electric_engine(original_electric_engine_id):
+
+    original_engine = EngineElectric.query.get(original_electric_engine_id)
+    copy_engine = EngineElectric()
+
+    # General engine information
+    copy_engine.manufacturer_id = original_engine.manufacturer_id
+    copy_engine.name_official = original_engine.name_official
+    copy_engine.name_display = "{} (copy)".format(original_engine.name_display)
+
+    # Technical engine information
+    copy_engine.fuel_type_id = original_engine.fuel_type_id
+
+    # Performance engine information
+    copy_engine.max_power_output_kw = original_engine.max_power_output_kw
+    copy_engine.max_power_output_rpm = original_engine.max_power_output_rpm
+    copy_engine.max_torque_nm = original_engine.max_torque_nm
+    copy_engine.max_torque_rpm = original_engine.max_torque_rpm
+
+    # Assign combustion engine specific information
+    copy_engine.electric_engine_type_id = original_engine.electric_engine_type_id
+    copy_engine.battery_voltage = original_engine.battery_voltage
+    copy_engine.battery_technology = original_engine.battery_technology
+
+    try:
+        database.session.add(copy_engine)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem creating a new engine.", "danger")
+        return redirect(url_for("overview_engines"))
+
+    # Copy text
+    for text in original_engine.texts:
+
+        new_text = EngineText(order=text.order,
+                              content=text.content,
+                              text_type=text.text_type,
+                              engine_id=copy_engine.id)
+
+        try:
+            database.session.add(new_text)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the texts from the original engine.", "danger")
+            return redirect(url_for("detail_engine", id=copy_engine.id))
+
+    # Copy images
+    for image in original_engine.images:
+
+        new_image = EngineImage(order=image.order,
+                                path=image.path,
+                                description=image.description,
+                                engine_id=copy_engine.id)
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+
+        except RuntimeError:
+            flash("There was a problem copying one of the images from the original engine.", "danger")
+            return redirect(url_for("detail_engine", id=copy_engine.id))
 
 
 class CombustionEngineType(database.Model):

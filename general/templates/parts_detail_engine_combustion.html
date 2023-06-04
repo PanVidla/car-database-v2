@@ -47,6 +47,7 @@
                         <li><a href="{{ url_for('edit_engine_combustion', id=engine.id) }}"><button type="button" class="btn btn-info">Edit engine</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">Add image</button></a></li>
+                        <li><a href="{{ url_for('copy_engine_combustion', id=engine.id) }}"><button type="button" class="btn btn-primary">Copy engine</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete engine</button></a></li>
                         {% endif %}
                     </ul>

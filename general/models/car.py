@@ -738,8 +738,6 @@ def create_copy_from_car(original_car_id):
                              is_thumbnail=image.is_thumbnail,
                              car_id=copy_car.id)
 
-        flash("")
-
         try:
             database.session.add(new_image)
             database.session.commit()
