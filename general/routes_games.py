@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy import or_
 
 from general import cardb, database
 from general.forms_games import PlatformAddForm, PlatformEditForm, GameSeriesAddForm, GameSeriesEditForm, \
@@ -259,6 +260,13 @@ def add_game_series():
 
     if form.validate_on_submit():
 
+        # Check if a series of the same name exists
+        existing_game_series = GameSeries.query.filter(GameSeries.name == form.name.data).first()
+
+        if existing_game_series is not None:
+            flash("A game series called {} already exists in the database.".format(existing_game_series.name), "warning")
+            return redirect(url_for("overview_game_series"))
+
         new_game_series = GameSeries()
         form.populate_obj(new_game_series)
 
@@ -288,6 +296,13 @@ def add_genre():
 
     if form.validate_on_submit():
 
+        # Check if a genre of the same name exists
+        existing_genre = GameGenre.query.filter(GameGenre.name == form.name.data).first()
+
+        if existing_genre is not None:
+            flash("The {} genre already exists in the database.".format(existing_genre.name), "warning")
+            return redirect(url_for("overview_genres"))
+
         new_genre = GameGenre()
         form.populate_obj(new_genre)
 
@@ -316,6 +331,14 @@ def add_platform():
     form = PlatformAddForm()
 
     if form.validate_on_submit():
+
+        # Check if a platform of the same name exists
+        platform = Platform.query.filter(or_(Platform.name_full == form.name_full.data,
+                                             Platform.name_display == form.name_display.data)).first()
+
+        if platform is not None:
+            flash("A platform called {} already exists in the database.".format(platform.name_full), "warning")
+            return redirect(url_for("overview_platforms"))
 
         new_platform = Platform()
         form.populate_obj(new_platform)
@@ -348,6 +371,13 @@ def add_state():
     form = GameStateAddForm()
 
     if form.validate_on_submit():
+
+        # Check if a state of the same name exists
+        existing_state = GameState.query.filter(GameState.name == form.name.data).first()
+
+        if existing_state is not None:
+            flash("A game state called \"{}\" already exists in the database.".format(existing_state.name), "warning")
+            return redirect(url_for("overview_states"))
 
         new_state = GameState()
         form.populate_obj(new_state)

@@ -196,6 +196,14 @@ class Game(database.Model):
 
 def create_game_from_form(form):
 
+    # Check if a game from the same year with the same name already exists
+    existing_game = Game.query.filter(Game.name_display == form.name_display.data,
+                                      Game.date_released == form.date_released.data).first()
+
+    if existing_game is not None:
+        flash("There is already a game of this name and released in the same year in the database.", "warning")
+        return -1
+
     new_game = Game()
     form.populate_obj(new_game)
 

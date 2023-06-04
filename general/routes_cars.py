@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy import or_
 
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
@@ -139,6 +140,13 @@ def add_car_1():
     form = CarAdd1Form()
 
     if form.validate_on_submit():
+
+        # Check if a car of the same display name already exists in the database
+        existing_car = Car.query.filter(Car.name_display == form.name_display.data).first()
+
+        if existing_car is not None:
+            flash("The {} already exists in the database.".format(existing_car.name_display), "warning")
+            return redirect(url_for("add_car_1"))
 
         new_car = create_car_from_form(form)
 
@@ -382,6 +390,13 @@ def add_aspiration():
 
     if form.validate_on_submit():
 
+        # Check if aspiration of the same name already exists in the database
+        existing_aspiration = Aspiration.query.filter(Aspiration.name == form.name.data).first()
+
+        if existing_aspiration is not None:
+            flash("The \"{}\" type of aspiration already exists in the database.".format(existing_aspiration.name), "warning")
+            return redirect(url_for("overview_aspiration"))
+
         new_aspiration = Aspiration()
         form.populate_obj(new_aspiration)
 
@@ -410,6 +425,16 @@ def add_assist():
     form = AssistAddForm()
 
     if form.validate_on_submit():
+
+        # Check if assist of the same name already exists in the database
+        existing_assist = Assist.query.filter(or_(Assist.name_full == form.name_full.data,
+                                                  Assist.name_short == form.name_short.data)).first()
+
+        if existing_assist is not None:
+            flash("An assist called {} or with the acronym {} already assists in the database.".format(
+                form.name_full.data,
+                form.name_short.data), "warning")
+            return redirect(url_for("overview_assists"))
 
         new_assist = Assist()
         form.populate_obj(new_assist)
@@ -441,6 +466,13 @@ def add_body_style():
 
     if form.validate_on_submit():
 
+        # Check if the body style with the same amount of doors already exists in the database
+        existing_body_style = BodyStyle.query.filter(BodyStyle.name == form.name.data).first()
+
+        if existing_body_style is not None:
+            flash("A body style called \"{}\" already exists in the database".format(form.name.data), "warning")
+            return redirect(url_for("overview_body_styles"))
+
         new_body_style = BodyStyle()
         form.populate_obj(new_body_style)
 
@@ -469,6 +501,13 @@ def add_car_class():
     form = CarClassAddForm()
 
     if form.validate_on_submit():
+
+        # Check if car class of the same custom name already exists in the database
+        existing_car_class = CarClass.query.filter(CarClass.name_custom == form.name_custom.data).first()
+
+        if existing_car_class is not None:
+            flash("A car class with the custom name \"{}\" already exists in the database.".format(form.name_custom.data), "warning")
+            return redirect(url_for("overview_car_classes"))
 
         new_car_class = CarClass()
         form.populate_obj(new_car_class)
@@ -499,6 +538,15 @@ def add_drivetrain():
 
     if form.validate_on_submit():
 
+        # Check if a drivetrain with same name or same shortcut already exists in the database
+        existing_drivetrain = Drivetrain.query.filter(or_(Drivetrain.name_full == form.name_full.data,
+                                                          Drivetrain.name_short == form.name_short.data)).first()
+
+        if existing_drivetrain is not None:
+            flash("A drivetrain called \"{}\" or with the short cut {} already exists in the database.".format(
+                form.name_full.data, form.name_short.data), "warning")
+            return redirect(url_for("overview_drivetrains"))
+
         drivetrain = Drivetrain()
         form.populate_obj(drivetrain)
 
@@ -528,6 +576,13 @@ def add_engine_layout():
 
     if form.validate_on_submit():
 
+        # Check if an engine layout of the same name already exists in the database
+        existing_engine_layout = EngineLayout.query.filter(EngineLayout.name == form.name.data).first()
+
+        if existing_engine_layout is not None:
+            flash("The \"{}\" engine layout already exists in the database.".format(form.name.data), "warning")
+            return redirect(url_for("overview_engine_layouts"))
+
         new_engine_layout = EngineLayout()
         form.populate_obj(new_engine_layout)
 
@@ -556,6 +611,13 @@ def add_fuel():
     form = FuelAddForm()
 
     if form.validate_on_submit():
+
+        # Check if a fuel type of the same name already exists in the database
+        existing_fuel_type = FuelType.query.filter(FuelType.name == form.name.data).first()
+
+        if existing_fuel_type is not None:
+            flash("The \"{}\" fuel type already exists in the database.".format(form.name.data), "warning")
+            return redirect(url_for("overview_fuels"))
 
         new_fuel_type = FuelType()
         form.populate_obj(new_fuel_type)
