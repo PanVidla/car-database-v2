@@ -44,18 +44,50 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         {% if car %}
-                        <li><a href="{{ url_for('edit_car_general', id=car.id) }}"><button type="button" class="btn btn-primary">Edit general info</button></a></li>
-                        <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textModal">Add text</button></a></li>
-                        <li><a href="#"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal">Add image</button></a></li>
-                        <li><a href="{{ url_for('copy_car', id=car.id) }}"><button type="button" class="btn btn-primary">Copy car</button></a></li>
-                        <li><a href="{{ url_for('edit_car_engine', id=car.id) }}"><button type="button" class="btn btn-info">Edit engine(s)</button></a></li>
-                        <li><a href="{{ url_for('edit_car_forced_induction', id=car.id) }}"><button type="button" class="btn btn-info">Edit forced induction</button></a></li>
-                        <li><a href="{{ url_for('edit_car_power_values', id=car.id) }}"><button type="button" class="btn btn-info">Edit power values</button></a></li>
-                        <li><a href="{{ url_for('edit_car_transmission', id=car.id) }}"><button type="button" class="btn btn-info">Edit transmission</button></a></li>
-                        <li><a href="{{ url_for('edit_car_platform', id=car.id) }}"><button type="button" class="btn btn-info">Edit platform</button></a></li>
-                        <li><a href="{{ url_for('edit_car_performance', id=car.id) }}"><button type="button" class="btn btn-info">Edit performance</button></a></li>
-                        <li><a href="{{ url_for('edit_car_assists', id=car.id) }}"><button type="button" class="btn btn-info">Edit assists</button></a></li>
-                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete car</button></a></li>
+                        <li class="dropdown">
+                            <form class="navbar-form">
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    General <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ url_for('edit_car_general', id=car.id) }}">Edit general information</a></li>
+                                      <li class="divider"></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#textModal">Add text</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#imageModal">Add image</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ url_for('copy_car', id=car.id) }}">Copy car</a></li>
+                                  </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="dropdown">
+                            <form class="navbar-form">
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    Technical <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ url_for('edit_car_engine', id=car.id) }}">Edit engine(s)</a></li>
+                                    <li><a href="{{ url_for('edit_car_forced_induction', id=car.id) }}">Edit forced induction</a></li>
+                                    <li><a href="{{ url_for('edit_car_power_values', id=car.id) }}">Edit power values</a></li>
+                                    <li><a href="{{ url_for('edit_car_transmission', id=car.id) }}">Edit transmission</a></li>
+                                    <li><a href="{{ url_for('edit_car_platform', id=car.id) }}">Edit platform</a></li>
+                                    <li><a href="{{ url_for('edit_car_performance', id=car.id) }}">Edit performance</a></li>
+                                    <li><a href="{{ url_for('edit_car_assists', id=car.id) }}">Edit assists</a></li>
+                                  </ul>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="dropdown">
+                            <form class="navbar-form">
+                                <div class="btn-group">
+                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                                    Delete car</span>
+                                  </button>
+                                </div>
+                            </form>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>

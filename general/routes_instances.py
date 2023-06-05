@@ -592,7 +592,7 @@ def edit_instance_transmission(id):
 
 
 # Edit instance (platform)
-@cardb.route("/cars/edit-instance/<id>/platform", methods=['GET', 'POST'])
+@cardb.route("/instances/edit-instance/<id>/platform", methods=['GET', 'POST'])
 @login_required
 def edit_instance_platform(id):
 
@@ -655,7 +655,7 @@ def edit_instance_performance(id):
 
 
 # Edit instance (assists)
-@cardb.route("/cars/edit-instance/<id>/assists", methods=['GET', 'POST'])
+@cardb.route("/instances/edit-instance/<id>/assists", methods=['GET', 'POST'])
 @login_required
 def edit_instance_assists(id):
 
@@ -692,7 +692,7 @@ def edit_instance_assists(id):
 
 
 # Delete instance
-@cardb.route("/cars/delete-instance/<id>", methods=['GET', 'POST'])
+@cardb.route("/instances/delete-instance/<id>", methods=['GET', 'POST'])
 @login_required
 def delete_instance(id):
 
