@@ -47,10 +47,12 @@ class Company(database.Model):
     images = database.relationship('CompanyImage', backref='company', lazy='dynamic')
 
     def get_ceased_to_exist(self):
-        return self.date_ceased_to_exist if self.date_ceased_to_exist != None else "n/a"
+        return "{}".format(
+            self.date_ceased_to_exist.strftime("%d.%m.%Y")) if self.date_ceased_to_exist is not None else "n/a"
 
     def get_established(self):
-        return self.date_established if self.date_established != None else "n/a"
+        return "{}".format(
+            self.date_established.strftime("%d.%m.%Y")) if self.date_established is not None else "n/a"
 
     def get_logos(self):
 
@@ -123,10 +125,12 @@ class Competition(database.Model):
     images = database.relationship('CompetitionImage', backref='competition', lazy='dynamic')
 
     def get_date_ended(self):
-        return self.date_ended if self.date_ended is not None else "n/a"
+        return "{}".format(
+            self.date_ended.strftime("%d.%m.%Y")) if self.date_ended is not None else "n/a"
 
     def get_date_started(self):
-        return self.date_started if self.date_started is not None else "n/a"
+        return "{}".format(
+            self.date_started.strftime("%d.%m.%Y")) if self.date_started is not None else "n/a"
 
     def get_is_virtual(self):
         return "✓" if self.is_virtual else "x"

@@ -109,15 +109,8 @@ class Game(database.Model):
         return images
 
     def get_last_played_date(self):
-
-        if self.datetime_played is not None:
-            date_string = "{}/{}/{}".format(self.datetime_played.day,
-                                            self.datetime_played.month,
-                                            self.datetime_played.year)
-            return date_string
-
-        else:
-            return "never"
+        return "{}".format(
+            self.datetime_played.strftime("%d.%m.%Y")) if self.datetime_played is not None else "n/a"
 
     def get_logos(self):
 
@@ -127,12 +120,8 @@ class Game(database.Model):
         return logos
 
     def get_date_released(self):
-        if self.date_released is not None:
-            date_string = "{}/{}/{}".format(self.date_released.day, self.date_released.month, self.date_released.year)
-        else:
-            date_string = "n/a"
-
-        return date_string
+        return "{}".format(
+            self.date_released.strftime("%d.%m.%Y")) if self.date_released is not None else "n/a"
 
     def get_platforms(self):
 
