@@ -80,14 +80,14 @@
               {% if game.series != None %}
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Part of series</b></div>
-                  <div class="col-sm-4">{{ game.get_series() }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_game_series', id=game.series.id) }}">{{ game.get_series() }}</a></div>
                   <div class="col-sm-2 text-right"><b>No. in series</b></div>
                   <div class="col-sm-4">{{ game.order_in_series }}</div>
               </div>
               {% endif %}
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Genre</b></div>
-                  <div class="col-sm-4">{{ game.genre.name }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_genre', id=game.genre.id) }}">{{ game.genre.name }}</a></div>
                   <div class="col-sm-2 text-right"><b>Platform(s)</b></div>
                   <div class="col-sm-4">{{ game.get_platforms() }}</div>
               </div>
@@ -104,7 +104,7 @@
                   <div class="col-sm-2 text-right"><b>Date & time last played</b></div>
                   <div class="col-sm-4">{{ game.get_datetime_played() }}</div>
                   <div class="col-sm-2 text-right"><b>State</b></div>
-                  <div class="col-sm-4">{{ game.state.name }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_state', id=game.state.id) }}">{{ game.state.name }}</a></div>
               </div>
           </div>
         </div>

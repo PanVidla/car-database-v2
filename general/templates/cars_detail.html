@@ -128,15 +128,15 @@
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Car class</b></div>
-                  <div class="col-sm-4">{{ car.get_car_class() }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_car_class', id=car.car_class.id) }}">{{ car.get_car_class() }}</a></div>
                   <div class="col-sm-2 text-right"><b>Body style</b></div>
-                  <div class="col-sm-4">{{ car.body_style.name }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_body_style', id=car.body_style.id) }}">{{ car.body_style.name }}</a></div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Drivetrain</b></div>
-                  <div class="col-sm-4">{{ car.get_drivetrain() }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_drivetrain', id=car.drivetrain.id) }}">{{ car.get_drivetrain() }}</a></div>
                   <div class="col-sm-2 text-right"><b>Engine layout</b></div>
-                  <div class="col-sm-4">{{ car.get_engine_layout() }}</div>
+                  <div class="col-sm-4"><a href="{{ url_for('detail_engine_layout', id=car.engine_layout.id) }}">{{ car.get_engine_layout() }}</a></div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Competitions</b></div>
