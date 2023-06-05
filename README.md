@@ -25,7 +25,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: Unify the format of datetime display in overviews and detail views.~~
 * ~~CHANGE: Move the Instance dropdown generation to a separate HTML snippet.~~
 * ~~CHANGE: Refactor the names of Car forms to make more sense.~~
-* CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.
+* ~~CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.~~
 * CHANGE: Make everything possible in detail views clickable.
 * CHANGE: Remove unnecessary decimal points where not needed.
 * CHANGE: Break up the detail view of Company with headings so it feels less cluttered.

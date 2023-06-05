@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from sqlalchemy import or_
 from wtforms import SelectField, StringField, DecimalField, IntegerField, SubmitField
 from wtforms.validators import Optional, DataRequired, NumberRange
 
@@ -64,6 +65,12 @@ class EngineCombustionForm(EngineForm):
                                                    in Aspiration.query
                                                    .order_by(Aspiration.name.asc()).all()]
 
+        self.fuel_type_id.choices = [(fuel_type.id, "{}".format(fuel_type.name))
+                                     for fuel_type
+                                     in FuelType.query.filter(FuelType.name != "electric",
+                                                              FuelType.name != "hydrogen")
+                                     .order_by(FuelType.name.asc()).all()]
+
 
 # Electric engine
 class EngineElectricForm(EngineForm):
@@ -82,6 +89,12 @@ class EngineElectricForm(EngineForm):
                                                  for electric_engine_type
                                                  in ElectricEngineType.query
                                                  .order_by(ElectricEngineType.name.asc()).all()]
+
+        self.fuel_type_id.choices = [(fuel_type.id, "{}".format(fuel_type.name))
+                                     for fuel_type
+                                     in FuelType.query.filter(FuelType.name != "petrol",
+                                                              FuelType.name != "diesel")
+                                     .order_by(FuelType.name.asc()).all()]
 
 
 class EngineCombustionAddForm(EngineCombustionForm):
