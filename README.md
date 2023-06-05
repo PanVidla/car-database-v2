@@ -20,7 +20,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~ADD: Make sure no duplicit entries can be added.~~
 * ~~ADD: Make the parsing of added text such that it's possible to add several paragraphs at a time.~~
 * ~~CHANGE: Consolidate the many buttons in the Car detail view into a concise nav bar.~~
-* CHANGE: If a Car is fictional, make its row in the overview colored to signify that.
+* ~~CHANGE: If a Car is fictional, make its row in the overview colored to signify that.~~
 * CHANGE: Unify the format of datetime display in overviews and detail views.
 * CHANGE: Move the Instance dropdown generation to a separate HTML snippet.
 * CHANGE: Refactor the names of Car forms to make more sense.

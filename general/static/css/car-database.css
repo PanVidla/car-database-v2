@@ -32,6 +32,16 @@
     background: #5bc0de;
 }
 
+.fictional {
+    color: #ffffff;
+    background: #bc73d1;
+}
+
+.fictional a {
+    color: #ffffff;
+    background: #bc73d1;
+}
+
 .genre-arcade {
     color: #ffffff;
     background: #d91c07;

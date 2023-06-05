@@ -1,4 +1,4 @@
-<tr>
+<tr {%if car.is_fictional %}class="fictional"{%endif%}>
     <td class="col-sm-1">{{ car.id }}</td>
     <td class="col-sm-1">{{ car.year }}</td>
     <td class="col-sm-3">{{ car.manufacturers_display }}</td>
