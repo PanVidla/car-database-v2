@@ -1,6 +1,7 @@
 # Overviews
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy import or_
 
 from general import cardb, database
 from general.forms_info import TextForm, ImageForm
@@ -42,6 +43,17 @@ def add_competition():
 
     if form.validate_on_submit():
 
+        # Check if a competition with the same full or display name already exists in the database
+        existing_competition = Competition.query.filter(or_(Competition.name_full == form.name_full.data,
+                                                            Competition.name_display == form.name_display.data)).first()
+
+        if existing_competition is not None:
+            flash("There is already a competition called {} ({}, {}) in the database.".format(existing_competition.name_display,
+                                                                                          existing_competition.name_full,
+                                                                                          existing_competition.name_short),
+                  "warning")
+            return redirect(url_for("overview_competitions"))
+
         new_competition = Competition()
         form.populate_obj(new_competition)
 
@@ -71,6 +83,18 @@ def add_country():
     form = CountryAddForm()
 
     if form.validate_on_submit():
+
+        # Check if a country with the same full or display name already exists in the database
+        existing_country = Country.query.filter(or_(Country.name_full == form.name_full.data,
+                                                    Country.name_display == form.name_display.data)).first()
+
+        if existing_country is not None:
+            flash("The country called {} ({}, {}) already exists in the database.".format(
+                existing_country.name_display,
+                existing_country.name_full,
+                existing_country.name_short),
+                  "warning")
+            return redirect(url_for("overview_countries"))
 
         new_country = Country()
         form.populate_obj(new_country)

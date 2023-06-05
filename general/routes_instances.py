@@ -94,6 +94,13 @@ def add_instance_general(car_id, game_id):
 
     if form.validate_on_submit():
 
+        # Check if an instance with the same nickname already exists in the database
+        existing_instance = Instance.query.filter(Instance.name_nickname == form.name_nickname.data).first()
+
+        if existing_instance is not None:
+            flash("An instance called {} already exists in the database.".format(existing_instance.name_nickname), "warning")
+            return redirect(url_for("add_instance_general", car_id=car_id, game_id=game_id))
+
         new_instance = create_instance_based_on_game(game)
         form.populate_obj(new_instance)
         new_instance.set_type_and_specialization(form)

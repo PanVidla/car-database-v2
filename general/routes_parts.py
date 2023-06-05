@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy import or_
 
 from general import cardb, database
 from general.forms_info import TextForm, ImageForm
@@ -121,6 +122,13 @@ def add_engine_combustion():
 
     if form.validate_on_submit():
 
+        # Check if an engine of the same display name already exists in the database
+        existing_combustion_engine = EngineCombustion.query.filter(EngineCombustion.name_display == form.name_display.data).first()
+
+        if existing_combustion_engine is not None:
+            flash("The {} already exists in the database.".format(existing_combustion_engine.name_display), "warning")
+            return redirect(url_for("overview_engines"))
+
         new_engine = create_combustion_engine_from_form(form)
 
         try:
@@ -149,6 +157,14 @@ def add_engine_electric():
 
     if form.validate_on_submit():
 
+        # Check if an engine of the same display name already exists in the database
+        existing_electric_engine = EngineElectric.query.filter(
+            EngineElectric.name_display == form.name_display.data).first()
+
+        if existing_electric_engine is not None:
+            flash("The {} already exists in the database.".format(existing_electric_engine.name_display), "warning")
+            return redirect(url_for("overview_engines"))
+
         new_engine = create_electric_engine_from_form(form)
 
         try:
@@ -176,6 +192,14 @@ def add_engine_type_combustion():
     form = EngineTypeAddForm()
 
     if form.validate_on_submit():
+
+        # Check if an engine type of the same name already exists in the database
+        existing_combustion_engine_type = CombustionEngineType.query.filter(
+            CombustionEngineType.name == form.name.data).first()
+
+        if existing_combustion_engine_type is not None:
+            flash("The \"{}\" engine type already exists in the database.".format(existing_combustion_engine_type.name), "warning")
+            return redirect(url_for("overview_engine_types_combustion"))
 
         new_engine_type = CombustionEngineType()
         form.populate_obj(new_engine_type)
@@ -206,6 +230,15 @@ def add_engine_type_electric():
 
     if form.validate_on_submit():
 
+        # Check if an engine type of the same name already exists in the database
+        existing_electric_engine_type = ElectricEngineType.query.filter(
+            ElectricEngineType.name == form.name.data).first()
+
+        if existing_electric_engine_type is not None:
+            flash("The \"{}\" engine type already exists in the database.".format(existing_electric_engine_type.name),
+                  "warning")
+            return redirect(url_for("overview_engine_types_electric"))
+
         new_engine_type = ElectricEngineType()
         form.populate_obj(new_engine_type)
 
@@ -235,6 +268,14 @@ def add_forced_induction():
 
     if form.validate_on_submit():
 
+        # Check if forced induction of the same display name already exists in the database
+        existing_forced_induction = ForcedInduction.query.filter(
+            ForcedInduction.name_display == form.name_display.data).first()
+
+        if existing_forced_induction is not None:
+            flash("The {} already exists in the database.".format(existing_forced_induction.name_display), "warning")
+            return redirect(url_for("overview_forced_induction"))
+
         new_forced_induction = create_forced_induction_from_form(form)
 
         try:
@@ -262,6 +303,14 @@ def add_suspension():
     form = SuspensionAddForm()
 
     if form.validate_on_submit():
+
+        # Check if suspension of the same name or with the same shortcut already exists in the database
+        existing_suspension = Suspension.query.filter(or_(Suspension.name_full == form.name_full.data,
+                                                          Suspension.name_short == form.name_short.data)).first()
+
+        if existing_suspension is not None:
+            flash("This kind of suspension or suspension with the same shortcut already exists in the database.", "warning")
+            return redirect(url_for("overview_suspensions"))
 
         new_suspension = Suspension()
         form.populate_obj(new_suspension)
@@ -292,6 +341,14 @@ def add_transmission():
 
     if form.validate_on_submit():
 
+        # Check if transmission of the same display name already exists in the database
+        existing_transmission = Transmission.query.filter(
+            Transmission.name_display == form.name_display.data).first()
+
+        if existing_transmission is not None:
+            flash("The {} already exists in the database.".format(existing_transmission.name_display), "warning")
+            return redirect(url_for("overview_transmissions"))
+
         new_transmission = create_transmission_from_form(form)
 
         try:
@@ -319,6 +376,14 @@ def add_transmission_type():
     form = TransmissionTypeAddForm()
 
     if form.validate_on_submit():
+
+        # Check if transmission type of the same name already exists in the database
+        existing_transmission_type = TransmissionType.query.filter(
+            TransmissionType.name == form.name.data).first()
+
+        if existing_transmission_type is not None:
+            flash("The \"{}\" transmission type already exists in the database.".format(existing_transmission_type.name), "warning")
+            return redirect(url_for("overview_transmission_types"))
 
         new_transmission_type = TransmissionType()
         form.populate_obj(new_transmission_type)

@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy import or_
 
 from general import cardb, database
 from general.forms_companies import CompanyAddForm, CompanyEditForm
@@ -63,6 +64,17 @@ def add_company():
     form = CompanyAddForm()
 
     if form.validate_on_submit():
+
+        # Check if a company with the same full or display name already exists in the database
+        existing_company = Company.query.filter(or_(Company.name_full == form.name_full.data,
+                                                    Company.name_display == form.name_display.data)).first()
+
+        if existing_company is not None:
+            flash("There is already a company called {} ({}, {}) in the database.".format(existing_company.name_display,
+                                                                                          existing_company.name_full,
+                                                                                          existing_company.name_short),
+                  "warning")
+            return redirect(url_for("overview_companies"))
 
         new_company = create_company_from_form(form)
 
