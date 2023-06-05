@@ -47,19 +47,29 @@ def detail_instance(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = InstanceText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(instance.texts.all()) + 1
-        new_text.instance_id = instance.id
+        whole_text = add_text_form.content.data
 
-        instance.datetime_edited = datetime.utcnow()
+        for paragraph in whole_text.splitlines():
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(instance.name_full), "danger")
-            return redirect(url_for("detail_instance", id=instance.id))
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = InstanceText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(instance.texts.all()) + 1
+                new_text.instance_id = instance.id
+
+                instance.datetime_edited = datetime.utcnow()
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(instance.name_display), "danger")
+                    return redirect(url_for("detail_instance", id=instance.id))
 
         flash("The text has been successfully added to {}.".format(instance.name_full), "success")
         return redirect(url_for("detail_instance", id=instance.id))

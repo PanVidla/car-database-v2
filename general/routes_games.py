@@ -946,19 +946,29 @@ def detail_game(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = GameText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(game.texts.all()) + 1
-        new_text.game_id = game.id
+        whole_text = add_text_form.content.data
 
-        game.datetime_edited = datetime.utcnow()
+        for paragraph in whole_text.splitlines():
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(game.name_display), "danger")
-            return redirect(url_for("detail_game", id=game.id))
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = GameText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(game.texts.all()) + 1
+                new_text.game_id = game.id
+
+                game.datetime_edited = datetime.utcnow()
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(game.name_display), "danger")
+                    return redirect(url_for("detail_game", id=game.id))
 
         flash("The text has been successfully added to {}.".format(game.name_display), "success")
         return redirect(url_for("detail_game", id=game.id))
@@ -1031,17 +1041,27 @@ def detail_game_series(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = GameSeriesText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(game_series.texts.all()) + 1
-        new_text.game_series_id = game_series.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(game_series.name), "danger")
-            return redirect(url_for("detail_game_series", id=game_series.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = GameSeriesText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(game_series.texts.all()) + 1
+                new_text.game_series_id = game_series.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(game_series.name), "danger")
+                    return redirect(url_for("detail_game_series", id=game_series.id))
 
         flash("The text has been successfully added to {}.".format(game_series.name), "success")
         return redirect(url_for("detail_game_series", id=game_series.id))
@@ -1115,17 +1135,27 @@ def detail_platform(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = PlatformText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(platform.texts.all()) + 1
-        new_text.platform_id = platform.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(platform.name_display), "danger")
-            return redirect(url_for("detail_platform", id=platform.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = PlatformText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(platform.texts.all()) + 1
+                new_text.platform_id = platform.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(platform.name_display), "danger")
+                    return redirect(url_for("detail_platform", id=platform.id))
 
         flash("The text has been successfully added to {}.".format(platform.name_display), "success")
         return redirect(url_for("detail_platform", id=platform.id))

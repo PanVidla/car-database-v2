@@ -1042,17 +1042,27 @@ def detail_engine_combustion(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = EngineText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(engine.texts.all()) + 1
-        new_text.engine_id = engine.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
-            return redirect(url_for("detail_engine_combustion", id=engine.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = EngineText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(engine.texts.all()) + 1
+                new_text.engine_id = engine.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
+                    return redirect(url_for("detail_engine_combustion", id=engine.id))
 
         flash("The text has been successfully added to {}.".format(engine.name_display), "success")
         return redirect(url_for("detail_engine_combustion", id=engine.id))
@@ -1113,17 +1123,27 @@ def detail_engine_electric(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = EngineText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(engine.texts.all()) + 1
-        new_text.engine_id = engine.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
-            return redirect(url_for("detail_engine_electric", id=engine.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = EngineText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(engine.texts.all()) + 1
+                new_text.engine_id = engine.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(engine.name_display), "danger")
+                    return redirect(url_for("detail_engine_electric", id=engine.id))
 
         flash("The text has been successfully added to {}.".format(engine.name_display), "success")
         return redirect(url_for("detail_engine_electric", id=engine.id))
@@ -1210,17 +1230,27 @@ def detail_forced_induction(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = ForcedInductionText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(forced_induction.texts.all()) + 1
-        new_text.forced_induction_id = forced_induction.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(forced_induction.name_display), "danger")
-            return redirect(url_for("detail_forced_induction", id=forced_induction.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = ForcedInductionText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(forced_induction.texts.all()) + 1
+                new_text.forced_induction_id = forced_induction.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(forced_induction.name_display), "danger")
+                    return redirect(url_for("detail_forced_induction", id=forced_induction.id))
 
         flash("The text has been successfully added to {}.".format(forced_induction.name_display), "success")
         return redirect(url_for("detail_forced_induction", id=forced_induction.id))
@@ -1291,17 +1321,27 @@ def detail_suspension(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = SuspensionText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(suspension.texts.all()) + 1
-        new_text.suspension_id = suspension.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(suspension.name_full), "danger")
-            return redirect(url_for("detail_suspension", id=suspension.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = SuspensionText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(suspension.texts.all()) + 1
+                new_text.suspension_id = suspension.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(suspension.name_full), "danger")
+                    return redirect(url_for("detail_suspension", id=suspension.id))
 
         flash("The text has been successfully added to {}.".format(suspension.name_full), "success")
         return redirect(url_for("detail_suspension", id=suspension.id))
@@ -1364,17 +1404,27 @@ def detail_transmission(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = TransmissionText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(transmission.texts.all()) + 1
-        new_text.transmission_id = transmission.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(transmission.name_display), "danger")
-            return redirect(url_for("detail_transmission", id=transmission.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = TransmissionText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(transmission.texts.all()) + 1
+                new_text.transmission_id = transmission.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(transmission.name_display), "danger")
+                    return redirect(url_for("detail_transmission", id=transmission.id))
 
         flash("The text has been successfully added to {}.".format(transmission.name_display), "success")
         return redirect(url_for("detail_transmission", id=transmission.id))

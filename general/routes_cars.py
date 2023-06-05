@@ -1352,19 +1352,29 @@ def detail_car(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = CarText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(car.texts.all()) + 1
-        new_text.car_id = car.id
+        whole_text = add_text_form.content.data
 
-        car.datetime_edited = datetime.utcnow()
+        for paragraph in whole_text.splitlines():
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(car.name_display), "danger")
-            return redirect(url_for("detail_car", id=car.id))
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = CarText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(car.texts.all()) + 1
+                new_text.car_id = car.id
+
+                car.datetime_edited = datetime.utcnow()
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(car.name_display), "danger")
+                    return redirect(url_for("detail_car", id=car.id))
 
         flash("The text has been successfully added to {}.".format(car.name_display), "success")
         return redirect(url_for("detail_car", id=car.id))

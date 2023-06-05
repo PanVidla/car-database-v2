@@ -226,17 +226,27 @@ def detail_company(id):
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
 
-        new_text = CompanyText()
-        add_text_form.populate_obj(new_text)
-        new_text.order = len(company.texts.all()) + 1
-        new_text.company_id = company.id
+        whole_text = add_text_form.content.data
 
-        try:
-            database.session.add(new_text)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem adding text to {}.".format(company.name_display), "danger")
-            return redirect(url_for("detail_company", id=company.id))
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = CompanyText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(company.texts.all()) + 1
+                new_text.company_id = company.id
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(company.name_display), "danger")
+                    return redirect(url_for("detail_company", id=company.id))
 
         flash("The text has been successfully added to {}.".format(company.name_display), "success")
         return redirect(url_for("detail_company", id=company.id))
