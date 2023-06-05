@@ -7,8 +7,8 @@ from sqlalchemy import or_
 from general import cardb, database
 from general.forms_cars import AssistAddForm, AssistEditForm, BodyStyleAddForm, BodyStyleEditForm, CarClassAddForm, \
     CarClassEditForm, DrivetrainAddForm, DrivetrainEditForm, EngineLayoutAddForm, EngineLayoutEditForm, FuelAddForm, \
-    FuelEditForm, AspirationEditForm, AspirationAddForm, Car1Form, Car2Form, Car3Form, \
-    Car4Form, Car5Form, Car6Form, Car7Form, Car8Form, CarAdd1Form, CarEdit1Form, CarImageForm
+    FuelEditForm, AspirationEditForm, AspirationAddForm, CarGeneralForm, CarEngineForm, CarForcedInductionForm, \
+    CarPowerValuesForm, CarTransmissionForm, CarPlatformForm, CarPerformanceForm, CarAssistForm, CarGeneralAddForm, CarGeneralEditForm, CarImageForm
 from general.forms_info import TextForm
 from general.models.car import Car, Assist, BodyStyle, CarClass, Drivetrain, EngineLayout, create_car_from_form, \
     CarManufacturer, CarCompetition, CarEngine, CarAssist, CarText, CarImage, create_copy_from_car
@@ -137,7 +137,7 @@ def overview_fuels():
 @login_required
 def add_car_1():
 
-    form = CarAdd1Form()
+    form = CarGeneralAddForm()
 
     if form.validate_on_submit():
 
@@ -177,7 +177,7 @@ def add_car_1():
 def add_car_2(id):
 
     car = Car.query.get(id)
-    form = Car2Form()
+    form = CarEngineForm()
 
     if form.submit_existing_engine.data and form.validate():
 
@@ -205,7 +205,7 @@ def add_car_2(id):
 def add_car_3(id):
 
     car = Car.query.get(id)
-    form = Car3Form()
+    form = CarForcedInductionForm()
 
     if form.validate_on_submit():
 
@@ -237,14 +237,14 @@ def add_car_4(id):
 
     if engines:
         first_engine = engines[0]
-        form = Car4Form(fuel_type_actual_id=first_engine.fuel_type_id,
-                        max_power_output_kw_actual=first_engine.max_power_output_kw,
-                        max_power_output_rpm_actual=first_engine.max_power_output_rpm,
-                        max_torque_nm_actual=first_engine.max_torque_nm,
-                        max_torque_rpm_actual=first_engine.max_torque_rpm)
+        form = CarPowerValuesForm(fuel_type_actual_id=first_engine.fuel_type_id,
+                                  max_power_output_kw_actual=first_engine.max_power_output_kw,
+                                  max_power_output_rpm_actual=first_engine.max_power_output_rpm,
+                                  max_torque_nm_actual=first_engine.max_torque_nm,
+                                  max_torque_rpm_actual=first_engine.max_torque_rpm)
 
     else:
-        form = Car4Form()
+        form = CarPowerValuesForm()
 
     if form.validate_on_submit():
 
@@ -272,7 +272,7 @@ def add_car_4(id):
 def add_car_5(id):
 
     car = Car.query.get(id)
-    form = Car5Form()
+    form = CarTransmissionForm()
 
     if form.validate_on_submit():
 
@@ -301,7 +301,7 @@ def add_car_5(id):
 def add_car_6(id):
 
     car = Car.query.get(id)
-    form = Car6Form()
+    form = CarPlatformForm()
 
     if form.validate_on_submit():
 
@@ -330,7 +330,7 @@ def add_car_6(id):
 def add_car_7(id):
 
     car = Car.query.get(id)
-    form = Car7Form()
+    form = CarPerformanceForm()
 
     if form.validate_on_submit():
 
@@ -359,7 +359,7 @@ def add_car_7(id):
 def add_car_8(id):
 
     car = Car.query.get(id)
-    form = Car8Form()
+    form = CarAssistForm()
 
     if form.validate_on_submit():
 
@@ -663,10 +663,10 @@ def edit_car_general(id):
     for competition in competitions:
         competition_ids += str(competition.competition_id)
 
-    form = CarEdit1Form(obj=car,
-                        primary_manufacturer=primary_manufacturer.manufacturer.id,
-                        secondary_manufacturers=secondary_manufacturer_ids,
-                        competitions_select=competition_ids)
+    form = CarGeneralEditForm(obj=car,
+                              primary_manufacturer=primary_manufacturer.manufacturer.id,
+                              secondary_manufacturers=secondary_manufacturer_ids,
+                              competitions_select=competition_ids)
 
     if form.validate_on_submit():
 
@@ -706,7 +706,7 @@ def edit_car_engine(id):
     for engine in engines:
         engine_ids += str(engine.engine_id)
 
-    form = Car2Form(engines=engine_ids)
+    form = CarEngineForm(engines=engine_ids)
 
     if form.validate_on_submit():
 
@@ -736,7 +736,7 @@ def edit_car_forced_induction(id):
 
     car = Car.query.get(id)
 
-    form = Car3Form(obj=car)
+    form = CarForcedInductionForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -766,7 +766,7 @@ def edit_car_power_values(id):
 
     car = Car.query.get(id)
 
-    form = Car4Form(obj=car)
+    form = CarPowerValuesForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -797,7 +797,7 @@ def edit_car_transmission(id):
 
     car = Car.query.get(id)
 
-    form = Car5Form(obj=car)
+    form = CarTransmissionForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -828,7 +828,7 @@ def edit_car_platform(id):
 
     car = Car.query.get(id)
 
-    form = Car6Form(obj=car)
+    form = CarPlatformForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -860,7 +860,7 @@ def edit_car_performance(id):
 
     car = Car.query.get(id)
 
-    form = Car7Form(obj=car)
+    form = CarPerformanceForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -898,7 +898,7 @@ def edit_car_assists(id):
     for assist in assists:
         assists_ids += str(assist.assist_id)
 
-    form = Car8Form(assists_select=assists_ids)
+    form = CarAssistForm(assists_select=assists_ids)
 
     if form.validate_on_submit():
 

@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 
 from general import cardb, database
-from general.forms_cars import Car2Form, Car3Form, Car4Form, Car5Form, Car6Form, Car7Form, Car8Form
+from general.forms_cars import CarEngineForm, CarForcedInductionForm, CarPowerValuesForm, CarTransmissionForm, CarPlatformForm, CarPerformanceForm, CarAssistForm
 from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
@@ -143,7 +143,7 @@ def add_instance_engine(instance_id):
     for engine in car.get_engines():
         engines_ids.append(engine.id)
 
-    form = Car2Form(engines=engines_ids)
+    form = CarEngineForm(engines=engines_ids)
 
     if form.validate_on_submit():
 
@@ -174,7 +174,7 @@ def add_instance_forced_induction(instance_id):
     instance = Instance.query.get(instance_id)
     car = Car.query.get(instance.car_id)
 
-    form = Car3Form(additional_forced_induction_id=car.additional_forced_induction_id)
+    form = CarForcedInductionForm(additional_forced_induction_id=car.additional_forced_induction_id)
 
     if form.validate_on_submit():
 
@@ -205,7 +205,7 @@ def add_instance_power_values(instance_id):
     instance = Instance.query.get(instance_id)
     car = Car.query.get(instance.car_id)
 
-    form = Car4Form(obj=car)
+    form = CarPowerValuesForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -237,7 +237,7 @@ def add_instance_transmission(instance_id):
     instance = Instance.query.get(instance_id)
     car = Car.query.get(instance.car_id)
 
-    form = Car5Form(obj=car)
+    form = CarTransmissionForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -269,7 +269,7 @@ def add_instance_platform(instance_id):
     instance = Instance.query.get(instance_id)
     car = Car.query.get(instance.car_id)
 
-    form = Car6Form(obj=car)
+    form = CarPlatformForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -301,7 +301,7 @@ def add_instance_performance(instance_id):
     instance = Instance.query.get(instance_id)
     car = Car.query.get(instance.car_id)
 
-    form = Car7Form(obj=car)
+    form = CarPerformanceForm(obj=car)
 
     if form.validate_on_submit():
 
@@ -336,7 +336,7 @@ def add_instance_assists(instance_id):
     # Get assists
     assists_ids = car.get_assists()
 
-    form = Car8Form(assists=assists_ids)
+    form = CarAssistForm(assists=assists_ids)
 
     if form.validate_on_submit():
 
@@ -476,7 +476,7 @@ def edit_instance_engine(id):
     for engine in engines:
         engine_ids += str(engine.engine_id)
 
-    form = Car2Form(engines=engine_ids)
+    form = CarEngineForm(engines=engine_ids)
 
     if form.validate_on_submit():
 
@@ -506,7 +506,7 @@ def edit_instance_forced_induction(id):
 
     instance = Instance.query.get(id)
 
-    form = Car3Form(obj=instance)
+    form = CarForcedInductionForm(obj=instance)
 
     if form.validate_on_submit():
 
@@ -536,7 +536,7 @@ def edit_instance_power_values(id):
 
     instance = Instance.query.get(id)
 
-    form = Car4Form(obj=instance)
+    form = CarPowerValuesForm(obj=instance)
 
     if form.validate_on_submit():
 
@@ -567,7 +567,7 @@ def edit_instance_transmission(id):
 
     instance = Instance.query.get(id)
 
-    form = Car5Form(obj=instance)
+    form = CarTransmissionForm(obj=instance)
 
     if form.validate_on_submit():
 
@@ -598,7 +598,7 @@ def edit_instance_platform(id):
 
     instance = Instance.query.get(id)
 
-    form = Car6Form(obj=instance)
+    form = CarPlatformForm(obj=instance)
 
     if form.validate_on_submit():
 
@@ -630,7 +630,7 @@ def edit_instance_performance(id):
 
     instance = Instance.query.get(id)
 
-    form = Car7Form(obj=instance)
+    form = CarPerformanceForm(obj=instance)
 
     if form.validate_on_submit():
 
@@ -668,7 +668,7 @@ def edit_instance_assists(id):
     for assist in assists:
         assists_ids += str(assist.assist_id)
 
-    form = Car8Form(assists_select=assists_ids)
+    form = CarAssistForm(assists_select=assists_ids)
 
     if form.validate_on_submit():
 

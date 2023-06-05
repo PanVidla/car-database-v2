@@ -24,7 +24,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: If a Car is fictional, make its row in the overview colored to signify that.~~
 * ~~CHANGE: Unify the format of datetime display in overviews and detail views.~~
 * ~~CHANGE: Move the Instance dropdown generation to a separate HTML snippet.~~
-* CHANGE: Refactor the names of Car forms to make more sense.
+* ~~CHANGE: Refactor the names of Car forms to make more sense.~~
 * CHANGE: Remove the "non-electric" fuel types from selection when creating an electric engine and vice versa.
 * CHANGE: Make everything possible in detail views clickable.
 * CHANGE: Remove unnecessary decimal points where not needed.
