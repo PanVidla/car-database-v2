@@ -3,7 +3,7 @@
 {% block instances_content %}
 
     <div>
-        <table class="table table-hover table-bordered table-striped">
+        <table class="table table-bordered">
 
             {% if instances == [] %}
             <tr>
@@ -14,19 +14,19 @@
                 <td class="col-sm-1"><strong>ID</strong></td>
                 <td class="col-sm-4"><strong>Name</strong></td>
                 <td class="col-sm-2"><strong>Nickname</strong></td>
-                <td class="col-sm-2"><strong>Type</strong></td>
-                <td class="col-sm-1"><strong>Complete</strong></td>
-                <td class="col-sm-2"><strong>Game</strong></td>
+                <td class="col-sm-2 text-center"><strong>Type</strong></td>
+                <td class="col-sm-2 text-center"><strong>Specialization</strong></td>
+                <td class="col-sm-1 text-center"><strong>Complete</strong></td>
             </tr>
 
                 {% for instance in instances %}
-            <tr>
+            <tr class="{% if instance.is_complete == True %}is-complete{% endif %}">
                 <td class="col-sm-1">{{ instance.id }}</td>
                 <td class="col-sm-4"><a href="{{ url_for('crazy_taxi.crazy_taxi_1.detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
                 <td class="col-sm-2">{{ instance.name_nickname }}</td>
-                <td class="col-sm-2">{{ instance.type.name_full }}</td>
-                <td class="col-sm-1">{{ instance.is_complete }}</td>
-                <td class="col-sm-2">{{ instance.game.name_display }}</td>
+                <td class="col-sm-2 text-center">{{ instance.type.name_full }}</td>
+                <td class="col-sm-2 text-center">{{ instance.specialization.name_full }}</td>
+                <td class="col-sm-1 text-center">{{ instance.get_is_complete() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

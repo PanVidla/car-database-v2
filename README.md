@@ -6,12 +6,14 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * ADD: Add the option to hard delete Cars, Games and Instances.
+* ADD: Add the option to select own color for instance types and specializations.
 * CHANGE: Add the option to delete logos easily.
 * CHANGE: Make sure related entities (text, images...) get deleted on deletion of objects.
 * CHANGE: Make sure datetime_edited changes when deleting related objects on entites that have it.
 * CHANGE: Remove the Developer, Car manufacturer and Part manufacturer columns from specialized Company overviews.
 * CHANGE: Consolidate the button coloring and grouping in the remaining detail views.
 * CHANGE: Remove irrelevant columns from tables in detail views.
+* CHANGE: The "Add instance" button in a Game-specific Instance overview should lead to creation of a car for the game in question.
 * FIX: Prevent cars from copying text and images twice when making a second copy of one car.
 
 ## v1.1.0.0.0
@@ -31,7 +33,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: Remove unnecessary decimal points where not needed.~~
 * ~~CHANGE: Break up the detail view of Company with headings so it feels less cluttered.~~
 * ~~FIX: The GameSeries of a game cannot seem to be changed additionally.~~
-* FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.
+* ~~FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.~~
 
 ### Crazy Taxi
 * FIX: The formatting and buttons in the Crazy Taxi overview are broken.

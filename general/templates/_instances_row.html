@@ -4,5 +4,5 @@
     <td class="col-sm-2">{{ instance.name_nickname }}</td>
     <td class="col-sm-2 text-center">{{ instance.get_instance_type() }}</td>
     <td class="col-sm-1 text-center">{{ instance.get_is_complete() }}</td>
-    <td class="col-sm-2">{{ instance.game.name_display }}</td>
+    <td class="col-sm-2"><a href="{{ url_for('detail_game', id=instance.game.id) }}">{{ instance.game.name_display }}</a></td>
 </tr>

@@ -21,7 +21,8 @@ def overview_instances():
     return render_template("ct1_instances_overview.html",
                            title="Crazy Taxi",
                            heading="All Crazy Taxi instances",
-                           instances=instances)
+                           instances=instances,
+                           viewing="instances")
 
 
 @crazy_taxi_1.route("/instances/add-instance", methods=['GET', 'POST'])
