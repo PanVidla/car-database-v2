@@ -36,7 +36,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.~~
 
 ### Crazy Taxi
-* FIX: The formatting and buttons in the Crazy Taxi overview are broken.
+* ~~FIX: The formatting and buttons in the Crazy Taxi overview are broken.~~
 
 ### Need for Speed III: Hot Pursuit
 * ADD: The ability to add, edit, delete and view NFS3 instances.
