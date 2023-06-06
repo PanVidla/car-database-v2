@@ -48,8 +48,6 @@ class Game(database.Model):
 
     def edit_game_from_form(self, form):
 
-        form.populate_obj(self)
-
         # If the game is not in a series
         if form.game_series_id.data == -1:
             self.game_series_id = None
@@ -57,10 +55,12 @@ class Game(database.Model):
 
         else:
             # If the game in the same series with the same order exists
-            if Game.query.filter(
-                    Game.game_series_id == form.game_series_id.data,
-                    Game.order_in_series == form.game_series_id.data).first() is not None:
-                flash("There is already a game in the same series with the same order in the series!", "warning")
+            existing_game = Game.query.filter(
+                Game.game_series_id == form.game_series_id.data,
+                Game.order_in_series == form.order_in_series.data,
+                Game.is_deleted == False).first()
+            if existing_game is not None:
+                flash("{} already has the same order in the same series!".format(existing_game.name_display), "warning")
                 return -1
 
         # If the game is in a series, but order in series is not filled out
@@ -68,6 +68,7 @@ class Game(database.Model):
             flash("If the game is a part of a series, the order in the series needs to be filled out!", "warning")
             return -1
 
+        form.populate_obj(self)
         self.datetime_edited = datetime.utcnow()
 
         return 0

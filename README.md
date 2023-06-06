@@ -30,7 +30,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ~~CHANGE: Make everything possible in detail views clickable.~~
 * ~~CHANGE: Remove unnecessary decimal points where not needed.~~
 * ~~CHANGE: Break up the detail view of Company with headings so it feels less cluttered.~~
-* FIX: The GameSeries of a game cannot seem to be changed additionally.
+* ~~FIX: The GameSeries of a game cannot seem to be changed additionally.~~
 * FIX: Add formatting, proper strings and coloring to the Instance and game-specific overviews.
 
 ### Crazy Taxi
