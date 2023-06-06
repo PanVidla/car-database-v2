@@ -159,7 +159,7 @@ class Car(database.Model):
         return self.country.name_display if self.country_id is not None else "n/a"
 
     def get_curb_weight_kg(self):
-        return "{} kg".format(self.curb_weight_kg) if self.curb_weight_kg is not None else "n/a"
+        return "{:.0f} kg".format(self.curb_weight_kg) if self.curb_weight_kg is not None else "n/a"
 
     def get_datetime_added(self):
         return "{}".format(self.datetime_added.strftime("%d.%m.%Y %H:%M:%S")) if self.datetime_added is not None else "n/a"
@@ -257,7 +257,7 @@ class Car(database.Model):
         maximum_power_string = ""
 
         if self.max_power_output_kw_actual is not None:
-            maximum_power_string += "{} kW".format(self.max_power_output_kw_actual)
+            maximum_power_string += "{:.0f} kW".format(self.max_power_output_kw_actual)
 
             if self.max_power_output_rpm_actual is not None:
                 maximum_power_string += " @ {} RPM".format(self.max_power_output_rpm_actual)
@@ -268,14 +268,14 @@ class Car(database.Model):
         return maximum_power_string
 
     def get_maximum_speed_kmh(self):
-        return "{} km/h".format(self.maximum_speed_kmh) if self.maximum_speed_kmh is not None else "n/a"
+        return "{:.0f} km/h".format(self.maximum_speed_kmh) if self.maximum_speed_kmh is not None else "n/a"
 
     def get_maximum_torque_nm(self):
 
         maximum_torque_string = ""
 
         if self.max_torque_nm_actual is not None:
-            maximum_torque_string += "{} N⋅m".format(self.max_torque_nm_actual)
+            maximum_torque_string += "{:.0f} N⋅m".format(self.max_torque_nm_actual)
 
             if self.max_torque_rpm_actual is not None:
                 maximum_torque_string += " @ {} RPM".format(self.max_torque_rpm_actual)
@@ -331,7 +331,7 @@ class Car(database.Model):
 
             weight_front = self.weight_distribution
             weight_rear = 100 - weight_front
-            return "{} / {} %".format(weight_front, weight_rear)
+            return "{:.0f} / {:.0f} %".format(weight_front, weight_rear)
 
         else:
             return "n/a"

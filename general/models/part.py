@@ -61,7 +61,7 @@ class Engine(database.Model):
         return self.manufacturer.name_display if self.manufacturer_id is not None else "n/a"
 
     def get_max_power_output_kw(self):
-        return self.max_power_output_kw if self.max_power_output_kw is not None else "n/a"
+        return "{:.0f}".format(self.max_power_output_kw) if self.max_power_output_kw is not None else "n/a"
 
     def get_max_power_output_hp(self):
         return self.max_power_output_kw * 1.34 if self.max_power_output_kw is not None else "n/a"
@@ -74,7 +74,7 @@ class Engine(database.Model):
         string = ""
 
         if self.max_power_output_kw is not None:
-            string += "{} kW".format(self.max_power_output_kw)
+            string += "{:.0f} kW".format(self.max_power_output_kw)
 
             if self.max_power_output_rpm is not None:
                 string += " @ {} RPM".format(self.max_power_output_rpm)
@@ -89,7 +89,7 @@ class Engine(database.Model):
         string = ""
 
         if self.max_torque_nm is not None:
-            string += "{} N⋅m".format(self.max_torque_nm)
+            string += "{:.0f} N⋅m".format(self.max_torque_nm)
 
             if self.max_torque_rpm is not None:
                 string += " @ {} RPM".format(self.max_torque_rpm)
@@ -100,7 +100,7 @@ class Engine(database.Model):
         return string
 
     def get_max_torque_nm(self):
-        return self.max_torque_nm if self.max_torque_nm is not None else "n/a"
+        return "{:.0f}".format(self.max_torque_nm) if self.max_torque_nm is not None else "n/a"
 
     def get_max_torque_rpm(self):
         return self.max_torque_rpm if self.max_torque_rpm is not None else "n/a"
@@ -275,7 +275,7 @@ class EngineElectric(Engine):
         return self.battery_technology if self.battery_technology is not (None or "") else "n/a"
 
     def get_battery_voltage(self):
-        return "{} V".format(self.battery_voltage) if self.battery_technology is not (None or "") else "n/a"
+        return "{:.0f} V".format(self.battery_voltage) if self.battery_technology is not (None or "") else "n/a"
 
     def get_engine_type(self):
         return self.engine_type.name if self.engine_type is not None else "n/a"
@@ -428,14 +428,14 @@ class ForcedInduction(database.Model):
         return self.name_official if self.name_official is not None else "n/a"
 
     def get_boost_pressure_bar(self):
-        return "{}".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"
+        return "{:.0f}".format(self.boost_pressure_bar) if self.boost_pressure_bar is not None else "n/a"
 
     def get_boost_pressure_string_bar(self):
 
         string = ""
 
         if self.boost_pressure_bar is not None:
-            string += "{} bar".format(self.boost_pressure_bar)
+            string += "{:.0f} bar".format(self.boost_pressure_bar)
 
         else:
             string = "n/a"
