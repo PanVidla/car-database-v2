@@ -39,6 +39,7 @@ class ClassNFS3(database.Model):
 
     # General
     name = database.Column(database.Unicode, index=True, nullable=False, unique=True)
+    color_hex = database.Column(database.Unicode, nullable=True)
 
     # Relationships
     instances = database.relationship('InstanceNFS3', backref='car_class', lazy='dynamic')
