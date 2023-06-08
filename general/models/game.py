@@ -225,7 +225,8 @@ def create_game_from_form(form):
 def get_games_in_progress():
 
     games_in_progress = Game.query\
-        .filter(Game.game_state_id == 2)\
+        .filter(Game.game_state_id == 2,
+                Game.is_deleted == False)\
         .order_by(Game.name_display.asc())\
         .all()
 

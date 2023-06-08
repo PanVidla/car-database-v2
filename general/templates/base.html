@@ -37,6 +37,8 @@
                           {% for game in get_games_in_progress() %}
                             {% if game.name_full == "Crazy Taxi" %}
                             <li><a href="{{ url_for('crazy_taxi.crazy_taxi_1.overview_instances') }}">{{ game.name_display }}</a></li>
+                            {% elif game.name_full == "Need for Speed III: Hot Pursuit" %}
+                            <li><a href="{{ url_for('need_for_speed.iii_hot_pursuit.overview_instances') }}">{{ game.name_display }}</a></li>
                             {% else %}
                             <li><a href="#">{{ game.name_display }}</a></li>
                             {% endif %}

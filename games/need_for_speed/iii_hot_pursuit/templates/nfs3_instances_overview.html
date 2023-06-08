@@ -22,7 +22,7 @@
                 {% for instance in instances %}
             <tr class="{% if instance.is_complete == True %}is-complete{% endif %}">
                 <td class="col-sm-1">{{ instance.id }}</td>
-                <td class="col-sm-4"><a href="{{ url_for('crazy_taxi.crazy_taxi_1.detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
+                <td class="col-sm-4">{{ instance.name_full }}</td>
                 <td class="col-sm-2">{{ instance.name_nickname }}</td>
                 <td class="col-sm-2 text-center">{{ instance.type.name_full }}</td>
                 <td class="col-sm-2 text-center">{{ instance.specialization.name_full }}</td>
