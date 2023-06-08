@@ -10,5 +10,8 @@ class TrackNFS3(Location):
     id = database.Column(database.Integer, database.ForeignKey('locations.id'), primary_key=True)
 
     # General
-    best_lap_time_event_record_id = database.Column(database.Integer, database.ForeignKey('event_records_nfs3.id'), nullable=True)
-    best_track_time_event_record_id = database.Column(database.Integer, database.ForeignKey('event_records_nfs3.id'), nullable=True)
+    best_lap_time_event_record_id = database.Column(database.Integer, nullable=True)
+    best_track_time_event_record_id = database.Column(database.Integer, nullable=True)
+
+    # Relationships
+    records = database.relationship('EventRecordNFS3', backref='track', lazy='dynamic')

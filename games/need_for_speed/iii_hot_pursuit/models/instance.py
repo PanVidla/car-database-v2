@@ -22,6 +22,7 @@ class InstanceNFS3(RacingInstance):
     # Statistics
     no_of_lap_records = database.Column(database.Integer, default=0, index=True, nullable=False)
     no_of_track_records = database.Column(database.Integer, default=0, index=True, nullable=False)
+    no_of_ranked_events = database.Column(database.Integer, default=0, index=True, nullable=False)
 
     # Relationships
     tune = database.relationship('TuneNFS3', backref='instance', lazy='dynamic')
@@ -48,11 +49,8 @@ class TuneNFS3(database.Model):
 
     __tablename__ = "tunes_nfs3"
 
-    # Metadata
-    id = database.Column(database.Integer, primary_key=True)
-
     # General
-    instance_id = database.Column(database.Integer, database.ForeignKey('instances_nfs3.id'), primary_key=True)
+    instance_id = database.Column(database.Integer, database.ForeignKey('instances_nfs3.id'), primary_key=True, nullable=False)
 
     # Stats
     engine = database.Column(database.Integer, default=0, nullable=False)

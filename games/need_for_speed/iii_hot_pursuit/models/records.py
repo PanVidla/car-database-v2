@@ -29,10 +29,10 @@ class EventRecordNFS3(database.Model):
     time_track_human_readable = database.Column(database.Unicode, nullable=True)
     is_lap_record = database.Column(database.Boolean, default=False, index=True, nullable=False)
     is_track_record = database.Column(database.Boolean, default=False, index=True, nullable=False)
-    maximum_speed = database.Column(database.Double, index=True, nullable=True)
+    maximum_speed = database.Column(database.Double, nullable=True)
 
     # Conditions
-    is_backwards = database.Column(database.Boolean, default=False, index=True, nullable=False)
-    is_mirrored = database.Column(database.Boolean, default=False, index=True, nullable=False)
-    is_at_night = database.Column(database.Boolean, default=False, index=True, nullable=False)
-    is_weather_on = database.Column(database.Boolean, default=False, index=True, nullable=False)
+    is_backwards = database.Column(database.Boolean, default=False,  nullable=False)
+    is_mirrored = database.Column(database.Boolean, default=False,  nullable=False)
+    is_at_night = database.Column(database.Boolean, default=False,  nullable=False)
+    is_weather_on = database.Column(database.Boolean, default=False, nullable=False)
