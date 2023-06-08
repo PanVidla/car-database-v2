@@ -40,7 +40,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ### Need for Speed III: Hot Pursuit
 * ADD: The ability to add, edit, delete and view NFS3 instances.
-* ADD: The ability to add, edit, delete and view events, tournaments, event records, tracks and track records.
+* ADD: The ability to add, edit, delete and view events, event records, tracks and track records.
 
 ## v1.0.0.1.0
 ### General
