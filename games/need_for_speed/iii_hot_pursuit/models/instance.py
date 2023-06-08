@@ -1,3 +1,4 @@
+from games.need_for_speed.iii_hot_pursuit.models.records import EventRecordNFS3
 from general import database
 from general.models.instance import RacingInstance
 
@@ -27,6 +28,20 @@ class InstanceNFS3(RacingInstance):
     # Relationships
     tune = database.relationship('TuneNFS3', backref='instance', lazy='dynamic')
     event_records = database.relationship('EventRecordNFS3', backref='instance', lazy='dynamic')
+
+    def get_class(self):
+        return self.car_class.name if self.nfs3_class_id is not None else "n/a"
+
+    def get_event_records(self):
+
+        event_records = EventRecordNFS3.query.filter(EventRecordNFS3.instance_id == self.id,
+                                                     EventRecordNFS3.is_deleted == False)\
+            .order_by(EventRecordNFS3.no_of_event_record.desc()).all()
+
+        return event_records
+
+    def set_average(self):
+        self.average = (self.acceleration + self.top_speed + self.handling + self.braking) / 4
 
 
 # Represents the groups of cars divided by performance

@@ -1,0 +1,35 @@
+from flask_wtf import FlaskForm
+from wtforms import SelectField, IntegerField, SubmitField, StringField
+from wtforms.validators import DataRequired, NumberRange, Optional, Length
+
+from games.need_for_speed.iii_hot_pursuit.models.instance import ClassNFS3
+
+
+class InstanceNFS3Form(FlaskForm):
+
+    # Game-specific
+    nfs3_class_id = SelectField("Class", coerce=int)
+    acceleration = IntegerField("Acceleration", validators=[DataRequired(), NumberRange(min=0, max=20)])
+    top_speed = IntegerField("Top speed", validators=[DataRequired(), NumberRange(min=0, max=20)])
+    handling = IntegerField("Handling", validators=[DataRequired(), NumberRange(min=0, max=20)])
+    braking = IntegerField("Braking", validators=[DataRequired(), NumberRange(min=0, max=20)])
+
+    submit = SubmitField("Set game-specific information")
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(InstanceNFS3Form, self).__init__(*args, **kwargs)
+
+        self.nfs3_class_id.choices = [(car_class.id, "{}".format(car_class.name))
+                                          for car_class
+                                          in ClassNFS3.query
+                                          .order_by(ClassNFS3.name.asc()).all()]
+
+
+class ClassNFS3Form(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[DataRequired()])
+    color_hex = StringField("Color", validators=[Optional(), Length(min=7, max=7)])
+
+    submit = SubmitField("Set class information")

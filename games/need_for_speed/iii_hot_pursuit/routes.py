@@ -1,7 +1,14 @@
-from flask import render_template
+from datetime import datetime
+
+from flask import render_template, flash, redirect, url_for
+from flask_login import login_required
 
 from games.need_for_speed.iii_hot_pursuit import blueprint
-from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3
+from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form
+from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
+from general import database
+from general.forms_info import TextForm, ImageForm
+from general.models.instance import Instance, InstanceText, InstanceImage
 
 
 @blueprint.route("/instances/overview", methods=['GET'])
@@ -16,4 +23,156 @@ def overview_instances():
                            title="Need for Speed III",
                            heading="All Need for Speed III instances",
                            instances=instances,
-                           viewing="instances")
+                           viewing="instances",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+@blueprint.route("/classes/overview", methods=['GET'])
+@blueprint.route("/classes/overview/all", methods=['GET'])
+def overview_classes():
+
+    classes = ClassNFS3.query.order_by(ClassNFS3.name.asc()).all()
+
+    return render_template("nfs3_classes_overview.html",
+                           title="Need for Speed III",
+                           heading="All Need for Speed III classes",
+                           classes=classes,
+                           viewing="classes",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+@blueprint.route("/instances/add-instance/<id>", methods=['GET', 'POST'])
+@login_required
+def add_instance(id):
+
+    instance = InstanceNFS3.query.get(id)
+    form = InstanceNFS3Form()
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        new_tune = TuneNFS3(instance_id=instance.id)
+        instance.set_average()
+
+        try:
+            database.session.add(new_tune)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem setting game-specific values for the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_instances"))
+
+        flash("Game-specific values have been successfully set for the {}.".format(instance.name_full), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+    return render_template("nfs3_instances_form.html",
+                           title="Add instance",
+                           heading="Add instance",
+                           form=form,
+                           viewing="instances",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+@blueprint.route("/classes/add-class", methods=['GET', 'POST'])
+@login_required
+def add_class():
+
+    form = ClassNFS3Form()
+
+    if form.validate_on_submit():
+
+        new_class = ClassNFS3()
+        form.populate_obj(new_class)
+
+        try:
+            database.session.add(new_class)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the {} class to the database.".format(new_class.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
+
+        flash("The {} class has been successfully added to the game.".format(new_class.name), "success")
+        # TODO: Should actually be the detail page.
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
+
+    return render_template("nfs3_class_form.html",
+                           title="Add class",
+                           heading="Add class",
+                           form=form,
+                           viewing="classes",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Instance detail
+@blueprint.route("/instances/detail/<id>", methods=['GET', 'POST'])
+@login_required
+def detail_instance(id):
+
+    instance = InstanceNFS3.query.get(id)
+    texts = InstanceText.query \
+        .filter(InstanceText.instance_id == instance.id) \
+        .order_by(InstanceText.order.asc()) \
+        .all()
+
+    add_text_form = TextForm()
+    add_image_form = ImageForm()
+
+    # Add text
+    if add_text_form.submit_add_text.data and add_text_form.validate():
+
+        whole_text = add_text_form.content.data
+
+        for paragraph in whole_text.splitlines():
+
+            if paragraph == "":
+                continue
+
+            else:
+
+                new_text = InstanceText()
+                new_text.content = paragraph
+                new_text.text_type = add_text_form.text_type.data
+                new_text.order = len(instance.texts.all()) + 1
+                new_text.instance_id = instance.id
+
+                instance.datetime_edited = datetime.utcnow()
+
+                try:
+                    database.session.add(new_text)
+                    database.session.commit()
+                except RuntimeError:
+                    flash("There was a problem adding text to {}.".format(instance.name_display), "danger")
+                    return redirect(url_for("detail_instance", id=instance.id))
+
+        flash("The text has been successfully added to {}.".format(instance.name_full), "success")
+        return redirect(url_for("detail_instance", id=instance.id))
+
+    # Add image
+    if add_image_form.submit_add_image.data and add_image_form.validate():
+
+        new_image = InstanceImage()
+        add_image_form.populate_obj(new_image)
+        new_image.order = len(instance.images.all()) + 1
+        new_image.instance_id = instance.id
+        new_image.is_thumbnail = False
+
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.add(new_image)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding an image to {}.".format(instance.name_full), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+        flash("The image has been successfully added to {}.".format(instance.name_full), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+    return render_template("nfs3_instances_detail.html",
+                           title="{}".format(instance.name_nickname),
+                           heading="{}".format(instance.name_full),
+                           instance=instance,
+                           texts=texts,
+                           add_text_form=add_text_form,
+                           add_image_form=add_image_form,
+                           viewing="instances",
+                           game="Need for Speed III: Hot Pursuit")

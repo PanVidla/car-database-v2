@@ -1,0 +1,145 @@
+{% extends "instances_detail.html" %}
+
+{% block game_specific %}
+
+    <h2>Game-specific information</h2>
+    <h3>Stats & Results</h3>
+    <!--  Performance stats  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Stats</h3>
+          </div>
+          <div {% if instance.car_class.color_hex %}bgcolor="{{ instance.car_class.color_hex }}"{% endif %} class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-center"><b>Class</b></div>
+                  <div class="col-sm-2 text-center"><b>Acceleration</b></div>
+                  <div class="col-sm-2 text-center"><b>Top speed</b></div>
+                  <div class="col-sm-2 text-center"><b>Handling</b></div>
+                  <div class="col-sm-2 text-center"><b>Braking</b></div>
+                  <div class="col-sm-2 text-center"><b>Average</b></div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-center">{{ instance.get_class() }}</div>
+                  <div class="col-sm-2 text-center">{{ instance.acceleration }}</div>
+                  <div class="col-sm-2 text-center">{{ instance.top_speed }}</div>
+                  <div class="col-sm-2 text-center">{{ instance.handling }}</div>
+                  <div class="col-sm-2 text-center">{{ instance.braking }}</div>
+                  <div class="col-sm-2 text-center">{{ instance.average }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Results  -->
+    <div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Results</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Total events</b></div>
+                  <div class="col-sm-10 text-left">{{ instance.no_of_events_total }} ({{ instance.no_of_ranked_events }} ranked)</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Wins</b></div>
+                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_won_string() }}</div>
+                  <div class="col-sm-2 text-right"><b>Podiums</b></div>
+                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_podium_string() }}</div>
+                  <div class="col-sm-2 text-right"><b>Losses</b></div>
+                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_lost_string() }}</div>
+                  <div class="col-sm-2 text-right"><b>DNFs</b></div>
+                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_dnf_string() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Average position</b></div>
+                  <div class="col-sm-10 text-left">average position</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Lap records</b></div>
+                  <div class="col-sm-1 text-left">{{ instance.no_of_lap_records }}</div>
+                  <div class="col-sm-2 text-right"><b>Track records</b></div>
+                  <div class="col-sm-7 text-left">{{ instance.no_of_lap_records }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <h3>Current tuning</h3>
+    <!--  Tune  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Tune</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed table-striped table-hover">
+              {% if instance.tune.first() == None %}
+              <tr>
+                  <td class="text-center"><strong>This instance doesn't have a tune.</strong></td>
+              </tr>
+              {% else %}
+              <tr>
+                <td class="col-sm-1 text-center"><strong>Engine</strong></td>
+                <td class="col-sm-1 text-center"><strong>Brake balance</strong></td>
+                <td class="col-sm-1 text-center"><strong>Steering speed</strong></td>
+                <td class="col-sm-1 text-center"><strong>Gearbox ratio</strong></td>
+                <td class="col-sm-1 text-center"><strong>Aerodynamics</strong></td>
+                <td class="col-sm-1 text-center"><strong>Suspension</strong></td>
+                <td class="col-sm-1 text-center"><strong>Tyres</strong></td>
+              </tr>
+              <tr>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().engine }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().brake_balance }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().steering_speed }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().gearbox_ratio }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().aerodynamics }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().suspension }} %</td>
+                <td class="col-sm-1 text-center">{{ instance.tune.first().tyres }} %</td>
+              </tr>
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <h3>Event records</h3>
+    <!--  Event records  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Event records</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if instance.get_event_records() == [] %}
+              <tr>
+                  <td class="text-center"><strong>This instance doesn't have any event records.</strong></td>
+              </tr>
+              {% else %}
+              <tr>
+                <td class="col-sm-1 text-center"><strong>No.</strong></td>
+                <td class="col-sm-2 text-center"><strong>Event</strong></td>
+                <td class="col-sm-2 text-center"><strong>Track</strong></td>
+                <td class="col-sm-1 text-center"><strong>Position</strong></td>
+                <td class="col-sm-2 text-center"><strong>Result</strong></td>
+                <td class="col-sm-1 text-center"><strong>Best lap</strong></td>
+                <td class="col-sm-1 text-center"><strong>Track time</strong></td>
+                <td class="col-sm-2 text-center"><strong>Conditions</strong></td>
+              </tr>
+                {% for event_record in instance.get_event_records() %}
+              <tr>
+                <td class="col-sm-1 text-center">{{ event_record.no_of_event_record }}</td>
+                <td class="col-sm-2 text-center">{{ event_record.event.name }}</td>
+                <td class="col-sm-2 text-center">{{ event_record.track.name }}</td>
+                <td class="col-sm-1 text-center">{{ event_record.position }}</td>
+                <td class="col-sm-2 text-center">{{ event_record.result }}</td>
+                <td class="col-sm-1 text-center">{{ event_record.time_best_lap_human_readable }}</td>
+                <td class="col-sm-1 text-center">{{ event_record.time_track_human_readable }}</td>
+                <td class="col-sm-2 text-center">conditions</td>
+              </tr>
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+{% endblock %}

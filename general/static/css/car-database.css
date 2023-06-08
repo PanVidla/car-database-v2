@@ -32,6 +32,14 @@
     background: #5bc0de;
 }
 
+.colored-row {
+    color: #ffffff;
+}
+
+.colored-row a {
+    color: #ffffff;
+}
+
 .fictional {
     color: #ffffff;
     background: #bc73d1;

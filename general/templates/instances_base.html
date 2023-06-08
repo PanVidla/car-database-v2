@@ -23,8 +23,14 @@
                         {% if viewing == "specialization" %}
                         <li><a class="hover-underline-animation" href="{{ url_for('add_specialization') }}"><strong>Add specialization</strong></a></li>
                         {% endif %}
+                        {% if game == "Need for Speed III: Hot Pursuit" %}
+                            {% include "_nfs3_add_buttons.html" %}
+                        {% endif %}
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_instance_types') }}">Types</a></li>
                         <li><a class="hover-underline-animation" href="{{ url_for('overview_specialization') }}">Specialization</a></li>
+                        {% if game == "Need for Speed III: Hot Pursuit" %}
+                            {% include "_nfs3_submenu.html" %}
+                        {% endif %}
                     </ul>
                 </div>
             </div>
