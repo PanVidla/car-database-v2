@@ -1,0 +1,37 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <table class="table table-bordered">
+
+            {% if events == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no Need for Speed III events in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-7"><strong>Name</strong></td>
+                <td class="col-sm-1 text-center"><strong>No. of participants</strong></td>
+                <td class="col-sm-1 text-center"><strong>No. of laps</strong></td>
+                <td class="col-sm-1 text-center"><strong>Ranked</strong></td>
+                <td class="col-sm-1 text-center"><strong>Color</strong></td>
+            </tr>
+
+                {% for event in events %}
+            <tr>
+                <td class="col-sm-1">{{ event.id }}</td>
+                <td class="col-sm-7"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_event', id=event.id) }}">{{ event.name }}</a></td>
+                <td class="col-sm-1 text-center">{{ event.no_of_participants }}</td>
+                <td class="col-sm-1 text-center">{{ event.no_of_laps }}</td>
+                <td class="col-sm-1 text-center">{{ event.is_ranked }}</td>
+                <td class="col-sm-1 text-center {% if event.color_hex %}colored-row{% endif %}" {% if event.color_hex %}bgcolor="{{ event.color_hex }}"{% endif %}>{{ event.color_hex }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

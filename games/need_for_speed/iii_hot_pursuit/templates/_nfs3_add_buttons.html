@@ -1,3 +1,5 @@
 {% if viewing == "classes" %}
 <li><a class="hover-underline-animation" href="{{ url_for('need_for_speed.iii_hot_pursuit.add_class') }}"><strong>Add class</strong></a></li>
+{% elif viewing == "events" %}
+<li><a class="hover-underline-animation" href="{{ url_for('need_for_speed.iii_hot_pursuit.add_event') }}"><strong>Add event</strong></a></li>
 {% endif %}

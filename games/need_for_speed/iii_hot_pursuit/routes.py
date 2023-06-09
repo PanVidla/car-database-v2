@@ -4,7 +4,8 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from games.need_for_speed.iii_hot_pursuit import blueprint
-from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form
+from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form
+from games.need_for_speed.iii_hot_pursuit.models.events import EventNFS3
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
 from general import database
 from general.forms_info import TextForm, ImageForm
@@ -38,6 +39,20 @@ def overview_classes():
                            heading="All Need for Speed III classes",
                            classes=classes,
                            viewing="classes",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+@blueprint.route("/events/overview", methods=['GET'])
+@blueprint.route("/events/overview/all", methods=['GET'])
+def overview_events():
+
+    events = EventNFS3.query.order_by(EventNFS3.name.asc()).all()
+
+    return render_template("nfs3_events_overview.html",
+                           title="Need for Speed III",
+                           heading="All Need for Speed III events",
+                           events=events,
+                           viewing="events",
                            game="Need for Speed III: Hot Pursuit")
 
 
@@ -90,15 +105,43 @@ def add_class():
             flash("There was a problem adding the {} class to the database.".format(new_class.name), "danger")
             return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
 
-        flash("The {} class has been successfully added to the game.".format(new_class.name), "success")
-        # TODO: Should actually be the detail page.
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
+        flash("The {} class has been successfully added to the database.".format(new_class.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=new_class.id))
 
     return render_template("nfs3_classes_form.html",
                            title="Add class",
                            heading="Add class",
                            form=form,
                            viewing="classes",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+@blueprint.route("/classes/add-event", methods=['GET', 'POST'])
+@login_required
+def add_event():
+
+    form = EventNFS3Form()
+
+    if form.validate_on_submit():
+
+        new_event = EventNFS3()
+        form.populate_obj(new_event)
+
+        try:
+            database.session.add(new_event)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the \"{}\" event to the database.".format(new_event.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_events"))
+
+        flash("The \"{}\" event has been successfully added to the database.".format(new_event.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=new_event.id))
+
+    return render_template("nfs3_events_form.html",
+                           title="Add event",
+                           heading="Add event",
+                           form=form,
+                           viewing="events",
                            game="Need for Speed III: Hot Pursuit")
 
 
@@ -165,6 +208,36 @@ def edit_class(id):
                            editing=True)
 
 
+# Edit event
+@blueprint.route("/events/edit-event/<id>", methods=['GET', 'POST'])
+@login_required
+def edit_event(id):
+
+    event = EventNFS3.query.get(id)
+    form = EventNFS3Form(obj=event)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(event)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {} event.".format(event.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
+
+        flash("The {} event has been successfully edited.".format(event.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
+
+    return render_template("nfs3_events_form.html",
+                           title="Edit event",
+                           heading="Edit event",
+                           form=form,
+                           viewing="events",
+                           game="Need for Speed III: Hot Pursuit",
+                           editing=True)
+
+
 # Delete class
 @blueprint.route("/classes/delete-class/<id>", methods=['GET', 'POST'])
 @login_required
@@ -182,6 +255,25 @@ def delete_class(id):
 
     flash("Class {} has been successfully deleted.".format(car_class.name), "success")
     return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
+
+
+# Delete event
+@blueprint.route("/events/delete-event/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_event(id):
+
+    event = EventNFS3.query.get(id)
+
+    try:
+        database.session.delete(event)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {}.".format(event.name), "danger")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
+
+    flash("The {} event has been successfully deleted.".format(event.name), "success")
+    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_events"))
 
 
 # Instance detail
@@ -307,4 +399,19 @@ def detail_class(id):
                            heading="{} class".format(car_class.name),
                            car_class=car_class,
                            viewing="classes",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Detail event
+@blueprint.route("/events/detail/<id>", methods=['GET', 'POST'])
+@login_required
+def detail_event(id):
+
+    event = EventNFS3.query.get(id)
+
+    return render_template("nfs3_events_detail.html",
+                           title="{}".format(event.name),
+                           heading="{}".format(event.name),
+                           event=event,
+                           viewing="events",
                            game="Need for Speed III: Hot Pursuit")

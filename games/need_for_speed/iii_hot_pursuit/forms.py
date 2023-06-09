@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, IntegerField, SubmitField, StringField
+from wtforms import SelectField, IntegerField, SubmitField, StringField, BooleanField
 from wtforms.validators import DataRequired, NumberRange, Optional, Length, InputRequired
 
 from games.need_for_speed.iii_hot_pursuit.models.instance import ClassNFS3
@@ -47,3 +47,16 @@ class TuneNFS3Form(FlaskForm):
     tyres = IntegerField("Tyres", validators=[InputRequired(), NumberRange(min=-100, max=100)])
 
     submit_edit_tune = SubmitField("Set tuning values")
+
+
+class EventNFS3Form(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[InputRequired()])
+    color_hex = StringField("Color", validators=[Optional()])
+
+    no_of_participants = IntegerField("No. of participants", validators=[InputRequired(), NumberRange(min=1, max=8)])
+    no_of_laps = IntegerField("No. of laps", validators=[InputRequired(), NumberRange(min=2, max=8)])
+    is_ranked = BooleanField("Ranked")
+
+    submit = SubmitField("Set event values")
