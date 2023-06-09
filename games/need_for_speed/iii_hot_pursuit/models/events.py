@@ -28,4 +28,4 @@ class EventNFS3(database.Model):
             .order_by(EventRecordNFS3.id).all()
 
     def get_is_ranked(self):
-        return "✓" if self.is_ranked is True else "x"
+        return "✓" if self.is_ranked == True else "x"

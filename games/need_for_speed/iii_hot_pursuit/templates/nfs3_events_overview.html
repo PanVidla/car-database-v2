@@ -25,7 +25,7 @@
                 <td class="col-sm-7"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_event', id=event.id) }}">{{ event.name }}</a></td>
                 <td class="col-sm-1 text-center">{{ event.no_of_participants }}</td>
                 <td class="col-sm-1 text-center">{{ event.no_of_laps }}</td>
-                <td class="col-sm-1 text-center">{{ event.is_ranked }}</td>
+                <td class="col-sm-1 text-center">{{ event.get_is_ranked() }}</td>
                 <td class="col-sm-1 text-center {% if event.color_hex %}colored-row{% endif %}" {% if event.color_hex %}bgcolor="{{ event.color_hex }}"{% endif %}>{{ event.color_hex }}</td>
             </tr>
                 {% endfor %}
