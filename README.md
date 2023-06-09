@@ -1,7 +1,7 @@
 # PanVidla's Definitive Car Database
 This is a database serving to collect and keep track of cars I've owned and driven in video games.
 
-## v1.1.0.1.0
+## v1.2.0.0.0
 ### General
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
@@ -17,6 +17,9 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: Remove irrelevant columns from tables in detail views.
 * CHANGE: The "Add instance" button in a Game-specific Instance overview should lead to creation of a car for the game in question.
 * FIX: Prevent cars from copying text and images twice when making a second copy of one car.
+
+### Need for Speed: Road Challenge
+* ADD: The ability to add, edit, delete and view NFS4 instances.
 
 ## v1.1.0.0.0
 ### General
