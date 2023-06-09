@@ -74,6 +74,11 @@ class ClassNFS3(database.Model):
     # Relationships
     instances = database.relationship('InstanceNFS3', backref='car_class', lazy='dynamic')
 
+    def get_instances(self):
+        return InstanceNFS3.query.filter(InstanceNFS3.nfs3_class_id == self.id,
+                                         InstanceNFS3.is_deleted == False)\
+            .order_by(InstanceNFS3.id.desc()).all()
+
 
 # Represents the current tuning of the car
 class TuneNFS3(database.Model):

@@ -17,7 +17,7 @@ def overview_instances():
 
     instances = InstanceNFS3.query. \
         filter(InstanceNFS3.is_deleted != True) \
-        .order_by(InstanceNFS3.nfs3_class_id.asc()).all()
+        .order_by(InstanceNFS3.id.desc()).all()
 
     return render_template("nfs3_instances_overview.html",
                            title="Need for Speed III",
@@ -94,7 +94,7 @@ def add_class():
         # TODO: Should actually be the detail page.
         return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
 
-    return render_template("nfs3_class_form.html",
+    return render_template("nfs3_classes_form.html",
                            title="Add class",
                            heading="Add class",
                            form=form,
@@ -133,6 +133,55 @@ def edit_instance_game_specific(id):
                            viewing="instances",
                            game="Need for Speed III: Hot Pursuit",
                            editing=True)
+
+
+# Edit class
+@blueprint.route("/classes/edit-class/<id>", methods=['GET', 'POST'])
+@login_required
+def edit_class(id):
+
+    car_class = ClassNFS3.query.get(id)
+    form = ClassNFS3Form(obj=car_class)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(car_class)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {} class.".format(car_class.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
+
+        flash("The {} class has been successfully edited.".format(car_class.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
+
+    return render_template("nfs3_classes_form.html",
+                           title="Edit class",
+                           heading="Edit class",
+                           form=form,
+                           viewing="classes",
+                           game="Need for Speed III: Hot Pursuit",
+                           editing=True)
+
+
+# Delete class
+@blueprint.route("/classes/delete-class/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_class(id):
+
+    car_class = ClassNFS3.query.get(id)
+
+    try:
+        database.session.delete(car_class)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {} class.".format(car_class.name), "danger")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
+
+    flash("Class {} has been successfully deleted.".format(car_class.name), "success")
+    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
 
 
 # Instance detail
@@ -243,4 +292,19 @@ def detail_instance(id):
                            add_image_form=add_image_form,
                            edit_tune_form=edit_tune_form,
                            viewing="instances",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Detail class
+@blueprint.route("/classes/detail/<id>", methods=['GET', 'POST'])
+@login_required
+def detail_class(id):
+
+    car_class = ClassNFS3.query.get(id)
+
+    return render_template("nfs3_classes_detail.html",
+                           title="{} class".format(car_class.name),
+                           heading="{} class".format(car_class.name),
+                           car_class=car_class,
+                           viewing="classes",
                            game="Need for Speed III: Hot Pursuit")

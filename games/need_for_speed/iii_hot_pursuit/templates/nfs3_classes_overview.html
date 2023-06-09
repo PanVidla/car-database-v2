@@ -19,7 +19,7 @@
                 {% for class in classes %}
             <tr {% if class.color_hex %}bgcolor="{{ class.color_hex }}" class="colored-row"{% endif %}>
                 <td class="col-sm-1">{{ class.id }}</td>
-                <td class="col-sm-10">{{ class.name }}</td>
+                <td class="col-sm-10"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_class', id=class.id) }}">{{ class.name }}</a></td>
                 <td class="col-sm-1">{{ class.color_hex }}</td>
             </tr>
                 {% endfor %}
