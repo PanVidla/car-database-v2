@@ -3,6 +3,7 @@ from wtforms import SelectField, IntegerField, SubmitField, StringField, Boolean
 from wtforms.validators import DataRequired, NumberRange, Optional, Length, InputRequired
 
 from games.need_for_speed.iii_hot_pursuit.models.instance import ClassNFS3
+from general.models.misc import Country
 
 
 class InstanceNFS3Form(FlaskForm):
@@ -60,3 +61,20 @@ class EventNFS3Form(FlaskForm):
     is_ranked = BooleanField("Ranked")
 
     submit = SubmitField("Set event values")
+
+
+class TrackNFS3Form(FlaskForm):
+
+    # General
+    name = StringField("Name", validators=[InputRequired()])
+    country_id = SelectField("Country", coerce=int)
+
+    submit = SubmitField("Set track values")
+
+    # Initialization
+    def __init__(self, *args, **kwargs):
+        super(TrackNFS3Form, self).__init__(*args, **kwargs)
+
+        self.country_id.choices = [(country.id, "{}".format(country.name_display))
+                                   for country
+                                   in Country.query.order_by(Country.name_display.asc()).all()]

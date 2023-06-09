@@ -4,12 +4,14 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from games.need_for_speed.iii_hot_pursuit import blueprint
-from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form
+from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form, \
+    TrackNFS3Form
 from games.need_for_speed.iii_hot_pursuit.models.events import EventNFS3
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
+from games.need_for_speed.iii_hot_pursuit.models.tracks import TrackNFS3
 from general import database
 from general.forms_info import TextForm, ImageForm
-from general.models.instance import Instance, InstanceText, InstanceImage
+from general.models.instance import InstanceText, InstanceImage
 
 
 @blueprint.route("/instances/overview", methods=['GET'])
@@ -56,6 +58,21 @@ def overview_events():
                            game="Need for Speed III: Hot Pursuit")
 
 
+@blueprint.route("/tracks/overview", methods=['GET'])
+@blueprint.route("/tracks/overview/all", methods=['GET'])
+def overview_tracks():
+
+    tracks = TrackNFS3.query.order_by(TrackNFS3.id.asc()).all()
+
+    return render_template("nfs3_tracks_overview.html",
+                           title="Need for Speed III",
+                           heading="All Need for Speed III tracks",
+                           tracks=tracks,
+                           viewing="tracks",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Add instance
 @blueprint.route("/instances/add-instance/<id>", methods=['GET', 'POST'])
 @login_required
 def add_instance(id):
@@ -116,7 +133,7 @@ def add_class():
                            game="Need for Speed III: Hot Pursuit")
 
 
-@blueprint.route("/classes/add-event", methods=['GET', 'POST'])
+@blueprint.route("/events/add-event", methods=['GET', 'POST'])
 @login_required
 def add_event():
 
@@ -142,6 +159,36 @@ def add_event():
                            heading="Add event",
                            form=form,
                            viewing="events",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Add track
+@blueprint.route("/tracks/add-track", methods=['GET', 'POST'])
+@login_required
+def add_track():
+
+    form = TrackNFS3Form()
+
+    if form.validate_on_submit():
+
+        new_track = TrackNFS3(is_fictional=True)
+        form.populate_obj(new_track)
+
+        try:
+            database.session.add(new_track)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the {} to the database.".format(new_track.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_tracks"))
+
+        flash("{} has been successfully added to the database.".format(new_track.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=new_track.id))
+
+    return render_template("nfs3_tracks_form.html",
+                           title="Add track",
+                           heading="Add track",
+                           form=form,
+                           viewing="tracks",
                            game="Need for Speed III: Hot Pursuit")
 
 
@@ -238,6 +285,36 @@ def edit_event(id):
                            editing=True)
 
 
+# Edit track
+@blueprint.route("/tracks/edit-track/<id>", methods=['GET', 'POST'])
+@login_required
+def edit_track(id):
+
+    track = TrackNFS3.query.get(id)
+    form = TrackNFS3Form(obj=track)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(track)
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing {}.".format(track.name), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+
+        flash("{} event has been successfully edited.".format(track.name), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+
+    return render_template("nfs3_tracks_form.html",
+                           title="Edit track",
+                           heading="Edit track",
+                           form=form,
+                           viewing="tracks",
+                           game="Need for Speed III: Hot Pursuit",
+                           editing=True)
+
+
 # Delete class
 @blueprint.route("/classes/delete-class/<id>", methods=['GET', 'POST'])
 @login_required
@@ -274,6 +351,25 @@ def delete_event(id):
 
     flash("The {} event has been successfully deleted.".format(event.name), "success")
     return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_events"))
+
+
+# Delete event
+@blueprint.route("/tracks/delete-track/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_track(id):
+
+    track = TrackNFS3.query.get(id)
+
+    try:
+        database.session.delete(track)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting {}.".format(track.name), "danger")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+
+    flash("{} event has been successfully deleted.".format(track.name), "success")
+    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_tracks"))
 
 
 # Instance detail
@@ -414,4 +510,19 @@ def detail_event(id):
                            heading="{}".format(event.name),
                            event=event,
                            viewing="events",
+                           game="Need for Speed III: Hot Pursuit")
+
+
+# Detail track
+@blueprint.route("/tracks/detail/<id>", methods=['GET', 'POST'])
+@login_required
+def detail_track(id):
+
+    track = TrackNFS3.query.get(id)
+
+    return render_template("nfs3_tracks_detail.html",
+                           title="{}".format(track.name),
+                           heading="{}".format(track.name),
+                           track=track,
+                           viewing="tracks",
                            game="Need for Speed III: Hot Pursuit")

@@ -1,0 +1,96 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <!-- Sub-sub-menu -->
+    {% block subsubmenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        {% if track %}
+                        <li><a href="{{ url_for('need_for_speed.iii_hot_pursuit.edit_track', id=track.id) }}"><button type="button" class="btn btn-info">Edit track</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete track</button></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    <!--  Content  -->
+    <h2>General information</h2>
+    <div>
+        <div class="panel panel-primary">
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Name</b></div>
+                  <div class="col-sm-4">{{ track.name }}</div>
+                  <div class="col-sm-2 text-right"><b>Country</b></div>
+                  <div class="col-sm-4">{{ track.country.name_display }}</div>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <!--  Relationships  -->
+    <h2>Relationships</h2>
+    <!--  Instances  -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Event records</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed">
+              {% if track.get_event_records() == [] %}
+              <tr>
+                  <td class="text-center"><strong>There are no records for this track.</strong></td>
+              </tr>
+              {% else %}
+                <tr>
+                    <td class="col-sm-1 text-center"><strong>No.</strong></td>
+                    <td class="col-sm-2 text-center"><strong>Instance</strong></td>
+                    <td class="col-sm-2 text-center"><strong>Event</strong></td>
+                    <td class="col-sm-1 text-center"><strong>Position</strong></td>
+                    <td class="col-sm-2 text-center"><strong>Result</strong></td>
+                    <td class="col-sm-1 text-center"><strong>Best lap</strong></td>
+                    <td class="col-sm-1 text-center"><strong>Track time</strong></td>
+                    <td class="col-sm-2 text-center"><strong>Conditions</strong></td>
+                </tr>
+                {% for event_record in track.get_track_records() %}
+                <tr>
+                    <td class="col-sm-1 text-center">{{ event_record.no_of_track_record }}</td>
+                    <td class="col-sm-2 text-center">{{ event_record.instance.name_nickname }}</td>
+                    <td class="col-sm-2 text-center">{{ event_record.event.name }}</td>
+                    <td class="col-sm-1 text-center">{{ event_record.position }}</td>
+                    <td class="col-sm-2 text-center">{{ event_record.result }}</td>
+                    <td class="col-sm-1 text-center">{{ event_record.time_best_lap_human_readable }}</td>
+                    <td class="col-sm-1 text-center">{{ event_record.time_track_human_readable }}</td>
+                    <td class="col-sm-2 text-center">conditions</td>
+                </tr>
+                {% endfor %}
+              {% endif %}
+          </table>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Delete suspension</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete {{ track.name }}? This action cannot be undone.</p>
+              <p>Deleting tracks with records assigned to them could break the database.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a href="{{ url_for('need_for_speed.iii_hot_pursuit.delete_track', id=track.id) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}
