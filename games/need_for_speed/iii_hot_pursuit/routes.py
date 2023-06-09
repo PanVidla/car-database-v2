@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from games.need_for_speed.iii_hot_pursuit import blueprint
-from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form
+from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
 from general import database
 from general.forms_info import TextForm, ImageForm
@@ -102,12 +102,46 @@ def add_class():
                            game="Need for Speed III: Hot Pursuit")
 
 
+# Edit instance (game-specific)
+@blueprint.route("/instances/edit-instance/<id>/game-specific", methods=['GET', 'POST'])
+@login_required
+def edit_instance_game_specific(id):
+
+    instance = InstanceNFS3.query.get(id)
+
+    form = InstanceNFS3Form(obj=instance)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(instance)
+        instance.set_average()
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the {}.".format(instance.name_full), "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.edit_instance_game_specific", id=instance.id))
+
+        flash("The {} has been successfully edited.".format(instance.name_full), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+    return render_template("nfs3_instances_form.html",
+                           title="Edit instance",
+                           heading="Edit game-specific information",
+                           form=form,
+                           viewing="instances",
+                           game="Need for Speed III: Hot Pursuit",
+                           editing=True)
+
+
 # Instance detail
 @blueprint.route("/instances/detail/<id>", methods=['GET', 'POST'])
 @login_required
 def detail_instance(id):
 
     instance = InstanceNFS3.query.get(id)
+    tune = instance.get_tune()
     texts = InstanceText.query \
         .filter(InstanceText.instance_id == instance.id) \
         .order_by(InstanceText.order.asc()) \
@@ -115,6 +149,8 @@ def detail_instance(id):
 
     add_text_form = TextForm()
     add_image_form = ImageForm()
+
+    edit_tune_form = TuneNFS3Form(obj=tune)
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -167,12 +203,44 @@ def detail_instance(id):
         flash("The image has been successfully added to {}.".format(instance.name_full), "success")
         return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
 
+    # Edit tune
+    if edit_tune_form.submit_edit_tune.data and edit_tune_form.validate():
+
+        if instance.get_tune() is None:
+
+            new_tune = TuneNFS3(instance_id=instance.id)
+            edit_tune_form.populate_obj(new_tune)
+
+            try:
+                database.session.add(new_tune)
+                database.session.commit()
+            except RuntimeError:
+                flash("There was a problem add a new tune to this instance", "danger")
+                return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+            flash("A tune has been successfully added to this instance.", "success")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+        edit_tune_form.populate_obj(tune)
+        instance.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing this instance's tune.", "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+        flash("The tune has been successfully updated.", "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
     return render_template("nfs3_instances_detail.html",
                            title="{}".format(instance.name_nickname),
                            heading="{}".format(instance.name_full),
                            instance=instance,
+                           tune=tune,
                            texts=texts,
                            add_text_form=add_text_form,
                            add_image_form=add_image_form,
+                           edit_tune_form=edit_tune_form,
                            viewing="instances",
                            game="Need for Speed III: Hot Pursuit")

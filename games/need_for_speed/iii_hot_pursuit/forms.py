@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectField, IntegerField, SubmitField, StringField
-from wtforms.validators import DataRequired, NumberRange, Optional, Length
+from wtforms.validators import DataRequired, NumberRange, Optional, Length, InputRequired
 
 from games.need_for_speed.iii_hot_pursuit.models.instance import ClassNFS3
 
@@ -33,3 +33,17 @@ class ClassNFS3Form(FlaskForm):
     color_hex = StringField("Color", validators=[Optional(), Length(min=7, max=7)])
 
     submit = SubmitField("Set class information")
+
+
+class TuneNFS3Form(FlaskForm):
+
+    # General
+    engine = IntegerField("Engine", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    brake_balance = IntegerField("Brake balance", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    steering_speed = IntegerField("Steering speed", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    gearbox_ratio = IntegerField("Gearbox ratio", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    aerodynamics = IntegerField("Aerodynamics", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    suspension = IntegerField("Suspension", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+    tyres = IntegerField("Tyres", validators=[InputRequired(), NumberRange(min=-100, max=100)])
+
+    submit_edit_tune = SubmitField("Set tuning values")

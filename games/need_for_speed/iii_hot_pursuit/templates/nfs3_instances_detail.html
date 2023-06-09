@@ -7,27 +7,27 @@
     <!--  Performance stats  -->
     <div>
         <div class="panel panel-default">
-          <div class="panel-heading">
+            <div class="panel-heading">
             <h3 class="panel-title">Stats</h3>
-          </div>
-          <div {% if instance.car_class.color_hex %}bgcolor="{{ instance.car_class.color_hex }}"{% endif %} class="panel-body">
-              <div class="row">
-                  <div class="col-sm-2 text-center"><b>Class</b></div>
-                  <div class="col-sm-2 text-center"><b>Acceleration</b></div>
-                  <div class="col-sm-2 text-center"><b>Top speed</b></div>
-                  <div class="col-sm-2 text-center"><b>Handling</b></div>
-                  <div class="col-sm-2 text-center"><b>Braking</b></div>
-                  <div class="col-sm-2 text-center"><b>Average</b></div>
-              </div>
-              <div class="row">
-                  <div class="col-sm-2 text-center">{{ instance.get_class() }}</div>
-                  <div class="col-sm-2 text-center">{{ instance.acceleration }}</div>
-                  <div class="col-sm-2 text-center">{{ instance.top_speed }}</div>
-                  <div class="col-sm-2 text-center">{{ instance.handling }}</div>
-                  <div class="col-sm-2 text-center">{{ instance.braking }}</div>
-                  <div class="col-sm-2 text-center">{{ instance.average }}</div>
-              </div>
-          </div>
+            </div>
+                <table class="table table-bordered table-hover table-striped">
+                    <tr>
+                        <td class="col-sm-2 text-center"><strong>Class</strong></td>
+                        <td class="col-sm-2 text-center"><strong>Acceleration</strong></td>
+                        <td class="col-sm-2 text-center"><strong>Top speed</strong></td>
+                        <td class="col-sm-2 text-center"><strong>Handling</strong></td>
+                        <td class="col-sm-2 text-center"><strong>Braking</strong></td>
+                        <td class="col-sm-2 text-center"><strong>Average</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="col-sm-2 text-center colored-row" bgcolor="{{ instance.car_class.color_hex }}">{{ instance.get_class() }}</td>
+                        <td class="col-sm-2 text-center">{{ instance.acceleration }}</td>
+                        <td class="col-sm-2 text-center">{{ instance.top_speed }}</td>
+                        <td class="col-sm-2 text-center">{{ instance.handling }}</td>
+                        <td class="col-sm-2 text-center">{{ instance.braking }}</td>
+                        <td class="col-sm-2 text-center">{{ instance.average }}</td>
+                    </tr>
+                </table>
         </div>
     </div>
 
@@ -54,8 +54,9 @@
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Average position</b></div>
-                  <div class="col-sm-10 text-left">average position</div>
+                  <div class="col-sm-10 text-left">{{ instance.get_average_position() }}</div>
               </div>
+              <hr>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Lap records</b></div>
                   <div class="col-sm-1 text-left">{{ instance.no_of_lap_records }}</div>
@@ -66,14 +67,14 @@
         </div>
     </div>
 
-    <h3>Current tuning</h3>
+    <h3>Tune</h3>
     <!--  Tune  -->
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Tune</h3>
+        <h3 class="panel-title">Current tuning</h3>
       </div>
       <div class="table-responsive">
-          <table class="table table-bordered table-condensed table-striped table-hover">
+          <table class="table table-bordered table-striped table-hover">
               {% if instance.tune.first() == None %}
               <tr>
                   <td class="text-center"><strong>This instance doesn't have a tune.</strong></td>
@@ -89,13 +90,13 @@
                 <td class="col-sm-1 text-center"><strong>Tyres</strong></td>
               </tr>
               <tr>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().engine }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().brake_balance }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().steering_speed }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().gearbox_ratio }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().aerodynamics }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().suspension }} %</td>
-                <td class="col-sm-1 text-center">{{ instance.tune.first().tyres }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.engine }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.brake_balance }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.steering_speed }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.gearbox_ratio }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.aerodynamics }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.suspension }} %</td>
+                <td class="col-sm-1 text-center">{{ tune.tyres }} %</td>
               </tr>
               {% endif %}
           </table>
@@ -140,6 +141,21 @@
               {% endif %}
           </table>
       </div>
+    </div>
+
+    <!--  Modals  -->
+    <div class="modal fade" id="tuneModal" tabindex="-1" role="dialog" aria-labelledby="tuneModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="imageLabel">Edit tune</h4>
+          </div>
+          <div class="modal-body">
+              {{ wtf.quick_form(edit_tune_form, button_map={"submit_edit_tune": "success"}) }}
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
     </div>
 
 {% endblock %}

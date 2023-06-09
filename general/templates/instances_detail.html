@@ -59,6 +59,9 @@
                                 </div>
                             </form>
                         </li>
+                        {% if instance.game.name_full == "Need for Speed III: Hot Pursuit" %}
+                            {% include "_nfs3_subsubmenu.html" %}
+                        {% endif %}
                         <li class="dropdown">
                             <form class="navbar-form">
                                 <div class="btn-group">
