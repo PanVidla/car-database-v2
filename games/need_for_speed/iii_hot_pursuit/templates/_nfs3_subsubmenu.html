@@ -1,0 +1,14 @@
+<li class="dropdown">
+    <form class="navbar-form">
+        <div class="btn-group">
+          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+            Game-specific <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="{{ url_for('need_for_speed.iii_hot_pursuit.edit_instance_game_specific', id=instance.id) }}">Edit game-specific information</a></li>
+            <li class="divider"></li>
+            <li><a href="#" data-toggle="modal" data-target="#tuneModal">Edit tune</a></li>
+          </ul>
+        </div>
+    </form>
+</li>
