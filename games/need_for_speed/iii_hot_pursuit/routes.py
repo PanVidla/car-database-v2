@@ -412,6 +412,8 @@ def delete_event_record(id):
     if event_record.is_track_record == True:
         event_record.track.update_best_track_time_event_record()
 
+    event_record.instance.update_statistics()
+
     try:
         database.session.commit()
 

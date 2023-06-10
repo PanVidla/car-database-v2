@@ -81,7 +81,10 @@ class InstanceNFS3(RacingInstance):
         self.no_of_events_won = no_of_wins
 
     def set_no_of_events_won_percentage(self):
-        self.no_of_events_won_percent = self.no_of_events_won / self.no_of_ranked_events
+        if self.no_of_ranked_events != 0:
+            self.no_of_events_won_percent = self.no_of_events_won / self.no_of_ranked_events
+        else:
+            self.no_of_events_won_percent = 0
 
     def set_no_of_events_podium(self):
 
@@ -95,7 +98,10 @@ class InstanceNFS3(RacingInstance):
         self.no_of_events_podium = no_of_podiums
 
     def set_no_of_events_podium_percentage(self):
-        self.no_of_events_podium_percent = self.no_of_events_podium / self.no_of_ranked_events
+        if self.no_of_ranked_events != 0:
+            self.no_of_events_podium_percent = self.no_of_events_podium / self.no_of_ranked_events
+        else:
+            self.no_of_events_podium_percent = 0
 
     def set_no_of_events_lost(self):
 
@@ -109,7 +115,10 @@ class InstanceNFS3(RacingInstance):
         self.no_of_events_lost = no_of_losses
 
     def set_no_of_events_lost_percentage(self):
-        self.no_of_events_lost_percent = self.no_of_events_lost / self.no_of_ranked_events
+        if self.no_of_ranked_events != 0:
+            self.no_of_events_lost_percent = self.no_of_events_lost / self.no_of_ranked_events
+        else:
+            self.no_of_events_lost_percent = 0
 
     def set_no_of_events_dnf(self):
 
@@ -123,7 +132,10 @@ class InstanceNFS3(RacingInstance):
         self.no_of_events_dnf = no_of_dnfs
 
     def set_no_of_events_dnf_percentage(self):
-        self.no_of_events_dnf_percent = self.no_of_events_dnf / self.no_of_ranked_events
+        if self.no_of_ranked_events != 0:
+            self.no_of_events_dnf_percent = self.no_of_events_dnf / self.no_of_ranked_events
+        else:
+            self.no_of_events_dnf_percent = 0
 
     def set_no_of_lap_records(self):
 
@@ -152,15 +164,20 @@ class InstanceNFS3(RacingInstance):
         ranked_event_records = self.get_event_records_ranked()
         sum_of_positions = 0
 
-        for event_record in ranked_event_records:
+        if self.no_of_ranked_events !=0:
 
-            if event_record.result == "DNF":
-                sum_of_positions += event_record.event.no_of_participants + 1
+            for event_record in ranked_event_records:
 
-            else:
-                sum_of_positions += event_record.position
+                if event_record.result == "DNF":
+                    sum_of_positions += event_record.event.no_of_participants + 1
 
-        self.average_position = sum_of_positions / self.no_of_ranked_events
+                else:
+                    sum_of_positions += event_record.position
+
+            self.average_position = sum_of_positions / self.no_of_ranked_events
+
+        else:
+            self.average_position = 0
 
     def update_statistics(self):
 

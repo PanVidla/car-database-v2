@@ -140,6 +140,8 @@
                 {% elif event_record.result == 'podium' and event_record.position == 3 %} result-podium-3
                 {% elif event_record.result == 'loss' %} result-loss
                 {% elif event_record.result == 'DNF' %} result-dnf
+                {% elif event_record.result == 'top cop' %} nfs3-result-top-cop
+                {% elif event_record.result == 'didn\'t meet quota' %} nfs3-result-didnt-meet-quota
                 {% elif event_record.result == 'busted' %} nfs3-result-busted
                 {% elif event_record.result == 'most wanted' %} nfs3-result-most-wanted{% endif %}">{{ event_record.get_result() }}</td>
                 <td class="col-sm-1 text-center {% if event_record.is_lap_record == True %} record-lap{% endif %}

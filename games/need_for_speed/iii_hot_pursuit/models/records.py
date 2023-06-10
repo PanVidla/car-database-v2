@@ -244,16 +244,52 @@ class EventRecordNFS3(database.Model):
 
         if self.event.name == "hot pursuit":
 
+            if "Pursuit Version" in self.instance.name_full:
+
+                if self.position is None:
+                    self.result = "DNF"
+                    return
+
+                if self.position == 1:
+                    self.result = "top cop"
+                elif self.position >= 2:
+                    self.result = "didn't meet quota"
+                else:
+                    self.result = "didn't meet quota"
+
+            else:
+
+                if self.position is None:
+                    self.result = "busted"
+                    return
+
+                if self.position == 1:
+                    self.result = "most wanted"
+                elif self.position == 2:
+                    self.result = "complete"
+                else:
+                    self.result = "DNF"
+
+        if "knockout" in self.event.name:
+
             if self.position is None:
-                self.result = "busted"
+                self.result = "DNF"
+                return
+
+            if self.position > self.event.no_of_participants:
+                self.result = "DNF"
+                return
+
+            if self.position >= self.event.no_of_participants:
+                self.result = "loss"
                 return
 
             if self.position == 1:
-                self.result = "most wanted"
-            elif self.position == 2:
+                self.result = "win"
+            elif (self.position == 2) or (self.position == 3):
+                self.result = "podium"
+            elif 4 <= self.position <= 7:
                 self.result = "complete"
-            else:
-                self.result = "DNF"
 
     def set_time_best_lap_milliseconds(self):
 
