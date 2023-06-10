@@ -30,7 +30,7 @@ class InstanceNFS3(RacingInstance):
     event_records = database.relationship('EventRecordNFS3', backref='instance', lazy='dynamic')
 
     def get_average_position(self):
-        return self.average_position if self.average_position is not None else "n/a"
+        return "{:.2f}".format(self.average_position) if self.average_position is not None else "n/a"
 
     def get_class(self):
         return self.car_class.name if self.nfs3_class_id is not None else "n/a"
@@ -45,18 +45,140 @@ class InstanceNFS3(RacingInstance):
 
     def get_event_records_ranked(self):
 
+        ranked_event_records = []
+
         event_records = EventRecordNFS3.query.filter(EventRecordNFS3.instance_id == self.id,
-                                                     EventRecordNFS3.event.is_ranked == True,
                                                      EventRecordNFS3.is_deleted == False)\
             .order_by(EventRecordNFS3.no_of_event_record.desc()).all()
 
-        return event_records
+        for event_record in event_records:
+            if event_record.event.is_ranked is True:
+                ranked_event_records.append(event_record)
+
+        return ranked_event_records
 
     def get_tune(self):
         return TuneNFS3.query.filter(TuneNFS3.instance_id == self.id).first()
 
     def set_average(self):
         self.average = (self.acceleration + self.top_speed + self.handling + self.braking) / 4
+
+    def set_no_events_total(self):
+        self.no_of_events_total = len(self.get_event_records())
+
+    def set_no_events_ranked(self):
+        self.no_of_ranked_events = len(self.get_event_records_ranked())
+
+    def set_no_of_events_won(self):
+
+        ranked_event_records = self.get_event_records_ranked()
+        no_of_wins = 0
+
+        for event_record in ranked_event_records:
+            if event_record.result == "win":
+                no_of_wins += 1
+
+        self.no_of_events_won = no_of_wins
+
+    def set_no_of_events_won_percentage(self):
+        self.no_of_events_won_percent = self.no_of_events_won / self.no_of_ranked_events
+
+    def set_no_of_events_podium(self):
+
+        ranked_event_records = self.get_event_records_ranked()
+        no_of_podiums = 0
+
+        for event_record in ranked_event_records:
+            if event_record.result == "podium":
+                no_of_podiums += 1
+
+        self.no_of_events_podium = no_of_podiums
+
+    def set_no_of_events_podium_percentage(self):
+        self.no_of_events_podium_percent = self.no_of_events_podium / self.no_of_ranked_events
+
+    def set_no_of_events_lost(self):
+
+        ranked_event_records = self.get_event_records_ranked()
+        no_of_losses = 0
+
+        for event_record in ranked_event_records:
+            if event_record.result == "loss":
+                no_of_losses += 1
+
+        self.no_of_events_lost = no_of_losses
+
+    def set_no_of_events_lost_percentage(self):
+        self.no_of_events_lost_percent = self.no_of_events_lost / self.no_of_ranked_events
+
+    def set_no_of_events_dnf(self):
+
+        ranked_event_records = self.get_event_records_ranked()
+        no_of_dnfs = 0
+
+        for event_record in ranked_event_records:
+            if event_record.result == "DNF":
+                no_of_dnfs += 1
+
+        self.no_of_events_dnf = no_of_dnfs
+
+    def set_no_of_events_dnf_percentage(self):
+        self.no_of_events_dnf_percent = self.no_of_events_dnf / self.no_of_ranked_events
+
+    def set_no_of_lap_records(self):
+
+        event_records = self.get_event_records()
+        no_of_lap_records = 0
+
+        for event_record in event_records:
+            if event_record.is_lap_record is True:
+                no_of_lap_records +=1
+
+        self.no_of_lap_records = no_of_lap_records
+
+    def set_no_of_track_records(self):
+
+        event_records = self.get_event_records()
+        no_of_track_records = 0
+
+        for event_record in event_records:
+            if event_record.is_track_record is True:
+                no_of_track_records += 1
+
+        self.no_of_track_records = no_of_track_records
+
+    def set_average_position(self):
+
+        ranked_event_records = self.get_event_records_ranked()
+        sum_of_positions = 0
+
+        for event_record in ranked_event_records:
+
+            if event_record.result == "DNF":
+                sum_of_positions += event_record.event.no_of_participants + 1
+
+            else:
+                sum_of_positions += event_record.position
+
+        self.average_position = sum_of_positions / self.no_of_ranked_events
+
+    def update_statistics(self):
+
+        self.set_no_events_total()
+        self.set_no_events_ranked()
+
+        self.set_no_of_events_won()
+        self.set_no_of_events_won_percentage()
+        self.set_no_of_events_podium()
+        self.set_no_of_events_podium_percentage()
+        self.set_no_of_events_lost()
+        self.set_no_of_events_lost_percentage()
+        self.set_no_of_events_dnf()
+        self.set_no_of_events_dnf_percentage()
+        self.set_average_position()
+
+        self.set_no_of_lap_records()
+        self.set_no_of_track_records()
 
 
 # Represents the groups of cars divided by performance

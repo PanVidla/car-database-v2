@@ -57,15 +57,15 @@
                     <td class="col-sm-1 text-center"><strong>Track time</strong></td>
                     <td class="col-sm-2 text-center"><strong>Conditions</strong></td>
                 </tr>
-                {% for event_record in track.get_track_records() %}
+                {% for event_record in track.get_event_records() %}
                 <tr>
                     <td class="col-sm-1 text-center">{{ event_record.no_of_track_record }}</td>
                     <td class="col-sm-2 text-center">{{ event_record.instance.name_nickname }}</td>
                     <td class="col-sm-2 text-center">{{ event_record.event.name }}</td>
                     <td class="col-sm-1 text-center">{{ event_record.position }}</td>
                     <td class="col-sm-2 text-center">{{ event_record.result }}</td>
-                    <td class="col-sm-1 text-center">{{ event_record.time_best_lap_human_readable }}</td>
-                    <td class="col-sm-1 text-center">{{ event_record.time_track_human_readable }}</td>
+                    <td class="col-sm-1 text-center">{{ event_record.get_time_best_lap_human_readable() }}</td>
+                    <td class="col-sm-1 text-center">{{ event_record.get_time_track_human_readable() }}</td>
                     <td class="col-sm-2 text-center">conditions</td>
                 </tr>
                 {% endfor %}

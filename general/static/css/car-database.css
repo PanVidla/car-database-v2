@@ -85,6 +85,10 @@
     background: #e6c200;
 }
 
+.not-available {
+    color: #cccccc;
+}
+
 .state-100 {
     color: #ffffff;
     background: #d91c07;
@@ -115,6 +119,51 @@
     background: #b1b2b3;
 }
 
+.record-lap {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
+.record-lap-current {
+    color: #ffffff;
+    background: #A020F0;
+}
+
+.record-track {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
+.record-track-current {
+    color: #ffffff;
+    background: #A020F0;
+}
+
+.result-win {
+    color: #ffffff;
+    background: #FFD700;
+}
+
+.result-podium-2 {
+    color: #ffffff;
+    background: #c0c0c0;
+}
+
+.result-podium-3 {
+    color: #ffffff;
+    background: #CD7F32;
+}
+
+.result-loss {
+    color: #ffffff;
+    background: #8B0000;
+}
+
+.result-dnf {
+    color: #ffffff;
+    background: #000000;
+}
+
 .true-neutral {
     color: #ffffff;
     background: #5bc0de;
@@ -123,4 +172,14 @@
 .false-neutral {
     color: #ffffff;
     background: #b1b2b3;
+}
+
+.nfs3-result-most-wanted {
+    color: #ffffff;
+    background: #5bc0de;
+}
+
+.nfs3-result-busted {
+    color: #ffffff;
+    background: #000000;
 }

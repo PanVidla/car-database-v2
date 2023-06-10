@@ -21,8 +21,8 @@
             <tr>
                 <td class="col-sm-1">{{ track.id }}</td>
                 <td class="col-sm-7"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_track', id=track.id) }}">{{ track.name }}</a></td>
-                <td class="col-sm-2 text-center">best lap time</td>
-                <td class="col-sm-2 text-center">best track time</td>
+                <td class="col-sm-2 text-center">{{ track.get_best_lap_time_human_readable() }}</td>
+                <td class="col-sm-2 text-center">{{ track.get_best_track_time_human_readable() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

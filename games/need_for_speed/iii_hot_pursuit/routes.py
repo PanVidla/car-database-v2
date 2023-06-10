@@ -5,9 +5,10 @@ from flask_login import login_required
 
 from games.need_for_speed.iii_hot_pursuit import blueprint
 from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form, \
-    TrackNFS3Form
+    TrackNFS3Form, EventRecordNFS3Form
 from games.need_for_speed.iii_hot_pursuit.models.events import EventNFS3
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
+from games.need_for_speed.iii_hot_pursuit.models.records import EventRecordNFS3
 from games.need_for_speed.iii_hot_pursuit.models.tracks import TrackNFS3
 from general import database
 from general.forms_info import TextForm, ImageForm
@@ -285,6 +286,49 @@ def edit_event(id):
                            editing=True)
 
 
+# Edit event record
+@blueprint.route("/event-records/edit-event-record/<id>", methods=['GET', 'POST'])
+@login_required
+def edit_event_record(id):
+
+    event_record = EventRecordNFS3.query.get(id)
+    form = EventRecordNFS3Form(obj=event_record)
+
+    if form.validate_on_submit():
+
+        form.populate_obj(event_record)
+
+        try:
+            database.session.add(event_record)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem editing the event record.", "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
+
+        event_record.set_calculated_values()
+        event_record.instance.update_statistics()
+
+        event_record.datetime_edited = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem calculating values for the event record in the database.", "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
+
+        flash("Event record no. {} has been successfully edited.".format(
+            event_record.no_of_event_record), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
+
+    return render_template("nfs3_event_records_form.html",
+                           title="Edit event record",
+                           heading="Edit event record",
+                           form=form,
+                           viewing="event_records",
+                           game="Need for Speed III: Hot Pursuit",
+                           editing=True)
+
+
 # Edit track
 @blueprint.route("/tracks/edit-track/<id>", methods=['GET', 'POST'])
 @login_required
@@ -353,6 +397,32 @@ def delete_event(id):
     return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_events"))
 
 
+# Delete event record
+@blueprint.route("/event-records/delete-event-record/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_event_record(id):
+
+    event_record = EventRecordNFS3.query.get(id)
+
+    event_record.is_deleted = True
+
+    if event_record.is_lap_record == True:
+        event_record.track.update_best_lap_time_event_record()
+
+    if event_record.is_track_record == True:
+        event_record.track.update_best_track_time_event_record()
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting event record no. {}.".format(event_record.no_of_event_record), "danger")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
+
+    flash("Event record no. {} has been successfully deleted.".format(event_record.no_of_event_record), "success")
+    return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
+
+
 # Delete event
 @blueprint.route("/tracks/delete-track/<id>", methods=['GET', 'POST'])
 @login_required
@@ -388,6 +458,7 @@ def detail_instance(id):
     add_image_form = ImageForm()
 
     edit_tune_form = TuneNFS3Form(obj=tune)
+    add_event_record_form = EventRecordNFS3Form()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -470,6 +541,36 @@ def detail_instance(id):
         flash("The tune has been successfully updated.", "success")
         return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
 
+    # Add event record
+    if add_event_record_form.submit_add_event_record.data and add_event_record_form.validate():
+
+        new_event_record = EventRecordNFS3(instance_id=instance.id,
+                                           datetime_added=datetime.utcnow(),
+                                           datetime_edited=datetime.utcnow(),
+                                           no_of_event_record=len(instance.get_event_records()) + 1)
+        add_event_record_form.populate_obj(new_event_record)
+
+        try:
+            database.session.add(new_event_record)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding a new event record to the database.", "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+        new_event_record.set_calculated_values()
+        instance.update_statistics()
+
+        instance.datetime_played = datetime.utcnow()
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem calculating values for the new event record in the database.", "danger")
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
+        flash("Event record no. {} has been successfully added to the database.".format(new_event_record.no_of_event_record), "success")
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+
     return render_template("nfs3_instances_detail.html",
                            title="{}".format(instance.name_nickname),
                            heading="{}".format(instance.name_full),
@@ -479,6 +580,7 @@ def detail_instance(id):
                            add_text_form=add_text_form,
                            add_image_form=add_image_form,
                            edit_tune_form=edit_tune_form,
+                           add_event_record_form=add_event_record_form,
                            viewing="instances",
                            game="Need for Speed III: Hot Pursuit")
 

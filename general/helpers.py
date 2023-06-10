@@ -2,7 +2,7 @@ from flask import redirect, url_for, flash
 
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3
-from general import cardb
+# from general import cardb
 from general.models.instance import Instance
 
 

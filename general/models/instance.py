@@ -441,25 +441,25 @@ class RacingInstance(Instance):
         if (self.no_of_events_won_percent is None) or (self.no_of_events_won_percent == 0):
             return "{}".format(self.no_of_events_won)
         else:
-            return "{} ({} %)".format(self.no_of_events_won, self.no_of_events_won_percent * 100)
+            return "{} ({:.1f}%)".format(self.no_of_events_won, self.no_of_events_won_percent * 100)
 
     def get_no_of_events_podium_string(self):
         if (self.no_of_events_podium_percent is None) or (self.no_of_events_podium_percent == 0):
             return "{}".format(self.no_of_events_podium)
         else:
-            return "{} ({} %)".format(self.no_of_events_podium, self.no_of_events_podium_percent * 100)
+            return "{} ({:.1f}%)".format(self.no_of_events_podium, self.no_of_events_podium_percent * 100)
 
     def get_no_of_events_lost_string(self):
         if (self.no_of_events_lost_percent is None) or (self.no_of_events_lost_percent == 0):
             return "{}".format(self.no_of_events_lost)
         else:
-            return "{} ({} %)".format(self.no_of_events_lost, self.no_of_events_lost_percent * 100)
+            return "{} ({:.1f}%)".format(self.no_of_events_lost, self.no_of_events_lost_percent * 100)
 
     def get_no_of_events_dnf_string(self):
         if (self.no_of_events_dnf_percent is None) or (self.no_of_events_dnf_percent == 0):
             return "{}".format(self.no_of_events_dnf)
         else:
-            return "{} ({} %)".format(self.no_of_events_dnf, self.no_of_events_dnf_percent * 100)
+            return "{} ({:.1f}%)".format(self.no_of_events_dnf, self.no_of_events_dnf_percent * 100)
 
 
 # Info

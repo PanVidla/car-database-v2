@@ -17,7 +17,7 @@ class EventNFS3(database.Model):
     # Game-specific
     no_of_participants = database.Column(database.Integer, index=True, nullable=False)
     no_of_laps = database.Column(database.Integer, index=True, nullable=False)
-    is_ranked = database.Column(database.Integer, default=True, index=True, nullable=False)
+    is_ranked = database.Column(database.Boolean, default=True, index=True, nullable=False)
 
     # Relationships
     records = database.relationship('EventRecordNFS3', backref='event', lazy='dynamic')

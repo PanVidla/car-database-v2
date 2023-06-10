@@ -44,13 +44,15 @@
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Wins</b></div>
-                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_won_string() }}</div>
-                  <div class="col-sm-2 text-right"><b>Podiums</b></div>
-                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_podium_string() }}</div>
+                  <div class="col-sm-4 text-left">{{ instance.get_no_of_events_won_string() }}</div>
                   <div class="col-sm-2 text-right"><b>Losses</b></div>
-                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_lost_string() }}</div>
+                  <div class="col-sm-4 text-left">{{ instance.get_no_of_events_lost_string() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Podiums</b></div>
+                  <div class="col-sm-4 text-left">{{ instance.get_no_of_events_podium_string() }}</div>
                   <div class="col-sm-2 text-right"><b>DNFs</b></div>
-                  <div class="col-sm-1 text-left">{{ instance.get_no_of_events_dnf_string() }}</div>
+                  <div class="col-sm-4 text-left">{{ instance.get_no_of_events_dnf_string() }}</div>
               </div>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Average position</b></div>
@@ -59,9 +61,9 @@
               <hr>
               <div class="row">
                   <div class="col-sm-2 text-right"><b>Lap records</b></div>
-                  <div class="col-sm-1 text-left">{{ instance.no_of_lap_records }}</div>
+                  <div class="col-sm-4 text-left">{{ instance.no_of_lap_records }}</div>
                   <div class="col-sm-2 text-right"><b>Track records</b></div>
-                  <div class="col-sm-7 text-left">{{ instance.no_of_lap_records }}</div>
+                  <div class="col-sm-4 text-left">{{ instance.no_of_track_records }}</div>
               </div>
           </div>
         </div>
@@ -119,23 +121,39 @@
               <tr>
                 <td class="col-sm-1 text-center"><strong>No.</strong></td>
                 <td class="col-sm-2 text-center"><strong>Event</strong></td>
-                <td class="col-sm-2 text-center"><strong>Track</strong></td>
+                <td class="col-sm-3 text-center"><strong>Track</strong></td>
                 <td class="col-sm-1 text-center"><strong>Position</strong></td>
                 <td class="col-sm-2 text-center"><strong>Result</strong></td>
                 <td class="col-sm-1 text-center"><strong>Best lap</strong></td>
                 <td class="col-sm-1 text-center"><strong>Track time</strong></td>
-                <td class="col-sm-2 text-center"><strong>Conditions</strong></td>
+                <td class="col-sm-1 text-center"><strong>Conditions</strong></td>
               </tr>
                 {% for event_record in instance.get_event_records() %}
               <tr>
                 <td class="col-sm-1 text-center">{{ event_record.no_of_event_record }}</td>
-                <td class="col-sm-2 text-center">{{ event_record.event.name }}</td>
-                <td class="col-sm-2 text-center">{{ event_record.track.name }}</td>
-                <td class="col-sm-1 text-center">{{ event_record.position }}</td>
-                <td class="col-sm-2 text-center">{{ event_record.result }}</td>
-                <td class="col-sm-1 text-center">{{ event_record.time_best_lap_human_readable }}</td>
-                <td class="col-sm-1 text-center">{{ event_record.time_track_human_readable }}</td>
-                <td class="col-sm-2 text-center">conditions</td>
+                <td class="col-sm-2 text-center {% if event_record.event.color_hex %}colored-row" bgcolor="{{ event_record.event.color_hex }}"{% else %}"{% endif %}>{{ event_record.event.name }}</td>
+                  <td class="col-sm-3 text-center"><a href="#" data-toggle="modal" data-target="#eventRecordNo{{ event_record.id }}Modal">{{ event_record.track.name }}</a></td>
+                <td class="col-sm-1 text-center {% if event_record.position == None %} not-available{% endif %}">{{ event_record.get_position() }}</td>
+                <td class="col-sm-2 text-center {% if event_record.result == None %} not-available{% endif %}
+                {% if event_record.result == 'win' %} result-win
+                {% elif event_record.result == 'podium' and event_record.position == 2 %} result-podium-2
+                {% elif event_record.result == 'podium' and event_record.position == 3 %} result-podium-3
+                {% elif event_record.result == 'loss' %} result-loss
+                {% elif event_record.result == 'DNF' %} result-dnf
+                {% elif event_record.result == 'busted' %} nfs3-result-busted
+                {% elif event_record.result == 'most wanted' %} nfs3-result-most-wanted{% endif %}">{{ event_record.get_result() }}</td>
+                <td class="col-sm-1 text-center {% if event_record.is_lap_record == True %} record-lap{% endif %}
+                {% if event_record.is_current_lap_record() == True %} record-lap-current{% endif %}
+                {% if event_record.time_best_lap_human_readable == '' %} not-available{% endif %}">{{ event_record.get_time_best_lap_human_readable() }}</td>
+                <td class="col-sm-1 text-center {% if event_record.is_track_record == True %} record-track{% endif %}
+                {% if event_record.is_current_track_record() == True %} record-track-current{% endif %}
+                {% if event_record.time_track_human_readable == '' %} not-available{% endif %}">{{ event_record.get_time_track_human_readable() }}</td>
+                <td class="col-sm-1 text-center">
+                    <img src="{% if event_record.is_backwards == False %}{{ url_for('static', filename='img/icon-forward.svg') }}{% else %}{{ url_for('static', filename='img/icon-backward.svg') }}{% endif %}" height="14 px" alt="Direction icon">
+                    <img src="{% if event_record.is_mirrored == False %}{{ url_for('static', filename='img/icon-not.svg') }}{% else %}{{ url_for('static', filename='img/icon-mirrored.svg') }}{% endif %}" height="14 px" alt="Mirroring icon">
+                    <img src="{% if event_record.is_at_night == False %}{{ url_for('static', filename='img/icon-day.svg') }}{% else %}{{ url_for('static', filename='img/icon-night.svg') }}{% endif %}" height="14 px" alt="Time of day icon">
+                    <img src="{% if event_record.is_weather_on == False %}{{ url_for('static', filename='img/icon-not.svg') }}{% else %}{{ url_for('static', filename='img/icon-weather.svg') }}{% endif %}" height="14 px" alt="Time of day icon">
+                </td>
               </tr>
                 {% endfor %}
               {% endif %}
@@ -149,7 +167,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="imageLabel">Edit tune</h4>
+            <h4 class="modal-title" id="tuneLabel">Edit tune</h4>
           </div>
           <div class="modal-body">
               {{ wtf.quick_form(edit_tune_form, button_map={"submit_edit_tune": "success"}) }}
@@ -157,5 +175,211 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div>
+
+    <div class="modal fade" id="addEventRecordModal" tabindex="-1" role="dialog" aria-labelledby="addEventRecordModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="addEventRecordLabel">Add event record</h4>
+          </div>
+          <div class="modal-body">
+              <form role="form" class="form-horizontal" method="post">
+
+                {{ add_event_record_form.hidden_tag() }}
+
+                <!--      General      -->
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.event_id.label }}</label>
+                        <div class="col-sm-10">
+                            {{ add_event_record_form.event_id(class_="form-control") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.track_id.label }}</label>
+                        <div class="col-sm-10">
+                            {{ add_event_record_form.track_id(class_="form-control") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.position.label }}</label>
+                        <div class="col-sm-10">
+                            {{ add_event_record_form.position(class_="form-control", placeholder="Position") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.time_best_lap_human_readable.label }}</label>
+                        <div class="col-sm-4">
+                            {{ add_event_record_form.time_best_lap_human_readable(class_="form-control", placeholder="Time (best lap time)") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.time_track_human_readable.label }}</label>
+                        <div class="col-sm-4">
+                            {{ add_event_record_form.time_track_human_readable(class_="form-control", placeholder="Time (track time)") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.maximum_speed.label }}</label>
+                        <div class="col-sm-10">
+                            {{ add_event_record_form.maximum_speed(class_="form-control", placeholder="Maximum speed") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.is_backwards.label }}</label>
+                        <div class="col-sm-1">
+                            {{ add_event_record_form.is_backwards(class_="form-control") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.is_mirrored.label }}</label>
+                        <div class="col-sm-1">
+                            {{ add_event_record_form.is_mirrored(class_="form-control") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.is_at_night.label }}</label>
+                        <div class="col-sm-1">
+                            {{ add_event_record_form.is_at_night(class_="form-control") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.is_weather_on.label }}</label>
+                        <div class="col-sm-1">
+                            {{ add_event_record_form.is_weather_on(class_="form-control") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ add_event_record_form.note.label }}</label>
+                        <div class="col-sm-10">
+                            {{ add_event_record_form.note(class_="form-control", placeholder="Additional notes") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                      {{ add_event_record_form.submit_add_event_record(class_="btn btn-success btn-block") }}
+                    </div>
+                </div>
+
+              </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+    <!--  Event record modals  -->
+    {% for event_record in instance.get_event_records() %}
+    <div class="modal fade" id="eventRecordNo{{ event_record.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="eventRecordNo{{ event_record.id }}Label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="eventRecordNo{{ event_record.id }}Label">Event record #{{ event_record.no_of_event_record }}</h4>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>ID</b></div>
+                  <div class="col-sm-10 text-left">{{ event_record.id }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Added</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_datetime_added() }}</div>
+                  <div class="col-sm-2 text-right"><b>Edited</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_datetime_edited() }}</div>
+              </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Event</b></div>
+                  <div class="col-sm-10 text-left">{{ event_record.event.name }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Track</b></div>
+                  <div class="col-sm-10 text-left">{{ event_record.track.name }}</div>
+              </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Position</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_position() }}</div>
+                  <div class="col-sm-2 text-right"><b>Result</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_result() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Best lap</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_time_best_lap_human_readable() }}</div>
+                  <div class="col-sm-2 text-right"><b>Track</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_time_track_human_readable() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Record</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_lap_record() }}</div>
+                  <div class="col-sm-2 text-right"><b>Record</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_track_record() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Speed</b></div>
+                  <div class="col-sm-10 text-left">{{ event_record.get_maximum_speed() }}</div>
+              </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Backward</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_backwards() }}</div>
+                  <div class="col-sm-2 text-right"><b>Night</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_at_night() }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Mirrored</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_mirrored() }}</div>
+                  <div class="col-sm-2 text-right"><b>Weather</b></div>
+                  <div class="col-sm-4 text-left">{{ event_record.get_is_weather_on() }}</div>
+              </div>
+
+              <hr>
+
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Note</b></div>
+                  <div class="col-sm-10 text-left"><p>{{ event_record.note }}</p></div>
+              </div>
+
+              <div class="modal-footer">
+                  <a href="{{ url_for('need_for_speed.iii_hot_pursuit.edit_event_record', id=event_record.id) }}"><button type="button" class="btn btn-success">Edit record</button></a>
+                  <a href="{{ url_for('need_for_speed.iii_hot_pursuit.delete_event_record', id=event_record.id) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    {% endfor %}
 
 {% endblock %}
