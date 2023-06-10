@@ -25,7 +25,7 @@ class EventNFS3(database.Model):
     def get_event_records(self):
         return EventRecordNFS3.query.filter(EventRecordNFS3.event_id == self.id,
                                             EventRecordNFS3.is_deleted == False)\
-            .order_by(EventRecordNFS3.id).all()
+            .order_by(EventRecordNFS3.datetime_added.desc()).all()
 
     def get_is_ranked(self):
         return "✓" if self.is_ranked == True else "x"

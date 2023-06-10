@@ -20,11 +20,17 @@ class TrackNFS3(Location):
     def get_best_lap_time_human_readable(self):
         return EventRecordNFS3.query.get(self.best_lap_time_event_record_id).time_best_lap_human_readable if self.best_lap_time_event_record_id is not None else "n/a"
 
+    def get_best_lap_time_instance_string(self):
+        return EventRecordNFS3.query.get(self.best_lap_time_event_record_id).instance.name_nickname if self.best_lap_time_event_record_id is not None else "n/a"
+
     def get_best_lap_time_milliseconds(self):
         return EventRecordNFS3.query.get(self.best_lap_time_event_record_id).time_best_lap_milliseconds if self.best_lap_time_event_record_id is not None else "n/a"
 
     def get_best_track_time_human_readable(self):
         return EventRecordNFS3.query.get(self.best_track_time_event_record_id).time_track_human_readable if self.best_track_time_event_record_id is not None else "n/a"
+
+    def get_best_track_time_instance_string(self):
+        return EventRecordNFS3.query.get(self.best_track_time_event_record_id).instance.name_nickname if self.best_track_time_event_record_id is not None else "n/a"
 
     def get_best_track_time_milliseconds(self):
         return EventRecordNFS3.query.get(self.best_track_time_event_record_id).time_track_milliseconds if self.best_track_time_event_record_id is not None else "n/a"
@@ -32,7 +38,7 @@ class TrackNFS3(Location):
     def get_event_records(self):
         return EventRecordNFS3.query.filter(EventRecordNFS3.track_id == self.id,
                                             EventRecordNFS3.is_deleted == False)\
-            .order_by(EventRecordNFS3.id.desc()).all()
+            .order_by(EventRecordNFS3.datetime_added.desc()).all()
 
     def update_best_lap_time_event_record(self):
 

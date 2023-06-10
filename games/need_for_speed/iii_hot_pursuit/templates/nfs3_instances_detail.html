@@ -144,10 +144,10 @@
                 {% elif event_record.result == 'didn\'t meet quota' %} nfs3-result-didnt-meet-quota
                 {% elif event_record.result == 'busted' %} nfs3-result-busted
                 {% elif event_record.result == 'most wanted' %} nfs3-result-most-wanted{% endif %}">{{ event_record.get_result() }}</td>
-                <td class="col-sm-1 text-center {% if event_record.is_lap_record == True %} record-lap{% endif %}
+                <td class="col-sm-1 text-center{% if event_record.is_lap_record == True %} record-lap{% endif %}
                 {% if event_record.is_current_lap_record() == True %} record-lap-current{% endif %}
                 {% if event_record.time_best_lap_human_readable == '' %} not-available{% endif %}">{{ event_record.get_time_best_lap_human_readable() }}</td>
-                <td class="col-sm-1 text-center {% if event_record.is_track_record == True %} record-track{% endif %}
+                <td class="col-sm-1 text-center{% if event_record.is_track_record == True %} record-track{% endif %}
                 {% if event_record.is_current_track_record() == True %} record-track-current{% endif %}
                 {% if event_record.time_track_human_readable == '' %} not-available{% endif %}">{{ event_record.get_time_track_human_readable() }}</td>
                 <td class="col-sm-1 text-center">

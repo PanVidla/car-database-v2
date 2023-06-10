@@ -179,14 +179,14 @@
     background: #000000;
 }
 
-.nfs3-result-top-cop {
-    color: #ffffff;
-    background: #5bc0de;
-}
-
 .nfs3-result-didnt-meet-quota {
     color: #ffffff;
     background: #8B0000;
+}
+
+.nfs3-result-most-wanted {
+    color: #ffffff;
+    background: #5bc0de;
 }
 
 .nfs3-result-top-cop {
