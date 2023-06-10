@@ -209,7 +209,10 @@ class EventRecordNFS3(database.Model):
 
     def set_result(self):
 
-        if (self.event.name == "race (standard)") or (self.event.name == "race (special)"):
+        if \
+                (self.event.name == "race (standard)") or \
+                (self.event.name == "race (special)") or \
+                (self.event.name == "tournament"):
 
             if self.position is None:
                 self.result = "DNF"
