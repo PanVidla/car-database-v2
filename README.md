@@ -18,6 +18,9 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHANGE: The "Add instance" button in a Game-specific Instance overview should lead to creation of a car for the game in question.
 * FIX: Prevent cars from copying text and images twice when making a second copy of one car.
 
+### Need for Speed III: Hot Pursuit
+* ADD: Add the option to add text and images to NFS3 events and tracks.
+
 ### Need for Speed: Road Challenge
 * ADD: The ability to add, edit, delete and view NFS4 instances.
 
