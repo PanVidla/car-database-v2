@@ -9,17 +9,25 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add the option to select own color for instance types and specializations.
 * ADD: Add selection of currently active Instance.
 * ADD: Add counting of sessions.
+* ADD: Add the possibility of defining custom rules for events.
 * CHANGE: Add the option to delete logos easily.
 * CHANGE: Make sure related entities (text, images...) get deleted on deletion of objects.
-* CHANGE: Make sure datetime_edited changes when deleting related objects on entites that have it.
+* CHANGE: Make sure datetime_edited changes when deleting related objects on entities that have it.
 * CHANGE: Remove the Developer, Car manufacturer and Part manufacturer columns from specialized Company overviews.
 * CHANGE: Consolidate the button coloring and grouping in the remaining detail views.
 * CHANGE: Remove irrelevant columns from tables in detail views.
 * CHANGE: The "Add instance" button in a Game-specific Instance overview should lead to creation of a car for the game in question.
+* CHANGE: Make prototypes / concept cars also colored a different way, like fictional cars.
 * FIX: Prevent cars from copying text and images twice when making a second copy of one car.
+* FIX: Wins should also be counted as "podiums".
+* FIX: Assists are still not copying over to the Instance from Car when creating it.
+* FIX: Last played datetime updated for an Instance should also updated the last played datetime for its Game.
+* FIX: The app crashes when trying to create an engine with an undefined no. of valves per cylinder.
 
 ### Need for Speed III: Hot Pursuit
 * ADD: Add the option to add text and images to NFS3 events and tracks.
+* FIX: Add missing color formatting to Event and Track overviews.
+* FIX: Make sure the no. of lap and track records is counted correctly (it's probably happening because when updating an event record, the record is not registered as a record a second time, as it's compared to the same value).
 
 ### Need for Speed: Road Challenge
 * ADD: The ability to add, edit, delete and view NFS4 instances.
