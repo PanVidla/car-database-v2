@@ -12,12 +12,16 @@
         <div class="form-group">
             <div>
                 <label class="col-sm-2 control-label">{{ form.name_full.label }}</label>
-                <div class="col-sm-7">
+                <div class="col-sm-4">
                     {{ form.name_full(class_="form-control", placeholder="Name (e.g. all-rounder, straight-line speed...)") }}
                 </div>
                 <label class="col-sm-1 control-label">{{ form.name_short.label }}</label>
                 <div class="col-sm-2">
                     {{ form.name_short(class_="form-control", placeholder="Shortcut") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.color_hex.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.color_hex(class_="form-control", placeholder="#00000") }}
                 </div>
             </div>
         </div>

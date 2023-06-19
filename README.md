@@ -1,12 +1,18 @@
 # PanVidla's Definitive Car Database
 This is a database serving to collect and keep track of cars I've owned and driven in video games.
 
-## v1.2.0.0.0
+## v1.3.0.0.0
 ### General
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * ADD: Add the option to hard delete Cars, Games and Instances.
-* ADD: Add the option to select own color for instance types and specializations.
+
+## v1.2.0.0.0
+### General
+* ~~ADD: Add the option to add and delete thumbnails for Cars and Instances.~~
+* ~~ADD: Add the option to add and delete regular pictures to Company and Competition objects.~~
+* ~~ADD: Add the option to hard delete Cars, Games and Instances.~~
+* ~~ADD: Add the option to select own color for instance types and specializations.~~
 * ADD: Add selection of currently active Instance.
 * ADD: Add counting of sessions.
 * ADD: Add the possibility of defining custom rules for events.

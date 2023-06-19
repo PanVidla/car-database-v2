@@ -497,6 +497,7 @@ class InstanceType(database.Model):
     # General
     name_full = database.Column(database.Unicode, index=True, nullable=False, unique=True)
     name_short = database.Column(database.Unicode, index=True, nullable=False, unique=True)
+    color_hex = database.Column(database.Unicode, nullable=True)
 
     # Relationships
     instances = database.relationship('Instance', backref='type', lazy='dynamic')
@@ -513,6 +514,7 @@ class InstanceSpecialization(database.Model):
     # General
     name_full = database.Column(database.Unicode, index=True, nullable=False)
     name_short = database.Column(database.Unicode, index=True, nullable=False)
+    color_hex = database.Column(database.Unicode, nullable=True)
 
     # Relationships
     instances = database.relationship('Instance', backref='specialization', lazy='dynamic')

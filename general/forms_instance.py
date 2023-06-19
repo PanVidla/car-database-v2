@@ -82,6 +82,7 @@ class InstanceTypeForm(FlaskForm):
     # General
     name_full = StringField("Name", validators=[DataRequired()])
     name_short = StringField("Shortcut", validators=[DataRequired()])
+    color_hex = StringField("Color", validators=[Optional()])
 
 
 class InstanceTypeAddForm(InstanceTypeForm):
@@ -99,6 +100,7 @@ class SpecializationForm(FlaskForm):
     # General
     name_full = StringField("Name", validators=[DataRequired()])
     name_short = StringField("Shortcut", validators=[DataRequired()])
+    color_hex = StringField("Color", validators=[Optional()])
 
 
 class SpecializationAddForm(SpecializationForm):

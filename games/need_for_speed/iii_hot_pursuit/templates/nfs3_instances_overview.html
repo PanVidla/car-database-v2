@@ -24,8 +24,8 @@
                 <td class="col-sm-1">{{ instance.id }}</td>
                 <td class="col-sm-4"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
                 <td class="col-sm-2">{{ instance.name_nickname }}</td>
-                <td class="col-sm-2 text-center">{{ instance.type.name_full }}</td>
-                <td class="col-sm-2 text-center">{{ instance.specialization.name_full }}</td>
+                <td class="col-sm-2 text-center {% if instance.type.color_hex %}colored-row{% endif %}" {% if instance.type.color_hex %}bgcolor="{{ instance.type.color_hex }}"{% endif %}">{{ instance.type.name_full }}</td>
+                <td class="col-sm-2 text-center {% if instance.specialization.color_hex %}colored-row{% endif %}" {% if instance.specialization.color_hex %}bgcolor="{{ instance.specialization.color_hex }}"{% endif %}">{{ instance.specialization.name_full }}</td>
                 <td class="col-sm-1 text-center {% if instance.car_class.color_hex %}colored-row{% endif %}" {% if instance.car_class.color_hex %}bgcolor="{{ instance.car_class.color_hex }}"{% endif %}>{{ instance.get_class() }}</td>
             </tr>
                 {% endfor %}

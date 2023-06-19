@@ -12,15 +12,17 @@
             {% else %}
             <tr>
                 <td class="col-sm-1"><strong>ID</strong></td>
-                <td class="col-sm-10"><strong>Name</strong></td>
-                <td class="col-sm-1"><strong>Shortcut</strong></td>
+                <td class="col-sm-9"><strong>Name</strong></td>
+                <td class="col-sm-1 text-center"><strong>Shortcut</strong></td>
+                <td class="col-sm-1 text-center"><strong>Color</strong></td>
             </tr>
 
                 {% for instance_type in instance_types %}
             <tr>
                 <td class="col-sm-1">{{ instance_type.id }}</td>
-                <td class="col-sm-10"><a href="{{ url_for('detail_instance_type', id=instance_type.id) }}">{{ instance_type.name_full }}</a></td>
-                <td class="col-sm-1">{{ instance_type.name_short }}</td>
+                <td class="col-sm-9"><a href="{{ url_for('detail_instance_type', id=instance_type.id) }}">{{ instance_type.name_full }}</a></td>
+                <td class="col-sm-1 text-center">{{ instance_type.name_short }}</td>
+                <td class="col-sm-1 text-center {% if instance_type.color_hex %}colored-row{% endif %}" {% if instance_type.color_hex %}bgcolor="{{ instance_type.color_hex }}"{% endif %}>{{ instance_type.color_hex }}</td>
             </tr>
                 {% endfor %}
             {% endif %}
