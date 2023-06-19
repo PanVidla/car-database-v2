@@ -7,12 +7,18 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * ADD: Add the option to hard delete Cars, Games and Instances.
 
-## v1.2.0.1.0
+## v1.3.0.0.0
+### General
+* ADD: Add pagination on long tables.
+
 ### Need for Speed III: Hot Pursuit
 * ADD: Game statistics on the Instance overview screen OR a separate statistics screen.
 
 ### Need for Speed: Road Challenge
 * ADD: Game statistics on the Instance overview screen OR a separate statistics screen.
+
+### Forza Horizon 4
+* ADD: Add the option to add, edit, delete and view FH4 instances, events, series of events etc.
 
 ## v1.2.0.0.0
 ### General

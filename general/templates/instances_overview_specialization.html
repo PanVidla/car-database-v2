@@ -13,7 +13,7 @@
             <tr>
                 <td class="col-sm-1"><strong>ID</strong></td>
                 <td class="col-sm-9"><strong>Name</strong></td>
-                <td class="col-sm-1"><strong>Shortcut</strong></td>
+                <td class="col-sm-1 text-center"><strong>Shortcut</strong></td>
                 <td class="col-sm-1 text-center"><strong>Color</strong></td>
             </tr>
 
@@ -22,7 +22,9 @@
                 <td class="col-sm-1">{{ specialization.id }}</td>
                 <td class="col-sm-9"><a href="{{ url_for('detail_specialization', id=specialization.id) }}">{{ specialization.name_full }}</td>
                 <td class="col-sm-1 text-center">{{ specialization.name_short }}</td>
-                <td class="col-sm-1 text-center {% if specialization.color_hex %}colored-row{% endif %}" {% if specialization.color_hex %}bgcolor="{{ specialization.color_hex }}"{% endif %}>{{ specialization.color_hex }}</td>
+                <td class="col-sm-1 text-center {% if specialization.color_hex %}colored-row{% endif %}
+                                                {% if specialization.color_hex == '' %} not-available{% endif %}" {% if specialization.color_hex %}bgcolor="{{ specialization.color_hex }}"{% endif %}
+                >{{ specialization.get_color_hex() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}

@@ -552,6 +552,9 @@ class InstanceType(database.Model):
     # Relationships
     instances = database.relationship('Instance', backref='type', lazy='dynamic')
 
+    def get_color_hex(self):
+        return self.color_hex if self.color_hex is not "" else "n/a"
+
 
 # Represents what the car specializes within its discipline (e.g. straight-line speed, road drifting, dirt rally...)
 class InstanceSpecialization(database.Model):
@@ -568,6 +571,9 @@ class InstanceSpecialization(database.Model):
 
     # Relationships
     instances = database.relationship('Instance', backref='specialization', lazy='dynamic')
+
+    def get_color_hex(self):
+        return self.color_hex if self.color_hex is not "" else "n/a"
 
 
 # Many-to-many relationships

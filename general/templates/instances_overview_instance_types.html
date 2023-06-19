@@ -22,7 +22,8 @@
                 <td class="col-sm-1">{{ instance_type.id }}</td>
                 <td class="col-sm-9"><a href="{{ url_for('detail_instance_type', id=instance_type.id) }}">{{ instance_type.name_full }}</a></td>
                 <td class="col-sm-1 text-center">{{ instance_type.name_short }}</td>
-                <td class="col-sm-1 text-center {% if instance_type.color_hex %}colored-row{% endif %}" {% if instance_type.color_hex %}bgcolor="{{ instance_type.color_hex }}"{% endif %}>{{ instance_type.color_hex }}</td>
+                <td class="col-sm-1 text-center {% if instance_type.color_hex %}colored-row{% endif %}
+                                                {% if instance_type.color_hex == '' %} not-available{% endif %}" {% if instance_type.color_hex %}bgcolor="{{ instance_type.color_hex }}"{% endif %}>{{ instance_type.get_color_hex() }}</td>
             </tr>
                 {% endfor %}
             {% endif %}
