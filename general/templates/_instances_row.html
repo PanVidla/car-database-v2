@@ -1,4 +1,7 @@
-<tr class="{% if instance.is_complete == True %}is-complete{% endif %}">
+<tr class="{% if instance.is_complete == True %}is-complete{% endif %}
+           {% if instance.is_for_collection == True %}is-for-collection{% endif %}
+           {% if instance.get_is_complete_and_for_collection() == True %}is-complete-and-for-collection{% endif %}
+           {% if instance.is_active == True %}active-line{% endif %}">
     <td class="col-sm-1">{{ instance.id }}</td>
     <td class="col-sm-4"><a href="{{ url_for('detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
     <td class="col-sm-2">{{ instance.name_nickname }}</td>

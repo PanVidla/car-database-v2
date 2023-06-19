@@ -85,6 +85,26 @@
     background: #e6c200;
 }
 
+.is-for-collection {
+    color: #ffffff;
+    background: #b1b2b3;
+}
+
+.is-for-collection a {
+    color: #ffffff;
+    background: #b1b2b3;
+}
+
+.is-complete-and-for-collection {
+    color: #ffffff;
+    background: #aa6c39;
+}
+
+.is-complete-and-for-collection a {
+    color: #ffffff;
+    background: #aa6c39;
+}
+
 .not-available {
     color: #cccccc;
 }

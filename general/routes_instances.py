@@ -5,7 +5,6 @@ from flask_login import login_required
 
 from general import cardb, database
 from general.forms_cars import CarEngineForm, CarForcedInductionForm, CarPowerValuesForm, CarTransmissionForm, CarPlatformForm, CarPerformanceForm, CarAssistForm
-from general.forms_info import TextForm
 from general.forms_instance import SelectGameForm, InstanceTypeAddForm, InstanceTypeEditForm, SpecializationAddForm, \
     SpecializationEditForm, InstanceGeneralForm
 from general.helpers import create_instance_based_on_game, return_redirect_to_details_based_on_game, \
@@ -13,7 +12,7 @@ from general.helpers import create_instance_based_on_game, return_redirect_to_de
 from general.models.car import Car
 from general.models.game import Game
 from general.models.instance import Instance, InstanceType, InstanceSpecialization, InstanceEngine, InstanceAssist, \
-    InstanceText, InstanceImage
+    InstanceText, InstanceImage, select_next_instance
 
 
 # Overview instances
@@ -916,3 +915,11 @@ def detail_specialization(id):
                            specialization=specialization,
                            instances=instances,
                            viewing="specialization")
+
+
+# Select next instance
+@cardb.route("/instances/next", methods=['GET', 'POST'])
+def next_instance():
+
+    select_next_instance()
+    return redirect(url_for("overview_instances"))

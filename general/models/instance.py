@@ -20,6 +20,7 @@ class Instance(database.Model):
     datetime_edited = database.Column(database.DateTime, default=datetime.utcnow, index=True, nullable=False)
     datetime_played = database.Column(database.DateTime, index=True, nullable=True)
     is_deleted = database.Column(database.Boolean, default=False, index=True, nullable=False)
+    is_active = database.Column(database.Boolean, default=False, index=True)
 
     # General
     name_full = database.Column(database.Unicode, index=True, nullable=False)
@@ -200,6 +201,9 @@ class Instance(database.Model):
 
     def get_is_for_collection(self):
         return "✓" if self.is_for_collection else "x"
+
+    def get_is_complete_and_for_collection(self):
+        return True if (self.is_complete and self.is_for_collection) else False
 
     def get_specialization(self):
         return self.specialization.name_full if self.specialization_id is not None else "n/a"
@@ -417,6 +421,50 @@ class Instance(database.Model):
             self.specialization_id = None
 
         self.datetime_edited = datetime.utcnow()
+
+
+def select_next_instance():
+
+    current_instance = Instance.query.filter(Instance.is_active == True).first()
+
+    if current_instance is None:
+
+        flash("No instance is currently active.", "warning")
+
+        eligible_instances = Instance.query.filter(Instance.is_deleted != True,
+                                                   Instance.is_complete != True,
+                                                   Instance.is_for_collection != True)\
+            .order_by(Instance.id.asc()).all()
+
+        eligible_instances[0].is_active = True
+
+    else:
+
+        next_eligible_instance_found = False
+        last_checked_instance = current_instance
+
+        while next_eligible_instance_found is False:
+
+            next_instance = Instance.query.get(last_checked_instance.id + 1)
+
+            if next_instance is None:
+                next_instance = Instance.query.get(1)
+
+            if not next_instance.is_deleted:
+                if not next_instance.is_for_collection:
+                    if not next_instance.is_complete:
+
+                        next_eligible_instance_found = True
+                        next_instance.is_active = True
+                        current_instance.is_active = False
+
+            last_checked_instance = next_instance
+
+    try:
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem making instance a new instance active.", "danger")
 
 
 class RacingInstance(Instance):
