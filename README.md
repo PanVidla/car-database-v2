@@ -16,6 +16,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 
 ## v1.2.0.0.0
 ### General
+* CHECK: Merge all the new DB migrations into one file.
 * ~~ADD: Add the option to select own color for instance types and specializations.~~
 * ~~ADD: Add selection of currently active Instance.~~
 * ADD: Add counting of sessions.
