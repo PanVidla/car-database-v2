@@ -1,17 +1,21 @@
 # PanVidla's Definitive Car Database
 This is a database serving to collect and keep track of cars I've owned and driven in video games.
 
-## v1.3.0.0.0
+## Delayed
 ### General
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * ADD: Add the option to hard delete Cars, Games and Instances.
 
+## v1.2.0.1.0
+### Need for Speed III: Hot Pursuit
+* ADD: Game statistics on the Instance overview screen OR a separate statistics screen.
+
+### Need for Speed: Road Challenge
+* ADD: Game statistics on the Instance overview screen OR a separate statistics screen.
+
 ## v1.2.0.0.0
 ### General
-* ~~ADD: Add the option to add and delete thumbnails for Cars and Instances.~~
-* ~~ADD: Add the option to add and delete regular pictures to Company and Competition objects.~~
-* ~~ADD: Add the option to hard delete Cars, Games and Instances.~~
 * ~~ADD: Add the option to select own color for instance types and specializations.~~
 * ADD: Add selection of currently active Instance.
 * ADD: Add counting of sessions.
