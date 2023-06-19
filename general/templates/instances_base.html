@@ -4,7 +4,7 @@
 
     <!--  Heading  -->
     <div class="page-header">
-        <h1>{{ heading }}</h1>
+        <h1>{{ heading }} {% if instance %}{% if instance.is_active == True %}<small>active</small>{% endif %}{% endif %}</h1>
     </div>
 
     <!-- Submenu -->
