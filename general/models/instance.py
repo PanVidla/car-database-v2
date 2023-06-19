@@ -458,6 +458,8 @@ def select_next_instance():
                         next_instance.is_active = True
                         current_instance.is_active = False
 
+                        next_instance.no_of_sessions += 1
+
             last_checked_instance = next_instance
 
     try:

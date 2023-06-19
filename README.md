@@ -19,7 +19,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * CHECK: Merge all the new DB migrations into one file.
 * ~~ADD: Add the option to select own color for instance types and specializations.~~
 * ~~ADD: Add selection of currently active Instance.~~
-* ADD: Add counting of sessions.
+* ~~ADD: Add counting of sessions.~~
 * ADD: Add the possibility of defining custom rules for events.
 * CHANGE: Add the option to delete logos easily.
 * CHANGE: Make sure related entities (text, images...) get deleted on deletion of objects.
