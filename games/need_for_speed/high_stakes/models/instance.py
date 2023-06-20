@@ -37,7 +37,6 @@ class InstanceNFS4(RacingInstance):
     # Relationships
     tune = database.relationship('TuneNFS4', backref='instance', lazy='dynamic')
     event_records = database.relationship('EventRecordNFS4', backref='instance', lazy='dynamic')
-    series_records = database.relationship('SeriesRecordNFS4', backref='instance', lazy='dynamic')
 
 
 # Represents the groups of cars divided by performance

@@ -22,7 +22,7 @@ def overview_games():
 
     games = Game.query\
         .filter(Game.is_deleted != True)\
-        .order_by(Game.name_display.asc())\
+        .order_by(Game.game_series_id.asc(), Game.date_released.asc())\
         .all()
 
     return render_template("games_overview.html",
