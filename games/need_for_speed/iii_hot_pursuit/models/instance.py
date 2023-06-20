@@ -144,7 +144,7 @@ class InstanceNFS3(RacingInstance):
 
         for event_record in event_records:
             if event_record.is_lap_record is True:
-                no_of_lap_records +=1
+                no_of_lap_records += 1
 
         self.no_of_lap_records = no_of_lap_records
 

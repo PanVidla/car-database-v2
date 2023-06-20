@@ -33,6 +33,9 @@ cardb.register_blueprint(crazy_taxi_blueprint)
 from games.need_for_speed import blueprint as need_for_speed_blueprint
 # Need for Speed III: Hot Pursuit
 from games.need_for_speed.iii_hot_pursuit import blueprint as need_for_speed_iii_hot_pursuit_blueprint
+# Need for Speed: High Stakes
+from games.need_for_speed.high_stakes import blueprint as need_for_speed_high_stakes_blueprint
 
 need_for_speed_blueprint.register_blueprint(need_for_speed_iii_hot_pursuit_blueprint)
+need_for_speed_blueprint.register_blueprint(need_for_speed_high_stakes_blueprint)
 cardb.register_blueprint(need_for_speed_blueprint)
