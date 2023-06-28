@@ -1,0 +1,126 @@
+{% extends "events_base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block events_content %}
+
+    <!-- Sub-sub-menu -->
+    {% block subsubmenu %}
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        {% if event_type %}
+                        <li><a href="{{ url_for('edit_event_type', id=event_type.id) }}"><button type="button" class="btn btn-primary">Edit event type</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete event type</button></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    <!--  Content  -->
+    <div>
+        <!--  General information  -->
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">General information</h3>
+          </div>
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Name</b></div>
+                  <div class="col-sm-4">{{ event_type.name }}</div>
+                  <div class="col-sm-1 text-right"><b>Color</b></div>
+                  <div class="col-sm-2">{{ event_type.get_color_hex() }}</div>
+                  <div class="col-sm-1 text-right"><b>Order</b></div>
+                  <div class="col-sm-2">{{ event_type.get_order_in_list() }}</div>
+              </div>
+          </div>
+        </div>
+
+        <!--  Relationships  -->
+        <h2>Relationships</h2>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Rules</h3>
+          </div>
+          <div class="table-responsive">
+              <table class="table table-bordered table-condensed">
+                  {% if event_type.rules.all() == [] %}
+                  <tr>
+                      <td class="text-center"><strong>This event type has no defined rules.</strong></td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                      <td class="col-sm-1"><strong>ID</strong></td>
+                      <td class="col-sm-1"><strong>Order</strong></td>
+                      <td class="col-sm-8"><strong>Conditions</strong></td>
+                      <td class="col-sm-2"><strong>Result</strong></td>
+                  </tr>
+                      {% for rule in event_type.get_rules() %}
+                  <tr>
+                      <td class="col-sm-1"><strong>ID</strong></td>
+                      <td class="col-sm-1"><strong>Order</strong></td>
+                      <td class="col-sm-8"><strong>Conditions</strong></td>
+                      <td class="col-sm-2"><strong>Result</strong></td>
+                  </tr>
+                      {% endfor %}
+                  {% endif %}
+              </table>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Events</h3>
+          </div>
+          <div class="table-responsive">
+              <table class="table table-bordered table-condensed">
+                  {% if event_type.events.all() == [] %}
+                  <tr>
+                      <td class="text-center"><strong>This event type has no events.</strong></td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                      <td class="col-sm-1"><strong>ID</strong></td>
+                      <td class="col-sm-6"><strong>Name</strong></td>
+                      <td class="col-sm-2"><strong>Type</strong></td>
+                      <td class="col-sm-1"><strong>Color</strong></td>
+                      <td class="col-sm-2"><strong>Game</strong></td>
+                  </tr>
+                      {% for event in event_type.get_events() %}
+                  <tr>
+                      <td class="col-sm-1">{{ event.id }}</td>
+                      <td class="col-sm-6">{{ event.name }}</td>
+                      <td class="col-sm-2">{{ event.event_type.name }}</td>
+                      <td class="col-sm-1{% if event.color_hex == '' %} not-available{% endif %}">{{ event.get_color_hex() }}</td>
+                      <td class="col-sm-2">{{ event.game.name_display }}</td>
+                  </tr>
+                      {% endfor %}
+                  {% endif %}
+              </table>
+          </div>
+        </div>
+    </div>
+
+    <!--  Modals  -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="deleteModalLabel">Delete event type</h4>
+          </div>
+          <div class="modal-body">
+              <p>Are you sure you want to delete the "{{ event_type.name }}" event type? Deleting an event type with events assigned to it could break the database.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <a href="{{ url_for('delete_event_type', id=event_type.id) }}"><button type="button" class="btn btn-danger">Delete</button></a>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+{% endblock %}

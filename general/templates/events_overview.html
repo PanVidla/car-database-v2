@@ -1,0 +1,32 @@
+{% extends "events_base.html" %}
+
+{% block events_content %}
+
+    <div>
+        <table class="table table-hover table-bordered table-striped">
+
+            {% if events == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no events in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-7"><strong>Name</strong></td>
+                <td class="col-sm-1"><strong>Color</strong></td>
+                <td class="col-sm-2"><strong>Game</strong></td>
+            </tr>
+                {% for event in events %}
+            <tr>
+                <td class="col-sm-1">{{ event.id }}</td>
+                <td class="col-sm-7">{{ event.name }}</td>
+                <td class="col-sm-1">{{ event.color_hex }}</td>
+                <td class="col-sm-2">{{ event.game.name_display }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

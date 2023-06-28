@@ -1,0 +1,32 @@
+{% extends "events_base.html" %}
+
+{% block events_content %}
+
+    <div>
+        <table class="table table-bordered table-condensed">
+
+            {% if event_types == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no event types in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-9"><strong>Name</strong></td>
+                <td class="col-sm-1 text-center"><strong>Color</strong></td>
+                <td class="col-sm-1 text-center"><strong>Rules</strong></td>
+            </tr>
+                {% for event_type in event_types %}
+            <tr class="{% if event_type.color_hex != '' %}colored-row{% endif %}" {% if event_type.color_hex != '' %}bgcolor="{{ event_type.color_hex }}"{% endif %}">
+                <td class="col-sm-1">{{ event_type.id }}</td>
+                <td class="col-sm-9"><a href="{{ url_for('detail_event_type', id=event_type.id) }}">{{ event_type.name }}</a></td>
+                <td class="col-sm-1 text-center{% if event_type.color_hex == '' %} not-available{% endif %}">{{ event_type.get_color_hex() }}</td>
+                <td class="col-sm-1 text-center">{{ event_type.get_no_of_rules() }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}
