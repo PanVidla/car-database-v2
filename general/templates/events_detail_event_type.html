@@ -11,6 +11,7 @@
                     <ul class="nav navbar-nav">
                         {% if event_type %}
                         <li><a href="{{ url_for('edit_event_type', id=event_type.id) }}"><button type="button" class="btn btn-primary">Edit event type</button></a></li>
+                        <li><a href="#"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#addRuleModal">Add rule</button></a></li>
                         <li><a href="#"><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete event type</button></a></li>
                         {% endif %}
                     </ul>
@@ -55,15 +56,18 @@
                   <tr>
                       <td class="col-sm-1"><strong>ID</strong></td>
                       <td class="col-sm-1"><strong>Order</strong></td>
-                      <td class="col-sm-8"><strong>Conditions</strong></td>
-                      <td class="col-sm-2"><strong>Result</strong></td>
+                      <td class="col-sm-7"><strong>Conditions</strong></td>
+                      <td class="col-sm-2 text-center"><strong>Result</strong></td>
+                      <td class="col-sm-1 text-center"><strong>Color</strong></td>
                   </tr>
                       {% for rule in event_type.get_rules() %}
                   <tr>
-                      <td class="col-sm-1"><strong>ID</strong></td>
-                      <td class="col-sm-1"><strong>Order</strong></td>
-                      <td class="col-sm-8"><strong>Conditions</strong></td>
-                      <td class="col-sm-2"><strong>Result</strong></td>
+                      <td class="col-sm-1">{{ rule.id }}</td>
+                      <td class="col-sm-1">{{ rule.order }}</td>
+                      <td class="col-sm-7">{{ rule.get_condition_string("1") }}</td>
+                      <!--  These should be colored.  -->
+                      <td class="col-sm-2 text-center {% if rule.color_hex != '' %}colored-row{% endif %}" {% if rule.color_hex != '' %}bgcolor="{{ rule.color_hex }}"{% endif %}">{{ rule.result }}</td>
+                      <td class="col-sm-1 text-center {% if rule.color_hex == '' %} not-available{% endif %}{% if rule.color_hex != '' %}colored-row{% endif %}" {% if rule.color_hex != '' %}bgcolor="{{ rule.color_hex }}"{% endif %}">{{ rule.get_color_hex() }}</td>
                   </tr>
                       {% endfor %}
                   {% endif %}
@@ -105,6 +109,70 @@
     </div>
 
     <!--  Modals  -->
+    <div class="modal fade" id="addRuleModal" tabindex="-1" role="dialog" aria-labelledby="addRuleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="addRuleModalLabel">Add rule</h4>
+          </div>
+          <div class="modal-body">
+              <form role="form" class="form-horizontal" method="post">
+
+                {{ form_add_rule.hidden_tag() }}
+
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ form_add_rule.order.label }}</label>
+                        <div class="col-sm-2">
+                            {{ form_add_rule.order(class_="form-control", placeholder="1") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ form_add_rule.result.label }}</label>
+                        <div class="col-sm-2">
+                            {{ form_add_rule.result(class_="form-control", placeholder="win") }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="col-sm-2 control-label">{{ form_add_rule.color_hex.label }}</label>
+                        <div class="col-sm-2">
+                            {{ form_add_rule.color_hex(class_="form-control", placeholder="#000000") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div>
+                        <label class="col-sm-2 control-label">{{ form_add_rule.operand_1.label }}</label>
+                        <div class="col-sm-3">
+                            {{ form_add_rule.operand_1(class_="form-control") }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ form_add_rule.operator(class_="form-control") }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_add_rule.operand_2(class_="form-control") }}
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                      {{ form_add_rule.submit_add_rule(class_="btn btn-info btn-block") }}
+                    </div>
+                </div>
+
+              </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">

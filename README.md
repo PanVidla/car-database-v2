@@ -6,11 +6,15 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add the option to add and delete thumbnails for Cars and Instances.
 * ADD: Add the option to add and delete regular pictures to Company and Competition objects.
 * ADD: Add the option to hard delete Cars, Games and Instances.
+* ADD: Make it possible to add more than one condition to a rule.
 
 ## v1.3.0.0.0
 ### General
 * ADD: Add pagination on long tables.
 * ADD: Add the ability to change the order of EventType objects without having to rewrite them all one by one.
+* ADD: Add the option to copy EventType objects.
+* CHANGE: Make the buttons for editing and deleting of game activities appear in a modal.
+* CHANGE: Make different tables in the Relationships section of a detail view appear in tabs, not all at once.
 
 ### Need for Speed III: Hot Pursuit
 * ADD: Game statistics on the Instance overview screen OR a separate statistics screen.

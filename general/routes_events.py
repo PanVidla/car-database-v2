@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from general import cardb, database
-from general.forms_events import EventTypeForm
-from general.models.event import EventType, Event, create_event_type_from_form
+from general.forms_events import EventTypeForm, RuleForm
+from general.models.event import EventType, Event, create_event_type_from_form, create_rule_from_form
 
 
 # Events overview
@@ -176,8 +176,44 @@ def detail_event_type(id):
 
     event_type = EventType.query.get(id)
 
+    form_add_rule = RuleForm()
+
+    if form_add_rule.submit_add_rule.data and form_add_rule.validate():
+
+        attempt_at_creating_new_rule = create_rule_from_form(form_add_rule, event_type.id)
+        result = attempt_at_creating_new_rule[0]
+        rule = attempt_at_creating_new_rule[1]
+
+        if result == 1:
+            flash("A rule with the same order ({}) already exists.".format(rule.id),
+                  "warning")
+            return redirect(url_for("detail_event_type", id=event_type.id))
+
+        if result == 2:
+            flash("If the rule is set to \"car type\", then only the \"equals\" operator is allowed.",
+                  "warning")
+            return redirect(url_for("detail_event_type", id=event_type.id))
+
+        if result == 0:
+            flash("Creating a rule.", "info")
+
+        else:
+            flash("There was an unknown error when creating a new rule from form.", "danger")
+            return redirect(url_for("detail_event_type", id=event_type.id))
+
+        try:
+            database.session.add(rule)
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the new rule to the database.", "danger")
+            return redirect(url_for("detail_event_type", id=event_type.id))
+
+        flash("The new rule has been successfully added to the database.", "success")
+        return redirect(url_for("detail_event_type", id=event_type.id))
+
     return render_template("events_detail_event_type.html",
                            title="{}".format(event_type.name),
                            heading="{}".format(event_type.name),
                            event_type=event_type,
+                           form_add_rule=form_add_rule,
                            viewing="event_types")

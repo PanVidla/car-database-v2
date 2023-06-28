@@ -3,8 +3,6 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
-from games.need_for_speed.high_stakes.forms import ClassNFS4Form
-from games.need_for_speed.high_stakes.models.instance import ClassNFS4
 from games.need_for_speed.iii_hot_pursuit import blueprint
 from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form, \
     TrackNFS3Form, EventRecordNFS3Form
@@ -111,11 +109,11 @@ def add_instance(id):
 @login_required
 def add_class():
 
-    form = ClassNFS4Form()
+    form = ClassNFS3Form()
 
     if form.validate_on_submit():
 
-        new_class = ClassNFS4()
+        new_class = ClassNFS3()
         form.populate_obj(new_class)
 
         try:
@@ -123,17 +121,17 @@ def add_class():
             database.session.commit()
         except RuntimeError:
             flash("There was a problem adding the {} class to the database.".format(new_class.name), "danger")
-            return redirect(url_for("need_for_speed.high_stakes.overview_classes"))
+            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
 
         flash("The {} class has been successfully added to the database.".format(new_class.name), "success")
-        return redirect(url_for("need_for_speed.high_stakes.detail_class", id=new_class.id))
+        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=new_class.id))
 
-    return render_template("nfs4_classes_form.html",
+    return render_template("nfs3_classes_form.html",
                            title="Add class",
                            heading="Add class",
                            form=form,
                            viewing="classes",
-                           game="Need for Speed: High Stakes")
+                           game="Need for Speed III: Hot Pursuit")
 
 
 @blueprint.route("/events/add-event", methods=['GET', 'POST'])

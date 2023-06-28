@@ -89,7 +89,7 @@ class EventType(database.Model):
 
 def create_event_type_from_form(form):
 
-    # Return a list where the first element is error code and the second element is the event type object (or nothing)
+    # Return a list where the first element is an error code and the second element is the event type object
     result = []
 
     # Check if an event type of the same name already exists
@@ -131,9 +131,92 @@ class Rule(database.Model):
 
     # General
     order = database.Column(database.Integer, index=True, nullable=False)
+    # This color is applied to the result
+    color_hex = database.Column(database.Unicode, nullable=True)
 
     # Logic
     logical_elements = database.Column(JSON, nullable=False)
 
     # Represents a result that will be applied to an event record if the rule(s) is deemed true.
     result = database.Column(database.Unicode, index=True, nullable=False)
+
+    def get_color_hex(self):
+        return self.color_hex if self.color_hex != "" else "n/a"
+
+    def get_condition_string(self, number_of_condition):
+
+        # Operand 1
+        if self.logical_elements[number_of_condition]["operand_1"] == 0:
+            operand_1 = "position"
+        elif self.logical_elements[number_of_condition]["operand_1"] == 1:
+            operand_1 = "time"
+        elif self.logical_elements[number_of_condition]["operand_1"] == 2:
+            operand_1 = "car type"
+        else:
+            operand_1 = "n/a"
+
+        # Operator
+        if self.logical_elements[number_of_condition]["operator"] == 0:
+            operator = "equal to"
+        elif self.logical_elements[number_of_condition]["operator"] == 1:
+            operator = "equal or greater than"
+        elif self.logical_elements[number_of_condition]["operator"] == 2:
+            operator = "greater than"
+        elif self.logical_elements[number_of_condition]["operator"] == 3:
+            operator = "lesser than"
+        elif self.logical_elements[number_of_condition]["operator"] == 4:
+            operator = "equal or lesser than"
+        elif self.logical_elements[number_of_condition]["operator"] == 5:
+            operator = "between (including)"
+        elif self.logical_elements[number_of_condition]["operator"] == 6:
+            operator = "between (excluding)"
+        else:
+            operator = "n/a"
+
+        # Operand 2
+        if (self.logical_elements[number_of_condition]["operator"] == 5) or (self.logical_elements[number_of_condition]["operator"] == 6):
+            numbers_without_comma = self.logical_elements[number_of_condition]["operand_2"].split(", ")
+            operand_2 = "{} and {}".format(numbers_without_comma[0], numbers_without_comma[1])
+        else:
+            operand_2 = self.logical_elements[number_of_condition]["operand_2"]
+
+        string = "if {} is {} {}".format(operand_1, operator, operand_2)
+        return string
+
+
+def create_rule_from_form(form, event_type_id):
+
+    # Return a list where the first element is ab error code and the second element is the rule
+    result = []
+
+    # Check if a rule with the same order already exists
+    rule_with_the_same_order = Rule.query\
+        .filter(Rule.event_type_id == event_type_id,
+                Rule.order == form.order.data)\
+        .first()
+    if rule_with_the_same_order is not None:
+
+        result.append(1)
+        result.append(rule_with_the_same_order)
+
+        return result
+
+    # Check if the first operand is set to "car type" and the operator to "equals"
+    if form.operand_1.data == 2:
+        if form.operator.data != 0:
+
+            result.append(2)
+            result.append(None)
+
+    # If the data from the form pass the checks above, create the new Rule object and return it
+    new_rule = Rule(event_type_id=event_type_id)
+    form.populate_obj(new_rule)
+    logical_elements_json = {1: {"operand_1": form.operand_1.data,
+                                 "operator": form.operator.data,
+                                 "operand_2": form.operand_2.data}}
+    new_rule.logical_elements = logical_elements_json
+
+    result.append(0)
+    result.append(new_rule)
+
+    return result
