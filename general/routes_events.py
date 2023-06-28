@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
+from sqlalchemy.orm.attributes import flag_modified
 
 from general import cardb, database
-from general.forms_events import EventTypeForm, RuleForm
-from general.models.event import EventType, Event, create_event_type_from_form, create_rule_from_form
+from general.forms_events import EventTypeForm, RuleAddForm, RuleConditionAddForm
+from general.models.event import EventType, Event, create_event_type_from_form, create_rule_from_form, Rule
 
 
 # Events overview
@@ -85,6 +86,50 @@ def add_event_type():
     return render_template("events_form_event_type.html",
                            title="Add event type",
                            heading="Add event type",
+                           form=form,
+                           viewing="event_types")
+
+
+# Add rule condition
+@cardb.route("/events/types/rules/<id>/add-condition", methods=['GET', 'POST'])
+@login_required
+def add_rule_condition(id):
+
+    rule = Rule.query.get(id)
+    form = RuleConditionAddForm()
+
+    if form.validate_on_submit():
+
+        attempt_at_creating_additional_condition = rule.add_additional_condition_from_form(form)
+        result = attempt_at_creating_additional_condition
+
+        if result == 2:
+            flash("If the rule is set to \"car type\", then only the \"equals\" operator is allowed.",
+                  "warning")
+            return redirect(url_for("add_rule_condition", id=rule.id))
+
+        if result == 0:
+            flash("Adding a new condition to the rule.", "info")
+
+            flag_modified(rule, "logical_elements")
+            database.session.add(rule)
+
+        else:
+            flash("There was an unknown error when adding a new condition to the rule from form.", "danger")
+            return redirect(url_for("add_rule_condition", id=rule.id))
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem adding the new condition for the rule to the database.", "danger")
+            return redirect(url_for("add_rule_condition", id=rule.id))
+
+        flash("The new condition has been successfully added to the rule in the database.", "success")
+        return redirect(url_for("detail_event_type", id=rule.event_type_id))
+
+    return render_template("events_form_rule_add_condition.html",
+                           title="Add condition",
+                           heading="Add condition to the rule",
                            form=form,
                            viewing="event_types")
 
@@ -176,7 +221,7 @@ def detail_event_type(id):
 
     event_type = EventType.query.get(id)
 
-    form_add_rule = RuleForm()
+    form_add_rule = RuleAddForm()
 
     if form_add_rule.submit_add_rule.data and form_add_rule.validate():
 

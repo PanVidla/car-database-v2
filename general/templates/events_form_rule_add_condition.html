@@ -1,0 +1,39 @@
+{% extends "events_base.html" %}
+
+{% block events_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>New condition</h2>
+        <div class="form-group">
+            <div>
+                <div class="col-sm-3">
+                    {{ form.connector(class_="form-control") }}
+                </div>
+                <label class="col-sm-1 control-label">{{ form.operand_1.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.operand_1(class_="form-control") }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form.operator(class_="form-control") }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form.operand_2(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-12">
+              {{ form.submit_add_condition(class_="btn btn-info btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

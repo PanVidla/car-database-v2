@@ -140,48 +140,107 @@ class Rule(database.Model):
     # Represents a result that will be applied to an event record if the rule(s) is deemed true.
     result = database.Column(database.Unicode, index=True, nullable=False)
 
+    def add_additional_condition_from_form(self, form):
+
+        # Check if the first operand is set to "car type" and the operator to "equals"
+        if form.operand_1.data == 2:
+            if form.operator.data != 0:
+
+                result = 2
+                return result
+
+        logical_elements = self.logical_elements
+        number_of_conditions = len(logical_elements)
+
+        # Add the logical connector
+        logical_elements[number_of_conditions + 1] = form.connector.data
+
+        # Add the condition
+        logical_elements[number_of_conditions + 2] = {"operand_1": form.operand_1.data,
+                                                      "operator": form.operator.data,
+                                                      "operand_2": form.operand_2.data}
+
+        self.logical_elements = logical_elements
+        result = 0
+
+        return result
+
     def get_color_hex(self):
         return self.color_hex if self.color_hex != "" else "n/a"
 
     def get_condition_string(self, number_of_condition):
 
-        # Operand 1
-        if self.logical_elements[number_of_condition]["operand_1"] == 0:
-            operand_1 = "position"
-        elif self.logical_elements[number_of_condition]["operand_1"] == 1:
-            operand_1 = "time"
-        elif self.logical_elements[number_of_condition]["operand_1"] == 2:
-            operand_1 = "car type"
-        else:
-            operand_1 = "n/a"
+        if int(number_of_condition) % 2 == 0:
 
-        # Operator
-        if self.logical_elements[number_of_condition]["operator"] == 0:
-            operator = "equal to"
-        elif self.logical_elements[number_of_condition]["operator"] == 1:
-            operator = "equal or greater than"
-        elif self.logical_elements[number_of_condition]["operator"] == 2:
-            operator = "greater than"
-        elif self.logical_elements[number_of_condition]["operator"] == 3:
-            operator = "lesser than"
-        elif self.logical_elements[number_of_condition]["operator"] == 4:
-            operator = "equal or lesser than"
-        elif self.logical_elements[number_of_condition]["operator"] == 5:
-            operator = "between (including)"
-        elif self.logical_elements[number_of_condition]["operator"] == 6:
-            operator = "between (excluding)"
-        else:
-            operator = "n/a"
+            # Connector
+            if self.logical_elements[number_of_condition] == 0:
+                connector = "and"
+            elif self.logical_elements[number_of_condition] == 1:
+                connector = "or"
+            else:
+                connector = "n/a"
 
-        # Operand 2
-        if (self.logical_elements[number_of_condition]["operator"] == 5) or (self.logical_elements[number_of_condition]["operator"] == 6):
-            numbers_without_comma = self.logical_elements[number_of_condition]["operand_2"].split(", ")
-            operand_2 = "{} and {}".format(numbers_without_comma[0], numbers_without_comma[1])
-        else:
-            operand_2 = self.logical_elements[number_of_condition]["operand_2"]
+            string = " {} ".format(connector)
 
-        string = "if {} is {} {}".format(operand_1, operator, operand_2)
-        return string
+            return string
+
+        else:
+
+            # Operand 1
+            if self.logical_elements[number_of_condition]["operand_1"] == 0:
+                operand_1 = "position"
+            elif self.logical_elements[number_of_condition]["operand_1"] == 1:
+                operand_1 = "time"
+            elif self.logical_elements[number_of_condition]["operand_1"] == 2:
+                operand_1 = "car type"
+            else:
+                operand_1 = "n/a"
+
+            # Operator
+            if self.logical_elements[number_of_condition]["operator"] == 0:
+                operator = "equal to"
+            elif self.logical_elements[number_of_condition]["operator"] == 1:
+                operator = "equal or greater than"
+            elif self.logical_elements[number_of_condition]["operator"] == 2:
+                operator = "greater than"
+            elif self.logical_elements[number_of_condition]["operator"] == 3:
+                operator = "lesser than"
+            elif self.logical_elements[number_of_condition]["operator"] == 4:
+                operator = "equal or lesser than"
+            elif self.logical_elements[number_of_condition]["operator"] == 5:
+                operator = "between (including)"
+            elif self.logical_elements[number_of_condition]["operator"] == 6:
+                operator = "between (excluding)"
+            else:
+                operator = "n/a"
+
+            # Operand 2
+            if (self.logical_elements[number_of_condition]["operator"] == 5) or (self.logical_elements[number_of_condition]["operator"] == 6):
+                numbers_without_comma = self.logical_elements[number_of_condition]["operand_2"].split(", ")
+                operand_2 = "{} and {}".format(numbers_without_comma[0], numbers_without_comma[1])
+            else:
+                operand_2 = self.logical_elements[number_of_condition]["operand_2"]
+
+            string = "if {} is {} {}".format(operand_1, operator, operand_2)
+            return string
+
+    def get_conditions_all_string(self):
+
+        first_line = True
+        counter = 1
+        all_conditions_as_string = ""
+
+        for condition in self.logical_elements:
+
+            if first_line:
+                all_conditions_as_string += "{}".format(self.get_condition_string(str(counter)))
+            else:
+                all_conditions_as_string += "\n{}".format(self.get_condition_string(str(counter)))
+                first_line = False
+
+            counter += 1
+
+        return all_conditions_as_string
 
 
 def create_rule_from_form(form, event_type_id):
@@ -207,6 +266,8 @@ def create_rule_from_form(form, event_type_id):
 
             result.append(2)
             result.append(None)
+
+            return result
 
     # If the data from the form pass the checks above, create the new Rule object and return it
     new_rule = Rule(event_type_id=event_type_id)

@@ -63,8 +63,8 @@
                       {% for rule in event_type.get_rules() %}
                   <tr>
                       <td class="col-sm-1">{{ rule.id }}</td>
-                      <td class="col-sm-1">{{ rule.order }}</td>
-                      <td class="col-sm-7">{{ rule.get_condition_string("1") }}</td>
+                      <td class="col-sm-1"><a href="#" data-toggle="modal" data-target="#ruleNo{{ rule.id }}Modal">{{ rule.order }}</a></td>
+                      <td class="col-sm-7">{{ rule.get_conditions_all_string() }}</td>
                       <!--  These should be colored.  -->
                       <td class="col-sm-2 text-center {% if rule.color_hex != '' %}colored-row{% endif %}" {% if rule.color_hex != '' %}bgcolor="{{ rule.color_hex }}"{% endif %}">{{ rule.result }}</td>
                       <td class="col-sm-1 text-center {% if rule.color_hex == '' %} not-available{% endif %}{% if rule.color_hex != '' %}colored-row{% endif %}" {% if rule.color_hex != '' %}bgcolor="{{ rule.color_hex }}"{% endif %}">{{ rule.get_color_hex() }}</td>
@@ -172,6 +172,51 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div>
+
+    <!--  Edit rule modals  -->
+    {% for rule in event_type.get_rules() %}
+    <div class="modal fade" id="ruleNo{{ rule.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="ruleNo{{ rule.id }}Label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="ruleNo{{ rule.id }}Label">Rule #{{ rule.order }}</h4>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>ID</b></div>
+                  <div class="col-sm-10 text-left">{{ rule.id }}</div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-2 text-right"><b>Order</b></div>
+                  <div class="col-sm-2 text-left">{{ rule.order }}</div>
+                  <div class="col-sm-2 text-right"><b>Result</b></div>
+                  <div class="col-sm-2 text-left">{{ rule.result }}</div>
+                  <div class="col-sm-2 text-right"><b>Color</b></div>
+                  <div class="col-sm-2 text-left">{{ rule.get_color_hex() }}</div>
+              </div>
+
+              <hr>
+
+              <h5>Conditions:</h5>
+              <div class="row">
+                  <div class="col-sm-12 text-left">
+                      <p>
+                          {{ rule.get_conditions_all_string() }}
+                      </p>
+                  </div>
+              </div>
+
+              <div class="modal-footer">
+                  <a href="{{ url_for('add_rule_condition', id=rule.id) }}"><button type="button" class="btn btn-info">Add condition</button></a>
+                  <a href="#"><button type="button" class="btn btn-info">Edit rule</button></a>
+                  <a href="#"><button type="button" class="btn btn-danger">Delete</button></a>
+              </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    {% endfor %}
 
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
