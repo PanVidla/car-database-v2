@@ -1,0 +1,38 @@
+{% extends "events_base.html" %}
+
+{% block events_content %}
+
+    <div>
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>General information</h2>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.order.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.order(class_="form-control", placeholder="Order") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.result.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.result(class_="form-control", placeholder="Result") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.color_hex.label }}</label>
+                <div class="col-sm-2">
+                    {{ form.color_hex(class_="form-control", placeholder="#FFFFFF") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit_edit_rule(class_="btn btn-info btn-block") }}
+            </div>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

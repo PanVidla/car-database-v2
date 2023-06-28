@@ -50,6 +50,18 @@ class RuleAddForm(RuleForm):
     submit_add_rule = SubmitField("Add")
 
 
+class RuleEditForm(FlaskForm):
+
+    # General
+    order = IntegerField("Order", validators=[Optional(), NumberRange(min=1)])
+
+    # Result
+    result = StringField("Result", validators=[DataRequired()])
+    color_hex = StringField("Color", validators=[Optional(), Length(min=7, max=7)])
+
+    submit_edit_rule = SubmitField("Edit rule")
+
+
 # Form intended for adding of additional conditions to a rule
 class RuleConditionAddForm(RuleForm):
 

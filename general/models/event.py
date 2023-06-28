@@ -165,6 +165,25 @@ class Rule(database.Model):
 
         return result
 
+    def edit_rule_from_form(self, form):
+
+        # Check if a rule with the same order already exists
+        rule_with_the_same_order = Rule.query \
+            .filter(Rule.event_type_id == self.event_type_id,
+                    Rule.order == form.order.data) \
+            .first()
+        if (rule_with_the_same_order is not None) and (rule_with_the_same_order != self):
+            result = 1
+
+            return result
+
+        else:
+
+            form.populate_obj(self)
+            result = 0
+
+            return result
+
     def get_color_hex(self):
         return self.color_hex if self.color_hex != "" else "n/a"
 

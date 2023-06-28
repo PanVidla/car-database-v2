@@ -3,7 +3,7 @@ from flask_login import login_required
 from sqlalchemy.orm.attributes import flag_modified
 
 from general import cardb, database
-from general.forms_events import EventTypeForm, RuleAddForm, RuleConditionAddForm
+from general.forms_events import EventTypeForm, RuleAddForm, RuleConditionAddForm, RuleEditForm
 from general.models.event import EventType, Event, create_event_type_from_form, create_rule_from_form, Rule
 
 
@@ -188,6 +188,46 @@ def edit_event_type(id):
                            editing=True)
 
 
+# Edit rule condition
+@cardb.route("/events/types/rules/edit-rule/<id>", methods=['GET', 'POST'])
+@login_required
+def edit_rule(id):
+
+    rule = Rule.query.get(id)
+    form = RuleEditForm(obj=rule)
+
+    if form.validate_on_submit():
+
+        attempt_at_editing_form = rule.edit_rule_from_form(form)
+        result = attempt_at_editing_form
+
+        if result == 1:
+            flash("A rule with the same order already exists.".format(rule.id), "warning")
+            return redirect(url_for("edit_rule", id=rule.id))
+
+        if result == 0:
+            flash("Editing rule.", "info")
+
+        else:
+            flash("There was an unknown error when editing the rule.", "danger")
+            return redirect(url_for("edit_rule", id=rule.id))
+
+        try:
+            database.session.commit()
+        except RuntimeError:
+            flash("There was a problem saving changes to the rule in the database.", "danger")
+            return redirect(url_for("edit_rule", id=rule.id))
+
+        flash("The changes to the rule have been successfully saved to the database.", "success")
+        return redirect(url_for("detail_event_type", id=rule.event_type_id))
+
+    return render_template("events_form_rule_edit.html",
+                           title="Edit rule",
+                           heading="Edit rule",
+                           form=form,
+                           viewing="event_types")
+
+
 # Delete event type
 @cardb.route("/events/types/delete-event-type/<id>", methods=['GET', 'POST'])
 @login_required
@@ -212,6 +252,25 @@ def delete_event_type(id):
                                                                                                    ),
           "success")
     return redirect(url_for("overview_event_types"))
+
+
+# Delete rule
+@cardb.route("/events/types/rules/delete-rule/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_rule(id):
+
+    rule = Rule.query.get(id)
+
+    try:
+        database.session.delete(rule)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the rule from the database.", "danger")
+        return redirect(url_for("detail_event_type", id=rule.event_type_id))
+
+    flash("The rule has been successfully deleted from the database.", "success")
+    return redirect(url_for("detail_event_type", id=rule.event_type_id))
 
 
 # Event type detail
