@@ -10,6 +10,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 ## v1.3.0.0.0
 ### General
 * ADD: Add pagination on long tables.
+* ADD: Add the ability to change the order of EventType objects without having to rewrite them all one by one.
 
 ### Need for Speed III: Hot Pursuit
 * ADD: Game statistics on the Instance overview screen OR a separate statistics screen.
