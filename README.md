@@ -13,6 +13,7 @@ This is a database serving to collect and keep track of cars I've owned and driv
 * ADD: Add pagination on long tables.
 * ADD: Add the ability to change the order of EventType objects without having to rewrite them all one by one.
 * ADD: Add the option to copy EventType objects.
+* ADD: Add a dropdown menu to the Events button that will take the user to the events for a specific game.
 * CHANGE: Make the buttons for editing and deleting of game activities appear in a modal.
 * CHANGE: Make different tables in the Relationships section of a detail view appear in tabs, not all at once.
 
