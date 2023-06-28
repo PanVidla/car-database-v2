@@ -1,8 +1,8 @@
 from flask import redirect, url_for, flash
 
 from games.crazy_taxi.crazy_taxi.models.instance import InstanceCT
+from games.need_for_speed.high_stakes.models.instance import InstanceNFS4
 from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3
-# from general import cardb
 from general.models.instance import Instance
 
 
@@ -17,6 +17,9 @@ def create_instance_based_on_game(game):
                                     handling=0,
                                     braking=0,
                                     average=0)
+
+    if game.name_full == "Need for Speed: High Stakes":
+        new_instance = InstanceNFS4()
 
     return new_instance
 

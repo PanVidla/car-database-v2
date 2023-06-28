@@ -1,0 +1,42 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <table class="table table-bordered">
+
+            {% if instances == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no Need for Speed: High Stakes instances in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-4"><strong>Name</strong></td>
+                <td class="col-sm-2"><strong>Nickname</strong></td>
+                <td class="col-sm-2 text-center"><strong>Type</strong></td>
+                <td class="col-sm-2 text-center"><strong>Specialization</strong></td>
+                <td class="col-sm-1 text-center"><strong>Class</strong></td>
+            </tr>
+
+                {% for instance in instances %}
+            <tr class="{% if instance.is_complete == True %}is-complete{% endif %}
+                       {% if instance.is_for_collection == True %}is-for-collection{% endif %}
+                       {% if instance.get_is_complete_and_for_collection() == True %}is-complete-and-for-collection{% endif %}
+                       {% if instance.is_active == True %}active-line{% endif %}">
+                <td class="col-sm-1">{{ instance.id }}</td>
+                <td class="col-sm-4"><a href="{{ url_for('need_for_speed.high_stakes.detail_instance', id=instance.id) }}">{{ instance.name_full }}</a></td>
+                <td class="col-sm-2">{{ instance.name_nickname }}</td>
+                <td class="col-sm-2 text-center {% if instance.type.color_hex %}colored-row{% endif %}
+                                                {% if instance.type == None %} not-available{% endif %}" {% if instance.type.color_hex %}bgcolor="{{ instance.type.color_hex }}"{% endif %}">{{ instance.get_instance_type() }}</td>
+                <td class="col-sm-2 text-center {% if instance.specialization.color_hex %}colored-row{% endif %}
+                                                {% if instance.specialization == None %} not-available{% endif %}" {% if instance.specialization.color_hex %}bgcolor="{{ instance.specialization.color_hex }}"{% endif %}">{{ instance.get_specialization() }}</td>
+                <td class="col-sm-1 text-center {% if instance.car_class.color_hex %}colored-row{% endif %}" {% if instance.car_class.color_hex %}bgcolor="{{ instance.car_class.color_hex }}"{% endif %}>{{ instance.get_class() }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

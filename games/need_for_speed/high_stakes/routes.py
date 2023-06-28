@@ -3,76 +3,73 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
-from games.need_for_speed.high_stakes.forms import ClassNFS4Form
-from games.need_for_speed.high_stakes.models.instance import ClassNFS4
-from games.need_for_speed.iii_hot_pursuit import blueprint
-from games.need_for_speed.iii_hot_pursuit.forms import InstanceNFS3Form, ClassNFS3Form, TuneNFS3Form, EventNFS3Form, \
-    TrackNFS3Form, EventRecordNFS3Form
-from games.need_for_speed.iii_hot_pursuit.models.events import EventNFS3
-from games.need_for_speed.iii_hot_pursuit.models.instance import InstanceNFS3, ClassNFS3, TuneNFS3
-from games.need_for_speed.iii_hot_pursuit.models.records import EventRecordNFS3
-from games.need_for_speed.iii_hot_pursuit.models.tracks import TrackNFS3
+from games.need_for_speed.high_stakes import blueprint
+from games.need_for_speed.high_stakes.forms import InstanceNFS4Form, ClassNFS4Form, TuneNFS4Form, TrackNFS4Form
+from games.need_for_speed.high_stakes.models.event import EventNFS4
+from games.need_for_speed.high_stakes.models.instance import InstanceNFS4, TuneNFS4, ClassNFS4
+from games.need_for_speed.high_stakes.models.track import TrackNFS4
 from general import database
 from general.forms_info import TextForm, ImageForm
 from general.models.instance import InstanceText, InstanceImage
 
 
+# Instances overview
 @blueprint.route("/instances/overview", methods=['GET'])
 @blueprint.route("/instances/overview/all", methods=['GET'])
 def overview_instances():
 
-    instances = InstanceNFS3.query. \
-        filter(InstanceNFS3.is_deleted != True) \
-        .order_by(InstanceNFS3.id.desc()).all()
+    instances = InstanceNFS4.query. \
+        filter(InstanceNFS4.is_deleted != True) \
+        .order_by(InstanceNFS4.id.desc()).all()
 
-    return render_template("nfs3_instances_overview.html",
-                           title="Need for Speed III",
-                           heading="All Need for Speed III instances",
+    return render_template("nfs4_instances_overview.html",
+                           title="Need for Speed: High Stakes",
+                           heading="All Need for Speed: High Stakes instances",
                            instances=instances,
                            viewing="instances",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 @blueprint.route("/classes/overview", methods=['GET'])
 @blueprint.route("/classes/overview/all", methods=['GET'])
 def overview_classes():
 
-    classes = ClassNFS3.query.order_by(ClassNFS3.name.asc()).all()
+    classes = ClassNFS4.query.order_by(ClassNFS4.name.asc()).all()
 
-    return render_template("nfs3_classes_overview.html",
-                           title="Need for Speed III",
-                           heading="All Need for Speed III classes",
+    return render_template("nfs4_classes_overview.html",
+                           title="Need for Speed: High Stakes",
+                           heading="All Need for Speed: High Stakes classes",
                            classes=classes,
                            viewing="classes",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 @blueprint.route("/events/overview", methods=['GET'])
 @blueprint.route("/events/overview/all", methods=['GET'])
-def overview_events():
+def overview_events_all():
 
-    events = EventNFS3.query.order_by(EventNFS3.name.asc()).all()
+    events = EventNFS4.query.order_by(EventNFS4.id.desc()).all()
 
-    return render_template("nfs3_events_overview.html",
-                           title="Need for Speed III",
-                           heading="All Need for Speed III events",
+    return render_template("nfs4_events_overview_all.html",
+                           title="Need for Speed: High Stakes",
+                           heading="All Need for Speed: High Stakes events",
                            events=events,
                            viewing="events",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 @blueprint.route("/tracks/overview", methods=['GET'])
 @blueprint.route("/tracks/overview/all", methods=['GET'])
 def overview_tracks():
 
-    tracks = TrackNFS3.query.order_by(TrackNFS3.id.asc()).all()
+    tracks = TrackNFS4.query.order_by(TrackNFS4.id.asc()).all()
 
-    return render_template("nfs3_tracks_overview.html",
-                           title="Need for Speed III",
-                           heading="All Need for Speed III tracks",
+    return render_template("nfs4_tracks_overview.html",
+                           title="Need for Speed: High Stakes",
+                           heading="All Need for Speed: High Stakes tracks",
                            tracks=tracks,
                            viewing="tracks",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 # Add instance
@@ -80,33 +77,33 @@ def overview_tracks():
 @login_required
 def add_instance(id):
 
-    instance = InstanceNFS3.query.get(id)
-    form = InstanceNFS3Form()
+    instance = InstanceNFS4.query.get(id)
+    form = InstanceNFS4Form()
 
     if form.validate_on_submit():
 
         form.populate_obj(instance)
-        new_tune = TuneNFS3(instance_id=instance.id)
-        instance.set_average()
+        new_tune = TuneNFS4(instance_id=instance.id)
 
         try:
             database.session.add(new_tune)
             database.session.commit()
         except RuntimeError:
             flash("There was a problem setting game-specific values for the {}.".format(instance.name_full), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_instances"))
+            return redirect(url_for("need_for_speed.high_stakes.overview_instances"))
 
         flash("Game-specific values have been successfully set for the {}.".format(instance.name_full), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
-    return render_template("nfs3_instances_form.html",
+    return render_template("nfs4_instances_form.html",
                            title="Add instance",
                            heading="Add instance",
                            form=form,
                            viewing="instances",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
+# Add class
 @blueprint.route("/classes/add-class", methods=['GET', 'POST'])
 @login_required
 def add_class():
@@ -136,15 +133,15 @@ def add_class():
                            game="Need for Speed: High Stakes")
 
 
-@blueprint.route("/events/add-event", methods=['GET', 'POST'])
+@blueprint.route("/events/add-event/career", methods=['GET', 'POST'])
 @login_required
-def add_event():
+def add_event_career():
 
-    form = EventNFS3Form()
+    form = EventNFS4CareerForm()
 
     if form.validate_on_submit():
 
-        new_event = EventNFS3()
+        new_event = EventNFS()
         form.populate_obj(new_event)
 
         try:
@@ -170,11 +167,11 @@ def add_event():
 @login_required
 def add_track():
 
-    form = TrackNFS3Form()
+    form = TrackNFS4Form()
 
     if form.validate_on_submit():
 
-        new_track = TrackNFS3(is_fictional=True)
+        new_track = TrackNFS4(is_fictional=True)
         form.populate_obj(new_track)
 
         try:
@@ -182,17 +179,17 @@ def add_track():
             database.session.commit()
         except RuntimeError:
             flash("There was a problem adding the {} to the database.".format(new_track.name), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_tracks"))
+            return redirect(url_for("need_for_speed.high_stakes.overview_tracks"))
 
         flash("{} has been successfully added to the database.".format(new_track.name), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=new_track.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_track", id=new_track.id))
 
-    return render_template("nfs3_tracks_form.html",
+    return render_template("nfs4_tracks_form.html",
                            title="Add track",
                            heading="Add track",
                            form=form,
                            viewing="tracks",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 # Edit instance (game-specific)
@@ -200,31 +197,30 @@ def add_track():
 @login_required
 def edit_instance_game_specific(id):
 
-    instance = InstanceNFS3.query.get(id)
+    instance = InstanceNFS4.query.get(id)
 
-    form = InstanceNFS3Form(obj=instance)
+    form = InstanceNFS4Form(obj=instance)
 
     if form.validate_on_submit():
 
         form.populate_obj(instance)
-        instance.set_average()
         instance.datetime_edited = datetime.utcnow()
 
         try:
             database.session.commit()
         except RuntimeError:
             flash("There was a problem editing the {}.".format(instance.name_full), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.edit_instance_game_specific", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.edit_instance_game_specific", id=instance.id))
 
         flash("The {} has been successfully edited.".format(instance.name_full), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
-    return render_template("nfs3_instances_form.html",
+    return render_template("nfs4_instances_form.html",
                            title="Edit instance",
                            heading="Edit game-specific information",
                            form=form,
                            viewing="instances",
-                           game="Need for Speed III: Hot Pursuit",
+                           game="Need for Speed: High Stakes",
                            editing=True)
 
 
@@ -233,8 +229,8 @@ def edit_instance_game_specific(id):
 @login_required
 def edit_class(id):
 
-    car_class = ClassNFS3.query.get(id)
-    form = ClassNFS3Form(obj=car_class)
+    car_class = ClassNFS4.query.get(id)
+    form = ClassNFS4Form(obj=car_class)
 
     if form.validate_on_submit():
 
@@ -244,90 +240,17 @@ def edit_class(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem editing the {} class.".format(car_class.name), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_class", id=car_class.id))
 
         flash("The {} class has been successfully edited.".format(car_class.name), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_class", id=car_class.id))
 
-    return render_template("nfs3_classes_form.html",
+    return render_template("nfs4_classes_form.html",
                            title="Edit class",
                            heading="Edit class",
                            form=form,
                            viewing="classes",
-                           game="Need for Speed III: Hot Pursuit",
-                           editing=True)
-
-
-# Edit event
-@blueprint.route("/events/edit-event/<id>", methods=['GET', 'POST'])
-@login_required
-def edit_event(id):
-
-    event = EventNFS3.query.get(id)
-    form = EventNFS3Form(obj=event)
-
-    if form.validate_on_submit():
-
-        form.populate_obj(event)
-
-        try:
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem editing the {} event.".format(event.name), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
-
-        flash("The {} event has been successfully edited.".format(event.name), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
-
-    return render_template("nfs3_events_form.html",
-                           title="Edit event",
-                           heading="Edit event",
-                           form=form,
-                           viewing="events",
-                           game="Need for Speed III: Hot Pursuit",
-                           editing=True)
-
-
-# Edit event record
-@blueprint.route("/event-records/edit-event-record/<id>", methods=['GET', 'POST'])
-@login_required
-def edit_event_record(id):
-
-    event_record = EventRecordNFS3.query.get(id)
-    form = EventRecordNFS3Form(obj=event_record)
-
-    if form.validate_on_submit():
-
-        form.populate_obj(event_record)
-
-        try:
-            database.session.add(event_record)
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem editing the event record.", "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
-
-        event_record.set_calculated_values()
-        event_record.instance.update_statistics()
-
-        event_record.datetime_edited = datetime.utcnow()
-
-        try:
-            database.session.commit()
-        except RuntimeError:
-            flash("There was a problem calculating values for the event record in the database.", "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
-
-        flash("Event record no. {} has been successfully edited.".format(
-            event_record.no_of_event_record), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
-
-    return render_template("nfs3_event_records_form.html",
-                           title="Edit event record",
-                           heading="Edit event record",
-                           form=form,
-                           viewing="event_records",
-                           game="Need for Speed III: Hot Pursuit",
+                           game="Need for Speed: High Stakes",
                            editing=True)
 
 
@@ -336,8 +259,8 @@ def edit_event_record(id):
 @login_required
 def edit_track(id):
 
-    track = TrackNFS3.query.get(id)
-    form = TrackNFS3Form(obj=track)
+    track = TrackNFS4.query.get(id)
+    form = TrackNFS4Form(obj=track)
 
     if form.validate_on_submit():
 
@@ -347,84 +270,18 @@ def edit_track(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem editing {}.".format(track.name), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_track", id=track.id))
 
         flash("{} event has been successfully edited.".format(track.name), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_track", id=track.id))
 
-    return render_template("nfs3_tracks_form.html",
+    return render_template("nfs4_tracks_form.html",
                            title="Edit track",
                            heading="Edit track",
                            form=form,
                            viewing="tracks",
-                           game="Need for Speed III: Hot Pursuit",
+                           game="Need for Speed: High Stakes",
                            editing=True)
-
-
-# Delete class
-@blueprint.route("/classes/delete-class/<id>", methods=['GET', 'POST'])
-@login_required
-def delete_class(id):
-
-    car_class = ClassNFS3.query.get(id)
-
-    try:
-        database.session.delete(car_class)
-        database.session.commit()
-
-    except RuntimeError:
-        flash("There was a problem with deleting the {} class.".format(car_class.name), "danger")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_class", id=car_class.id))
-
-    flash("Class {} has been successfully deleted.".format(car_class.name), "success")
-    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_classes"))
-
-
-# Delete event
-@blueprint.route("/events/delete-event/<id>", methods=['GET', 'POST'])
-@login_required
-def delete_event(id):
-
-    event = EventNFS3.query.get(id)
-
-    try:
-        database.session.delete(event)
-        database.session.commit()
-
-    except RuntimeError:
-        flash("There was a problem with deleting the {}.".format(event.name), "danger")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_event", id=event.id))
-
-    flash("The {} event has been successfully deleted.".format(event.name), "success")
-    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_events"))
-
-
-# Delete event record
-@blueprint.route("/event-records/delete-event-record/<id>", methods=['GET', 'POST'])
-@login_required
-def delete_event_record(id):
-
-    event_record = EventRecordNFS3.query.get(id)
-
-    event_record.is_deleted = True
-
-    if event_record.is_lap_record == True:
-        event_record.track.update_best_lap_time_event_record()
-
-    if event_record.is_track_record == True:
-        event_record.track.update_best_track_time_event_record()
-
-    event_record.instance.update_statistics()
-
-    try:
-        database.session.commit()
-
-    except RuntimeError:
-        flash("There was a problem with deleting event record no. {}.".format(event_record.no_of_event_record), "danger")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
-
-    flash("Event record no. {} has been successfully deleted.".format(event_record.no_of_event_record), "success")
-    return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=event_record.instance.id))
 
 
 # Delete event
@@ -432,7 +289,7 @@ def delete_event_record(id):
 @login_required
 def delete_track(id):
 
-    track = TrackNFS3.query.get(id)
+    track = TrackNFS4.query.get(id)
 
     try:
         database.session.delete(track)
@@ -440,10 +297,29 @@ def delete_track(id):
 
     except RuntimeError:
         flash("There was a problem with deleting {}.".format(track.name), "danger")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_track", id=track.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_track", id=track.id))
 
     flash("{} event has been successfully deleted.".format(track.name), "success")
-    return redirect(url_for("need_for_speed.iii_hot_pursuit.overview_tracks"))
+    return redirect(url_for("need_for_speed.high_stakes.overview_tracks"))
+
+
+# Delete class
+@blueprint.route("/classes/delete-class/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_class(id):
+
+    car_class = ClassNFS4.query.get(id)
+
+    try:
+        database.session.delete(car_class)
+        database.session.commit()
+
+    except RuntimeError:
+        flash("There was a problem with deleting the {} class.".format(car_class.name), "danger")
+        return redirect(url_for("need_for_speed.high_stakes.detail_class", id=car_class.id))
+
+    flash("Class {} has been successfully deleted.".format(car_class.name), "success")
+    return redirect(url_for("need_for_speed.high_stakes.overview_classes"))
 
 
 # Instance detail
@@ -451,7 +327,7 @@ def delete_track(id):
 @login_required
 def detail_instance(id):
 
-    instance = InstanceNFS3.query.get(id)
+    instance = InstanceNFS4.query.get(id)
     tune = instance.get_tune()
     texts = InstanceText.query \
         .filter(InstanceText.instance_id == instance.id) \
@@ -461,8 +337,8 @@ def detail_instance(id):
     add_text_form = TextForm()
     add_image_form = ImageForm()
 
-    edit_tune_form = TuneNFS3Form(obj=tune)
-    add_event_record_form = EventRecordNFS3Form()
+    edit_tune_form = TuneNFS4Form(obj=tune)
+    # add_event_record_form = EventRecordNFS3Form()
 
     # Add text
     if add_text_form.submit_add_text.data and add_text_form.validate():
@@ -510,17 +386,17 @@ def detail_instance(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem adding an image to {}.".format(instance.name_full), "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
         flash("The image has been successfully added to {}.".format(instance.name_full), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
     # Edit tune
     if edit_tune_form.submit_edit_tune.data and edit_tune_form.validate():
 
         if instance.get_tune() is None:
 
-            new_tune = TuneNFS3(instance_id=instance.id)
+            new_tune = TuneNFS4(instance_id=instance.id)
             edit_tune_form.populate_obj(new_tune)
 
             try:
@@ -528,10 +404,10 @@ def detail_instance(id):
                 database.session.commit()
             except RuntimeError:
                 flash("There was a problem add a new tune to this instance", "danger")
-                return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+                return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
             flash("A tune has been successfully added to this instance.", "success")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
         edit_tune_form.populate_obj(tune)
         instance.datetime_edited = datetime.utcnow()
@@ -540,10 +416,10 @@ def detail_instance(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem editing this instance's tune.", "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
         flash("The tune has been successfully updated.", "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
     # Add event record
     if add_event_record_form.submit_add_event_record.data and add_event_record_form.validate():
@@ -559,7 +435,7 @@ def detail_instance(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem adding a new event record to the database.", "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
         new_event_record.set_calculated_values()
         instance.update_statistics()
@@ -570,12 +446,12 @@ def detail_instance(id):
             database.session.commit()
         except RuntimeError:
             flash("There was a problem calculating values for the new event record in the database.", "danger")
-            return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+            return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
         flash("Event record no. {} has been successfully added to the database.".format(new_event_record.no_of_event_record), "success")
-        return redirect(url_for("need_for_speed.iii_hot_pursuit.detail_instance", id=instance.id))
+        return redirect(url_for("need_for_speed.high_stakes.detail_instance", id=instance.id))
 
-    return render_template("nfs3_instances_detail.html",
+    return render_template("nfs4_instances_detail.html",
                            title="{}".format(instance.name_nickname),
                            heading="{}".format(instance.name_full),
                            instance=instance,
@@ -586,7 +462,7 @@ def detail_instance(id):
                            edit_tune_form=edit_tune_form,
                            add_event_record_form=add_event_record_form,
                            viewing="instances",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 # Detail class
@@ -594,29 +470,14 @@ def detail_instance(id):
 @login_required
 def detail_class(id):
 
-    car_class = ClassNFS3.query.get(id)
+    car_class = ClassNFS4.query.get(id)
 
-    return render_template("nfs3_classes_detail.html",
+    return render_template("nfs4_classes_detail.html",
                            title="{} class".format(car_class.name),
                            heading="{} class".format(car_class.name),
                            car_class=car_class,
                            viewing="classes",
-                           game="Need for Speed III: Hot Pursuit")
-
-
-# Detail event
-@blueprint.route("/events/detail/<id>", methods=['GET', 'POST'])
-@login_required
-def detail_event(id):
-
-    event = EventNFS3.query.get(id)
-
-    return render_template("nfs3_events_detail.html",
-                           title="{}".format(event.name),
-                           heading="{}".format(event.name),
-                           event=event,
-                           viewing="events",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")
 
 
 # Detail track
@@ -624,11 +485,11 @@ def detail_event(id):
 @login_required
 def detail_track(id):
 
-    track = TrackNFS3.query.get(id)
+    track = TrackNFS4.query.get(id)
 
-    return render_template("nfs3_tracks_detail.html",
+    return render_template("nfs4_tracks_detail.html",
                            title="{}".format(track.name),
                            heading="{}".format(track.name),
                            track=track,
                            viewing="tracks",
-                           game="Need for Speed III: Hot Pursuit")
+                           game="Need for Speed: High Stakes")

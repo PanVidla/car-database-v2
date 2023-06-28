@@ -21,6 +21,12 @@ class EventNFS4(Event):
     # Relationships
     records = database.relationship('EventRecordNFS4', backref='event', lazy='dynamic')
 
+    def get_car_restriction(self):
+        return self.car_restriction if self.car_restriction != "" else "n/a"
+
+    def get_skill_level(self):
+        return self.skill_level if self.skill_level != "" else "n/a"
+
 
 # Represents an arcade event in NFS4 - single race, hot pursuit, time trial...
 # The specific conditions for the event are a part of the event record, not the event itself

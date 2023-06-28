@@ -1,0 +1,125 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+
+        {% if not editing %}
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" style="width: 95%">
+            <span class="sr-only">95% Complete</span>
+          </div>
+        </div>
+        {% endif %}
+
+        <form role="form" class="form-horizontal" method="post">
+
+        {{ form.hidden_tag() }}
+
+        <h2>Game-specific information</h2>
+        <hr>
+        <!--      Car class      -->
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.nfs4_class_id.label }}</label>
+                <div class="col-sm-10">
+                    {{ form.nfs4_class_id(class_="form-control input-lg") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.is_pursuit_vehicle.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_pursuit_vehicle(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.is_unlocked_in_career.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_unlocked_in_career(class_="form-control") }}
+                </div>
+            </div>
+            <div>
+                <label class="col-sm-2 control-label">{{ form.is_unlocked_in_arcade.label }}</label>
+                <div class="col-sm-1">
+                    {{ form.is_unlocked_in_arcade(class_="form-control") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!--      Stats      -->
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.acceleration.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.acceleration(class_="form-control", placeholder="Acceleration") }}
+                </div>
+            </div>
+            <div>
+                <label class="col-sm-2 control-label">{{ form.top_speed.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.top_speed(class_="form-control", placeholder="Top speed") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.handling.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.handling(class_="form-control", placeholder="Handling") }}
+                </div>
+            </div>
+            <div>
+                <label class="col-sm-2 control-label">{{ form.braking.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.braking(class_="form-control", placeholder="Braking") }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.overall.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.overall(class_="form-control", placeholder="Overall") }}
+                </div>
+            </div>
+        </div>
+        <span class="help-block col-sm-offset-2">For all stats, enter values from 0 to 20.</span>
+
+        <hr>
+
+        <!--      Miscellaneous      -->
+        <div class="form-group">
+            <div>
+                <label class="col-sm-2 control-label">{{ form.upgrade_level.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.upgrade_level(class_="form-control", placeholder="Upgrade level (optional)") }}
+                </div>
+                <label class="col-sm-2 control-label">{{ form.buying_price.label }}</label>
+                <div class="col-sm-4">
+                    {{ form.buying_price(class_="form-control", placeholder="Buying price [$] (optional)") }}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "instances_base.html" %}
+
+{% block instances_content %}
+
+    <div>
+        <table class="table table-bordered table-condensed">
+
+            {% if tracks == [] %}
+            <tr>
+                <td class="col-sm-12 text-center"><b>There are no Need for Speed: High Stakes tracks in the database.</b></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td class="col-sm-1"><strong>ID</strong></td>
+                <td class="col-sm-7"><strong>Name</strong></td>
+                <td class="col-sm-2 text-center"><strong>Best lap time</strong></td>
+                <td class="col-sm-2 text-center"><strong>Best track time</strong></td>
+            </tr>
+
+                {% for track in tracks %}
+            <tr>
+                <td class="col-sm-1">{{ track.id }}</td>
+                <td class="col-sm-7"><a href="{{ url_for('need_for_speed.iii_hot_pursuit.detail_track', id=track.id) }}">{{ track.name }}</a></td>
+                <td class="col-sm-2 text-center">{{ track.get_best_lap_time_human_readable() }}</td>
+                <td class="col-sm-2 text-center">{{ track.get_best_track_time_human_readable() }}</td>
+            </tr>
+                {% endfor %}
+            {% endif %}
+
+        </table>
+    </div>
+
+{% endblock %}

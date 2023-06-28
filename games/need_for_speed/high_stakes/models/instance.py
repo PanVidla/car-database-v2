@@ -30,13 +30,13 @@ class InstanceNFS4(RacingInstance):
     no_of_lap_records = database.Column(database.Integer, default=0, index=True, nullable=False)
     no_of_track_records = database.Column(database.Integer, default=0, index=True, nullable=False)
     no_of_ranked_events = database.Column(database.Integer, default=0, index=True, nullable=False)
-    no_of_series_total = database.Column(database.Integer, default=0, index=True, nullable=False)
-    no_of_ranked_series = database.Column(database.Integer, default=0, index=True, nullable=False)
-    money_won = database.Column(database.Integer, nullable=True)
 
     # Relationships
     tune = database.relationship('TuneNFS4', backref='instance', lazy='dynamic')
     event_records = database.relationship('EventRecordNFS4', backref='instance', lazy='dynamic')
+
+    def get_class(self):
+        return self.car_class.name if self.nfs4_class_id is not None else "n/a"
 
 
 # Represents the groups of cars divided by performance
@@ -53,6 +53,14 @@ class ClassNFS4(database.Model):
 
     # Relationships
     instances = database.relationship('InstanceNFS4', backref='car_class', lazy='dynamic')
+
+    def get_color(self):
+        return self.color_hex if self.color_hex != "" else "n/a"
+
+    def get_instances(self):
+        return InstanceNFS4.query.filter(InstanceNFS4.nfs4_class_id == self.id,
+                                         InstanceNFS4.is_deleted == False)\
+            .order_by(InstanceNFS4.id.desc()).all()
 
 
 # Represents the current tuning of the car

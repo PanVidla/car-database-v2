@@ -213,6 +213,9 @@ class ClassNFS3(database.Model):
     # Relationships
     instances = database.relationship('InstanceNFS3', backref='car_class', lazy='dynamic')
 
+    def get_color(self):
+        return self.color_hex if self.color_hex != "" else "n/a"
+
     def get_instances(self):
         return InstanceNFS3.query.filter(InstanceNFS3.nfs3_class_id == self.id,
                                          InstanceNFS3.is_deleted == False)\

@@ -371,6 +371,9 @@ def add_instance_game_specific(instance_id):
     if instance.game.name_full == "Need for Speed III: Hot Pursuit":
         return redirect(url_for("need_for_speed.iii_hot_pursuit.add_instance", id=instance_id))
 
+    if instance.game.name_full == "Need for Speed: High Stakes":
+        return redirect(url_for("need_for_speed.high_stakes.add_instance", id=instance_id))
+
 
 # Add instance type
 @cardb.route("/instances/types/add-type", methods=['GET', 'POST'])

@@ -1,0 +1,7 @@
+{% if viewing == "classes" %}
+<li><a class="hover-underline-animation" href="{{ url_for('need_for_speed.high_stakes.add_class') }}"><strong>Add class</strong></a></li>
+{% elif viewing == "events" %}
+<li><a class="hover-underline-animation" href="{{ url_for('need_for_speed.high_stakes.add_event_career') }}"><strong>Add career event</strong></a></li>
+{% elif viewing == "tracks" %}
+<li><a class="hover-underline-animation" href="{{ url_for('need_for_speed.high_stakes.add_track') }}"><strong>Add track</strong></a></li>
+{% endif %}

@@ -3,7 +3,7 @@ from sqlalchemy import JSON
 from general import database
 
 
-# Represents an event in a game (e.g. standard road race, extended knockout, long haul...)
+# Represents a specific event in a game (e.g. standard road race, extended knockout, long haul...)
 class Event(database.Model):
 
     __tablename__ = "events"
@@ -16,8 +16,25 @@ class Event(database.Model):
     name = database.Column(database.Unicode, index=True, nullable=False)
     color_hex = database.Column(database.Unicode, nullable=True)
 
+    event_type_id = database.Column(database.Integer, database.ForeignKey('event_types.id'), nullable=False, index=True)
+
+
+# Represents a type of event that binds rules to itself, so that rules don't need to be re-defined for every single
+# event in every game.
+class EventType(database.Model):
+
+    __tablename__ = "event_types"
+
+    # Metadata
+    id = database.Column(database.Integer, primary_key=True)
+
+    # General
+    name = database.Column(database.Unicode, index=True, nullable=False)
+    color_hex = database.Column(database.Unicode, nullable=True)
+
     # Relationships
-    rules = database.relationship('Rule', backref='event', lazy='dynamic')
+    rules = database.relationship('Rule', backref='event_type', lazy='dynamic')
+    events = database.relationship('Event', backref='event_type', lazy='dynamic')
 
 
 # Represents a rule for the determination of event result
@@ -27,7 +44,7 @@ class Rule(database.Model):
 
     # Metadata
     id = database.Column(database.Integer, primary_key=True)
-    event_id = database.Column(database.Integer, database.ForeignKey('events.id'), index=True)
+    event_type_id = database.Column(database.Integer, database.ForeignKey('event_types.id'), index=True)
 
     # General
     order = database.Column(database.Integer, index=True, nullable=False)
