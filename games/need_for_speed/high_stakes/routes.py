@@ -4,8 +4,9 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_required
 
 from games.need_for_speed.high_stakes import blueprint
-from games.need_for_speed.high_stakes.forms import InstanceNFS4Form, ClassNFS4Form, TuneNFS4Form, TrackNFS4Form
-from games.need_for_speed.high_stakes.models.event import EventNFS4
+from games.need_for_speed.high_stakes.forms import InstanceNFS4Form, ClassNFS4Form, TuneNFS4Form, TrackNFS4Form, \
+    ArcadeEventNFS4Form
+from games.need_for_speed.high_stakes.models.event import EventNFS4, create_new_arcade_event_from_form, ArcadeEventNFS4
 from games.need_for_speed.high_stakes.models.instance import InstanceNFS4, TuneNFS4, ClassNFS4
 from games.need_for_speed.high_stakes.models.track import TrackNFS4
 from general import database
@@ -55,6 +56,20 @@ def overview_events_all():
                            heading="All Need for Speed: High Stakes events",
                            events=events,
                            viewing="events",
+                           game="Need for Speed: High Stakes")
+
+
+@blueprint.route("/events/arcade/overview", methods=['GET'])
+@blueprint.route("/events/arcade/overview/all", methods=['GET'])
+def overview_events_arcade():
+
+    arcade_events = ArcadeEventNFS4.query.order_by(ArcadeEventNFS4.id.desc()).all()
+
+    return render_template("nfs4_events_overview_arcade.html",
+                           title="Need for Speed: High Stakes",
+                           heading="All Need for Speed: High Stakes arcade events",
+                           arcade_events=arcade_events,
+                           viewing="events_arcade",
                            game="Need for Speed: High Stakes")
 
 
@@ -130,6 +145,49 @@ def add_class():
                            heading="Add class",
                            form=form,
                            viewing="classes",
+                           game="Need for Speed: High Stakes")
+
+
+@blueprint.route("/events/add-event/arcade", methods=['GET', 'POST'])
+@login_required
+def add_event_arcade():
+
+    form = ArcadeEventNFS4Form()
+
+    if form.validate_on_submit():
+
+        attempt_at_creating_new_arcade_event = create_new_arcade_event_from_form(form)
+
+        error_code = attempt_at_creating_new_arcade_event[0]
+        arcade_event = attempt_at_creating_new_arcade_event[1]
+        message = attempt_at_creating_new_arcade_event[2]
+
+        if (error_code >= 1) and (error_code <= 3):
+            flash(message, "warning")
+            return redirect(url_for("need_for_speed.high_stakes.add_event_arcade"))
+
+        elif error_code != 0:
+            flash("There was an unknown error when creating the new arcade event.", "danger")
+            return redirect(url_for("need_for_speed.high_stakes.add_event_arcade"))
+
+        else:
+
+            try:
+                database.session.add(arcade_event)
+                database.session.commit()
+            except RuntimeError:
+                flash("There was a problem adding the arcade event \"{}\" event to the database.".format(arcade_event.name), "danger")
+                return redirect(url_for("need_for_speed.high_stakes.add_event_arcade"))
+
+        flash("The arcade event \"{}\" has been successfully added to the database.".format(arcade_event.name), "success")
+        # TODO: Should actually redirect to the detail view of the event
+        return redirect(url_for("need_for_speed.high_stakes.overview_events_all"))
+
+    return render_template("nfs4_events_form_arcade.html",
+                           title="Add arcade event",
+                           heading="Add arcade event",
+                           form=form,
+                           viewing="events",
                            game="Need for Speed: High Stakes")
 
 

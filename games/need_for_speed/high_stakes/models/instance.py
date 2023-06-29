@@ -12,7 +12,6 @@ class InstanceNFS4(RacingInstance):
     # Game-specific
     # Stats
     nfs4_class_id = database.Column(database.Integer, database.ForeignKey('classes_nfs4.id'))
-    is_pursuit_vehicle = database.Column(database.Boolean, index=True, default=False, nullable=False)
     is_unlocked_in_career = database.Column(database.Boolean, index=True, default=False, nullable=False)
     is_unlocked_in_arcade = database.Column(database.Boolean, index=True, default=False, nullable=False)
 

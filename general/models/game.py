@@ -42,7 +42,7 @@ class Game(database.Model):
     no_of_times_played = database.Column(database.Integer, default=0, nullable=False)
 
     # Relationships
-    events = database.relationship('Event', backref='game', lazy='dynamic')
+    games = database.relationship('Event', backref='game', lazy='dynamic')
     instances = database.relationship('Instance', backref='game', lazy='dynamic')
     texts = database.relationship('GameText', backref='game', lazy='dynamic')
     images = database.relationship('GameImage', backref='game', lazy='dynamic')

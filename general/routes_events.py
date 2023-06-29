@@ -12,7 +12,7 @@ from general.models.event import EventType, Event, create_event_type_from_form, 
 @cardb.route("/events/all", methods=['GET'])
 def overview_events():
 
-    events = Event.query.order_by(Event.game_id.desc(), Event.event_type_id.asc(), Event.name.asc()).all()
+    events = Event.query.order_by(Event.event_type_id.asc(), Event.name.asc()).all()
 
     return render_template("events_overview.html",
                            title="Events",

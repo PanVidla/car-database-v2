@@ -10,9 +10,9 @@ class Event(database.Model):
 
     # Metadata
     id = database.Column(database.Integer, primary_key=True)
+    game_id = database.Column(database.Integer, database.ForeignKey('games.id'), nullable=False, index=True)
 
     # General
-    game_id = database.Column(database.Integer, database.ForeignKey('games.id'), nullable=False)
     name = database.Column(database.Unicode, index=True, nullable=False)
     color_hex = database.Column(database.Unicode, nullable=True)
 
@@ -20,6 +20,9 @@ class Event(database.Model):
 
     def get_color_hex(self):
         return self.color_hex if self.color_hex != "" else "n/a"
+
+    def get_game(self):
+        pass
 
 
 # Represents a type of event that binds rules to itself, so that rules don't need to be re-defined for every single
