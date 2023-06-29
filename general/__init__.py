@@ -18,8 +18,8 @@ login.login_view = "login"
 from general.models import blueprint as models_general_blueprint
 cardb.register_blueprint(models_general_blueprint)
 
-from general import routes_cars, routes_companies, routes_events, routes_games, routes_instances, routes_misc,\
-    routes_parts, routes_user
+from general import routes_cars, routes_companies, routes_debug, routes_events, routes_games, routes_instances,\
+    routes_misc, routes_parts, routes_user
 
 # Crazy Taxi
 from games.crazy_taxi import blueprint as crazy_taxi_blueprint
